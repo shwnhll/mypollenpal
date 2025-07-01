@@ -9,16 +9,87 @@ declare global {
   }
 }
 
+interface GooglePlace {
+  formatted_address: string;
+  place_id: string;
+  geometry: {
+    location: {
+      lat: () => number;
+      lng: () => number;
+    };
+  };
+}
+
 export default function Home() {
   const [pollenData, setPollenData] = useState<any>(null)
   const [loading, setLoading] = useState(false)
   const [hasSearched, setHasSearched] = useState(false)
   const [forecastData, setForecastData] = useState<any[]>([])
+  const [autocomplete, setAutocomplete] = useState<any>(null)
 
-  // Load Google Places API - simplified approach
+  // Load Google Places API
   useEffect(() => {
-    // Skip autocomplete for now to focus on core functionality
-    // We can add this back once everything else is working perfectly
+    const loadGooglePlaces = () => {
+      // Check if Google Places API is already loaded
+      if (window.google && window.google.maps && window.google.maps.places) {
+        initializeAutocomplete();
+        return;
+      }
+
+      // Check if script is already being loaded
+      if (document.querySelector('script[src*="maps.googleapis.com"]')) {
+        // Wait for it to load
+        const checkLoaded = setInterval(() => {
+          if (window.google && window.google.maps && window.google.maps.places) {
+            clearInterval(checkLoaded);
+            initializeAutocomplete();
+          }
+        }, 100);
+        return;
+      }
+
+      // Load the Google Places API script
+      const script = document.createElement('script');
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY}&libraries=places&callback=initAutocomplete`;
+      script.async = true;
+      script.defer = true;
+      
+      // Define the callback function globally
+      window.initAutocomplete = initializeAutocomplete;
+      
+      script.onerror = () => {
+        console.warn('Google Places API failed to load. Autocomplete will not be available.');
+      };
+      
+      document.head.appendChild(script);
+    };
+
+    const initializeAutocomplete = () => {
+      try {
+        const input = document.getElementById('locationInput') as HTMLInputElement;
+        if (input && window.google && window.google.maps && window.google.maps.places) {
+          const autocompleteInstance = new window.google.maps.places.Autocomplete(input, {
+            types: ['(cities)'],
+            componentRestrictions: { country: 'us' }
+          });
+          
+          autocompleteInstance.addListener('place_changed', () => {
+            const place: GooglePlace = autocompleteInstance.getPlace();
+            if (place && place.formatted_address) {
+              input.value = place.formatted_address;
+              // Optionally trigger search automatically
+              // searchLocation();
+            }
+          });
+          
+          setAutocomplete(autocompleteInstance);
+        }
+      } catch (error) {
+        console.warn('Failed to initialize Google Places autocomplete:', error);
+      }
+    };
+
+    loadGooglePlaces();
   }, []);
 
   const searchLocation = async () => {
