@@ -310,7 +310,7 @@ export default function Home() {
                     <circle
                       id="treeRing"
                       cx="40" cy="40" r="32" fill="none" stroke="#ef4444" strokeWidth="6"
-                      strokeDasharray="160.85 201.06" strokeLinecap="round"
+                      strokeDasharray="201.06 201.06" strokeLinecap="round"
                     />
                   </svg>
                   <div style={{
@@ -320,21 +320,21 @@ export default function Home() {
                     transform: 'translate(-50%, -50%)',
                     fontSize: '1.5rem',
                     fontWeight: '800',
-                    color: '#ef4444'
+                    color: '#7c2d12'
                   }} id="treeLevelDisplay">
                     <span id="treeLevel">4</span>
                   </div>
                 </div>
                 
                 <div style={{
-                  color: '#ef4444',
+                  color: '#7c2d12',
                   fontWeight: '600',
                   marginBottom: '1rem',
                   textTransform: 'uppercase',
                   fontSize: '0.9rem',
                   letterSpacing: '0.5px'
                 }} id="treeStatusDisplay">
-                  <span id="treeStatus">High</span>
+                  <span id="treeStatus">Severe</span>
                 </div>
               </div>
 
@@ -368,7 +368,7 @@ export default function Home() {
                     <circle
                       id="grassRing"
                       cx="40" cy="40" r="32" fill="none" stroke="#f59e0b" strokeWidth="6"
-                      strokeDasharray="80.42 201.06" strokeLinecap="round"
+                      strokeDasharray="100.53 201.06" strokeLinecap="round"
                     />
                   </svg>
                   <div style={{
@@ -426,7 +426,7 @@ export default function Home() {
                     <circle
                       id="weedRing"
                       cx="40" cy="40" r="32" fill="none" stroke="#10b981" strokeWidth="6"
-                      strokeDasharray="40.21 201.06" strokeLinecap="round"
+                      strokeDasharray="50.27 201.06" strokeLinecap="round"
                     />
                   </svg>
                   <div style={{
@@ -508,7 +508,7 @@ export default function Home() {
                 color: '#4a5568',
                 lineHeight: '1.5'
               }              } id="overallAdvice">
-                High pollen day! Take precautions if you have allergies - consider staying indoors or taking medication.
+                Severe pollen levels! Stay indoors if possible and take allergy medication.
               </div>
             </div>
           </div>
