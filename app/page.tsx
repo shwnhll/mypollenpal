@@ -14,15 +14,14 @@ export default function Home() {
         top: 0,
         zIndex: 100
       }}>
-        <nav style={{
-          maxWidth: '1000px',
-          margin: '0 auto',
-          padding: '0 20px',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          padding: '1rem 0'
-        }}>
+<nav style={{
+  maxWidth: '1000px',
+  margin: '0 auto',
+  padding: '1rem 20px',
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center'
+}}>
           <div style={{
             fontSize: '1.5rem',
             fontWeight: '600',
