@@ -223,6 +223,21 @@ export default function Home() {
       lineHeight: '1.6',
       minHeight: '100vh'
     }}>
+      <style jsx>{`
+        .pollen-cards-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 2rem;
+          margin: 2rem 0;
+        }
+        
+        @media (max-width: 768px) {
+          .pollen-cards-grid {
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+          }
+        }
+      `}</style>
       {/* Header */}
       <header style={{
         background: 'white',
@@ -382,19 +397,23 @@ export default function Home() {
                 marginBottom: '0.5rem'
               }}>
                 📊 Universal Pollen Index (0-4)
-                <span style={{
-                  width: '16px',
-                  height: '16px',
-                  borderRadius: '50%',
-                  background: '#6b7280',
-                  color: 'white',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '10px',
-                  fontWeight: 'bold',
-                  cursor: 'help'
-                }} title="Standardized scale used globally by health organizations to measure pollen levels and allergy risk">?</span>
+                <span 
+                  style={{
+                    width: '16px',
+                    height: '16px',
+                    borderRadius: '50%',
+                    background: '#6b7280',
+                    color: 'white',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '10px',
+                    fontWeight: 'bold',
+                    cursor: 'help'
+                  }} 
+                  title="Standardized scale used globally by health organizations to measure pollen levels and allergy risk"
+                  onClick={() => alert('Universal Pollen Index (0-4):\n\n0: None - No pollen detected\n1: Low - Minimal allergy risk\n2: Medium - Moderate allergy symptoms possible\n3: High - Significant allergy symptoms likely\n4: Severe - Very high allergy risk, stay indoors if possible\n\nThis standardized scale is used globally by health organizations to measure pollen levels and allergy risk.')}
+                >?</span>
               </div>
               <div style={{
                 display: 'flex',
@@ -414,10 +433,10 @@ export default function Home() {
 
             <div style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+              gridTemplateColumns: 'repeat(3, 1fr)',
               gap: '2rem',
               margin: '2rem 0'
-            }}>
+            }} className="pollen-cards-grid">
               {/* Tree Pollen Card */}
               <div style={{
                 background: 'white',
