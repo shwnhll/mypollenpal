@@ -1,6 +1,30 @@
 'use client'
+import { useState } from 'react'
 
 export default function Home() {
+  const [pollenData, setPollenData] = useState(null)
+  const [loading, setLoading] = useState(false)
+
+  const searchLocation = async () => {
+    const input = document.getElementById('locationInput')
+    const location = input.value.trim()
+    
+    if (!location) {
+      alert('Please enter a location')
+      return
+    }
+
+    setLoading(true)
+    try {
+      const response = await fetch(`/api/pollen?location=${encodeURIComponent(location)}`)
+      const data = await response.json()
+      setPollenData(data)
+    } catch (error) {
+      alert('Unable to fetch pollen data. Please try again.')
+    }
+    setLoading(false)
+  }
+
   return (
     <div style={{
       fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
@@ -89,7 +113,7 @@ export default function Home() {
               }}
             />
             <button 
-              onClick={() => alert('API integration coming next!')}
+              onClick={searchLocation}
               style={{
                 position: 'absolute',
                 right: '6px',
@@ -104,7 +128,7 @@ export default function Home() {
                 fontWeight: '600'
               }}
             >
-              🔍 Search
+               {loading ? '⏳ Loading...' : '🔍 Search'}
             </button>
           </div>
         </div>
