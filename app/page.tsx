@@ -70,44 +70,45 @@ export default function Home() {
             One click to find out exactly what's in your air, anywhere in the United States. Your personal pollen companion.
           </p>
 
-          <div style={{
-  maxWidth: '500px',
-  margin: '0 auto',
-  position: 'relative'
-}}>
-  <input 
-    type="text" 
-    placeholder="Enter your ZIP code or city..."
-    style={{
-      width: '100%',
-      padding: '1rem 1.5rem',
-      paddingRight: '120px', // Make room for button
-      fontSize: '1rem',
-      border: 'none',
-      borderRadius: '50px',
-      outline: 'none',
-      boxShadow: '0 4px 15px rgba(0, 0, 0, 0.1)',
-      background: 'white',
-      color: '#2d3748',
-      boxSizing: 'border-box'
-    }}
-  />
-  <button style={{
-    position: 'absolute',
-    right: '6px',
-    top: '50%',
-    transform: 'translateY(-50%)', // Center vertically
-    padding: '0.75rem 1.5rem',
-    background: '#007AFF',
-    color: 'white',
-    border: 'none',
-    borderRadius: '50px',
-    cursor: 'pointer',
-    fontWeight: '600'
-  }}>
-    🔍 Search
-  </button>
-</div>
+<div style={{
+            maxWidth: '500px',
+            margin: '0 auto',
+            position: 'relative'
+          }}>
+            <input 
+              type="text" 
+              placeholder="Enter your ZIP code or city..."
+              style={{
+                width: '100%',
+                padding: '1rem 1.5rem',
+                paddingRight: '120px',
+                fontSize: '1rem',
+                border: 'none',
+                borderRadius: '50px',
+                outline: 'none',
+                boxShadow: '0 4px 15px rgba(0, 0, 0, 0.1)',
+                background: 'white',
+                color: '#2d3748',
+                boxSizing: 'border-box'
+              }}
+            />
+            <button style={{
+              position: 'absolute',
+              right: '6px',
+              top: '50%',
+              transform: 'translateY(-50%)',
+              padding: '0.75rem 1.5rem',
+              background: '#007AFF',
+              color: 'white',
+              border: 'none',
+              borderRadius: '50px',
+              cursor: 'pointer',
+              fontWeight: '600'
+            }}>
+              🔍 Search
+            </button>
+          </div>
+        </div>
       </section>
 
       {/* Main Content */}
