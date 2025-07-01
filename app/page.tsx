@@ -51,6 +51,11 @@ export default function Home() {
 
       // Update the visual elements
       updateVisualRings(data)
+      updateOverallAdvice(
+        parseInt(data.current.tree.level) || 0,
+        parseInt(data.current.grass.level) || 0, 
+        parseInt(data.current.weed.level) || 0
+      )
       
     } catch (error) {
       alert('Unable to fetch pollen data. Please try again.')
@@ -75,30 +80,42 @@ export default function Home() {
   const updateRing = (type: string, level: string, status: string) => {
     const levelNum = parseInt(level) || 0
     let color = '#10b981'
-    let advice = 'Great day for outdoor activities!'
     
     if (levelNum <= 1) {
       color = '#10b981'
-      advice = `Great day for outdoor activities! ${type} pollen is very low.`
     } else if (levelNum <= 2) {
       color = '#f59e0b'
-      advice = `Moderate ${type} pollen. Consider allergy meds if sensitive.`
     } else {
       color = '#ef4444'
-      advice = `High ${type} pollen day! Take precautions if allergic.`
     }
 
-    // Update ring color
+    // Update ring color and status (use the actual status from API)
     const ring = document.getElementById(`${type}Ring`)
-    const advice_el = document.getElementById(`${type}Advice`)
     const level_el = document.getElementById(`${type}LevelDisplay`)
     const status_el = document.getElementById(`${type}StatusDisplay`)
+    const status_span = document.getElementById(`${type}Status`)
     
     if (ring) ring.setAttribute('stroke', color)
     if (ring) ring.setAttribute('stroke-dasharray', `${(levelNum/5) * 201.06} 201.06`)
-    if (advice_el) advice_el.textContent = advice
     if (level_el) level_el.style.color = color
     if (status_el) status_el.style.color = color
+    if (status_span) status_span.textContent = status // Use actual API status
+  }
+
+  const updateOverallAdvice = (treeLevel: number, grassLevel: number, weedLevel: number) => {
+    const maxLevel = Math.max(treeLevel, grassLevel, weedLevel)
+    const advice_el = document.getElementById('overallAdvice')
+    
+    let advice = ''
+    if (maxLevel <= 1) {
+      advice = "Perfect day for outdoor activities! All pollen levels are very low."
+    } else if (maxLevel <= 2) {
+      advice = "Good day for most outdoor activities. Consider allergy meds if you're sensitive."
+    } else {
+      advice = "High pollen day! Take precautions if you have allergies - consider staying indoors or taking medication."
+    }
+    
+    if (advice_el) advice_el.textContent = advice
   }
 
   return (
@@ -250,7 +267,7 @@ export default function Home() {
 
             <div style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+              gridTemplateColumns: 'repeat(3, 1fr)',
               gap: '2rem',
               margin: '2rem 0'
             }}>
@@ -302,7 +319,7 @@ export default function Home() {
                 </div>
                 
                 <div style={{
-                  color: '#ef4444',
+                  color: '#10b981',
                   fontWeight: '600',
                   marginBottom: '1rem',
                   textTransform: 'uppercase',
@@ -310,18 +327,6 @@ export default function Home() {
                   letterSpacing: '0.5px'
                 }} id="treeStatusDisplay">
                   <span id="treeStatus">High</span>
-                </div>
-                
-                <div style={{
-                  background: '#f8fafc',
-                  padding: '1rem',
-                  borderRadius: '8px',
-                  fontSize: '0.85rem',
-                  color: '#4a5568',
-                  lineHeight: '1.4',
-                  border: '1px solid #ef444420'
-                }} id="treeAdvice">
-                  High tree pollen day! Take precautions if allergic.
                 </div>
               </div>
 
@@ -372,7 +377,7 @@ export default function Home() {
                 </div>
                 
                 <div style={{
-                  color: '#f59e0b',
+                  color: '#10b981',
                   fontWeight: '600',
                   marginBottom: '1rem',
                   textTransform: 'uppercase',
@@ -380,18 +385,6 @@ export default function Home() {
                   letterSpacing: '0.5px'
                 }} id="grassStatusDisplay">
                   <span id="grassStatus">Low</span>
-                </div>
-                
-                <div style={{
-                  background: '#f8fafc',
-                  padding: '1rem',
-                  borderRadius: '8px',
-                  fontSize: '0.85rem',
-                  color: '#4a5568',
-                  lineHeight: '1.4',
-                  border: '1px solid #f59e0b20'
-                }} id="grassAdvice">
-                  Moderate grass pollen. Consider allergy meds if sensitive.
                 </div>
               </div>
 
@@ -451,18 +444,32 @@ export default function Home() {
                 }} id="weedStatusDisplay">
                   <span id="weedStatus">Very Low</span>
                 </div>
-                
-                <div style={{
-                  background: '#f8fafc',
-                  padding: '1rem',
-                  borderRadius: '8px',
-                  fontSize: '0.85rem',
-                  color: '#4a5568',
-                  lineHeight: '1.4',
-                  border: '1px solid #10b98120'
-                }} id="weedAdvice">
-                  Great day for outdoor activities! Weed pollen is very low.
-                </div>
+              </div>
+            </div>
+
+            {/* Overall advice section */}
+            <div style={{
+              background: '#f8fafc',
+              padding: '1.5rem',
+              borderRadius: '12px',
+              textAlign: 'center',
+              marginTop: '2rem',
+              border: '1px solid #e2e8f0'
+            }}>
+              <div style={{
+                fontSize: '1rem',
+                fontWeight: '600',
+                color: '#2d3748',
+                marginBottom: '0.5rem'
+              }}>
+                📍 Today's Recommendation
+              </div>
+              <div style={{
+                fontSize: '0.9rem',
+                color: '#4a5568',
+                lineHeight: '1.5'
+              }} id="overallAdvice">
+                High tree pollen day! Take precautions if you have allergies - consider staying indoors or taking medication.
               </div>
             </div>
           </div>
