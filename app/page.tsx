@@ -453,73 +453,9 @@ export default function Home() {
       </section>
     </div>
     
-    <script dangerouslySetInnerHTML={{
-      __html: `
-        async function fetchPollenData(location = 'Carmel, Indiana') {
-          try {
-            showLoading();
-            
-            const response = await fetch('/api/pollen?location=' + encodeURIComponent(location));
-            
-            if (!response.ok) {
-              throw new Error('API Error: ' + response.status);
-            }
-            
-            const data = await response.json();
-            return data;
-            
-          } catch (error) {
-            console.error('Error fetching pollen data:', error);
-            throw error;
-          }
-        }
-
-        function updatePollenDisplay(data) {
-          document.getElementById('currentLocation').textContent = data.location;
-          document.getElementById('lastUpdated').textContent = 'Last updated: ' + data.lastUpdated;
-          
-          document.getElementById('treeLevel').textContent = data.current.tree.level;
-          document.getElementById('treeStatus').textContent = data.current.tree.status;
-          document.getElementById('grassLevel').textContent = data.current.grass.level;
-          document.getElementById('grassStatus').textContent = data.current.grass.status;
-          document.getElementById('weedLevel').textContent = data.current.weed.level;
-          document.getElementById('weedStatus').textContent = data.current.weed.status;
-        }
-
-        function showLoading() {
-          document.getElementById('treeLevel').textContent = '...';
-          document.getElementById('grassLevel').textContent = '...';
-          document.getElementById('weedLevel').textContent = '...';
-        }
-
-        async function searchLocation() {
-          const input = document.getElementById('locationInput');
-          const location = input.value.trim();
-          
-          if (!location) {
-            alert('Please enter a location');
-            return;
-          }
-
-          try {
-            const data = await fetchPollenData(location);
-            updatePollenDisplay(data);
-          } catch (error) {
-            alert('Unable to fetch pollen data. Please try again.');
-          }
-        }
-
-        // Test with real data on page load
-        window.addEventListener('load', async function() {
-          try {
-            const data = await fetchPollenData();
-            updatePollenDisplay(data);
-          } catch (error) {
-            console.error('Failed to load initial data');
-          }
-        });
-      `
-    }} />
+  </div>
+      </section>
+    </div>
     </>
   )
 }
