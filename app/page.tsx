@@ -10,10 +10,10 @@ declare global {
 }
 
 export default function Home() {
-  const [pollenData, setPollenData] = useState(null)
+  const [pollenData, setPollenData] = useState<any>(null)
   const [loading, setLoading] = useState(false)
   const [hasSearched, setHasSearched] = useState(false)
-  const [forecastData, setForecastData] = useState(null)
+  const [forecastData, setForecastData] = useState<any[]>([])
 
   // Load Google Places API - simplified approach
   useEffect(() => {
@@ -694,7 +694,7 @@ export default function Home() {
                   scrollbarWidth: 'thin',
                   scrollbarColor: '#cbd5e0 #f7fafc'
                 }} className="forecast-container" id="forecastContainer">
-                  {forecastData ? forecastData.map((day, index) => {
+                  {forecastData.length > 0 ? forecastData.map((day, index) => {
                     let date;
                     let dateDisplay = 'Invalid Date';
                     
