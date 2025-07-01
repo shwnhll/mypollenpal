@@ -81,13 +81,15 @@ export default function Home() {
               style={{
                 width: '100%',
                 padding: '1rem 1.5rem',
+                paddingRight: '120px',
                 fontSize: '1rem',
                 border: 'none',
                 borderRadius: '50px',
                 outline: 'none',
                 boxShadow: '0 4px 15px rgba(0, 0, 0, 0.1)',
                 background: 'white',
-                color: '#2d3748'
+                color: '#2d3748',
+                boxSizing: 'border-box'
               }}
             />
             <button style={{
@@ -95,6 +97,7 @@ export default function Home() {
               right: '8px',
               top: '8px',
               padding: '0.75rem 1.5rem',
+              transform: 'translateY(-50%)',
               background: '#007AFF',
               color: 'white',
               border: 'none',
