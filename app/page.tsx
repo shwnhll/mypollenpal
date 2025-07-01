@@ -1,59 +1,191 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 export default function Home() {
   const [pollenData, setPollenData] = useState(null)
   const [loading, setLoading] = useState(false)
 
-  const searchLocation = async () => {
-  const input = document.getElementById('locationInput') as HTMLInputElement
-  const location = input?.value?.trim() || ''
-  
-  if (!location) {
-    alert('Please enter a location')
-    return
-  }
+  // Load Google Places API
+  useEffect(() => {
+    const loadGooglePlaces = () => {
+      if (window.google) return;
+      
+      const script = document.createElement('script');
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY}&libraries=places`;
+      script.async = true;
+      script.onload = initializeAutocomplete;
+      document.head.appendChild(script);
+    };
 
-  setLoading(true)
-  
-  try {
-    const response = await fetch(`/api/pollen?location=${encodeURIComponent(location)}`)
-    const data = await response.json()
+    const initializeAutocomplete = () => {
+      const input = document.getElementById('locationInput');
+      if (input && window.google) {
+        const autocomplete = new window.google.maps.places.Autocomplete(input, {
+          types: ['(cities)'],
+          componentRestrictions: { country: 'us' }
+        });
+        
+        autocomplete.addListener('place_changed', () => {
+          const place = autocomplete.getPlace();
+          if (place.formatted_address) {
+            input.value = place.formatted_address;
+          }
+        });
+      }
+    };
+
+    loadGooglePlaces();
+  }, []);
+
+  // Handle Enter key press
+  const handleKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      searchLocation();
+    }
+  };
+
+  const searchLocation = async () => {
+    const input = document.getElementById('locationInput');
+    const location = input?.value?.trim() || '';
     
-    // Update the display elements
-    const locationEl = document.getElementById('currentLocation')
-    const treeLevel = document.getElementById('treeLevel')
-    const treeStatus = document.getElementById('treeStatus')
-    const grassLevel = document.getElementById('grassLevel') 
-    const grassStatus = document.getElementById('grassStatus')
-    const weedLevel = document.getElementById('weedLevel')
-    const weedStatus = document.getElementById('weedStatus')
-    const lastUpdated = document.getElementById('lastUpdated')
+    if (!location) {
+      alert('Please enter a location');
+      return;
+    }
+
+    setLoading(true);
     
-    if (locationEl) locationEl.textContent = data.location
-    if (treeLevel) treeLevel.textContent = data.current.tree.level
-    if (treeStatus) treeStatus.textContent = data.current.tree.status
-    if (grassLevel) grassLevel.textContent = data.current.grass.level
-    if (grassStatus) grassStatus.textContent = data.current.grass.status
-    if (weedLevel) weedLevel.textContent = data.current.weed.level
-    if (weedStatus) weedStatus.textContent = data.current.weed.status
-    if (lastUpdated) {
-  const now = new Date()
-  const userTime = now.toLocaleString('en-US', {
-    timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-    month: 'short',
-    day: 'numeric',
-    hour: 'numeric',
-    minute: '2-digit'
-  })
-  lastUpdated.textContent = `Last updated: ${userTime}`
-}
+    try {
+      const response = await fetch(`/api/pollen?location=${encodeURIComponent(location)}`);
+      const data = await response.json();
+      
+      if (response.ok) {
+        setPollenData(data);
+      } else {
+        alert(data.error || 'Unable to fetch pollen data. Please try again.');
+      }
+    } catch (error) {
+      alert('Unable to fetch pollen data. Please try again.');
+    }
+    setLoading(false);
+  };
+
+  // Get pollen level color and advice
+  const getPollenInfo = (level, type) => {
+    const levelNum = parseInt(level) || 0;
     
-  } catch (error) {
-    alert('Unable to fetch pollen data. Please try again.')
-  }
-  setLoading(false)
-}
+    if (levelNum <= 1) {
+      return {
+        color: '#10b981', // Green
+        ring: '0 0 0 4px rgba(16, 185, 129, 0.2)',
+        advice: `Great day for outdoor activities! ${type} pollen is very low.`
+      };
+    } else if (levelNum <= 2) {
+      return {
+        color: '#f59e0b', // Yellow/Orange
+        ring: '0 0 0 4px rgba(245, 158, 11, 0.2)',
+        advice: `Moderate ${type.toLowerCase()} pollen. Consider taking allergy meds if you're sensitive.`
+      };
+    } else {
+      return {
+        color: '#ef4444', // Red
+        ring: '0 0 0 4px rgba(239, 68, 68, 0.2)',
+        advice: `High ${type.toLowerCase()} pollen day! Take precautions if you're allergic.`
+      };
+    }
+  };
+
+  const PollenCard = ({ type, emoji, level, status }) => {
+    const pollenInfo = getPollenInfo(level, type);
+    
+    return (
+      <div style={{
+        background: 'white',
+        borderRadius: '16px',
+        padding: '2rem',
+        textAlign: 'center',
+        boxShadow: '0 8px 25px rgba(0, 0, 0, 0.1)',
+        border: '1px solid #f1f3f4',
+        position: 'relative'
+      }}>
+        <div style={{
+          fontSize: '1.8rem',
+          marginBottom: '1rem'
+        }}>{emoji}</div>
+        <div style={{
+          fontWeight: '600',
+          color: '#2d3748',
+          marginBottom: '1.5rem'
+        }}>{type} Pollen</div>
+        
+        {/* Circular Progress Ring */}
+        <div style={{
+          position: 'relative',
+          width: '80px',
+          height: '80px',
+          margin: '0 auto 1rem'
+        }}>
+          <svg width="80" height="80" style={{ transform: 'rotate(-90deg)' }}>
+            {/* Background circle */}
+            <circle
+              cx="40"
+              cy="40"
+              r="32"
+              fill="none"
+              stroke="#e5e7eb"
+              strokeWidth="6"
+            />
+            {/* Progress circle */}
+            <circle
+              cx="40"
+              cy="40"
+              r="32"
+              fill="none"
+              stroke={pollenInfo.color}
+              strokeWidth="6"
+              strokeDasharray={`${(level/5) * 201.06} 201.06`}
+              strokeLinecap="round"
+            />
+          </svg>
+          <div style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            fontSize: '1.5rem',
+            fontWeight: '800',
+            color: pollenInfo.color
+          }}>
+            {level}
+          </div>
+        </div>
+        
+        <div style={{
+          color: pollenInfo.color,
+          fontWeight: '600',
+          marginBottom: '1rem',
+          textTransform: 'uppercase',
+          fontSize: '0.9rem',
+          letterSpacing: '0.5px'
+        }}>
+          {status}
+        </div>
+        
+        {/* So What Explanation */}
+        <div style={{
+          background: '#f8fafc',
+          padding: '1rem',
+          borderRadius: '8px',
+          fontSize: '0.85rem',
+          color: '#4a5568',
+          lineHeight: '1.4',
+          border: `1px solid ${pollenInfo.color}20`
+        }}>
+          {pollenInfo.advice}
+        </div>
+      </div>
+    );
+  };
 
   return (
     <div style={{
@@ -128,6 +260,7 @@ export default function Home() {
               id="locationInput"
               type="text" 
               placeholder="Enter your ZIP code or city..."
+              onKeyPress={handleKeyPress}
               style={{
                 width: '100%',
                 padding: '1rem 1.5rem',
@@ -144,21 +277,22 @@ export default function Home() {
             />
             <button 
               onClick={searchLocation}
+              disabled={loading}
               style={{
                 position: 'absolute',
                 right: '6px',
                 top: '50%',
                 transform: 'translateY(-50%)',
                 padding: '0.75rem 1.5rem',
-                background: '#007AFF',
+                background: loading ? '#94a3b8' : '#007AFF',
                 color: 'white',
                 border: 'none',
                 borderRadius: '50px',
-                cursor: 'pointer',
+                cursor: loading ? 'not-allowed' : 'pointer',
                 fontWeight: '600'
               }}
             >
-               {loading ? '⏳ Loading...' : '🔍 Search'}
+              {loading ? '⏳ Loading...' : '🔍 Search'}
             </button>
           </div>
         </div>
@@ -174,141 +308,105 @@ export default function Home() {
           padding: '0 20px'
         }}>
           {/* Pollen Data Card */}
-          <div style={{
-            background: 'white',
-            borderRadius: '16px',
-            padding: '2.5rem',
-            marginBottom: '2rem',
-            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)'
-          }}>
+          {pollenData && (
             <div style={{
-              textAlign: 'center',
-              marginBottom: '2rem'
-            }}>
-              <h2 style={{
-                fontSize: '2rem',
-                fontWeight: '700',
-                color: '#2d3748',
-                marginBottom: '0.5rem'
-              }} id="currentLocation">
-                Carmel, Indiana
-              </h2>
-              <p style={{
-                color: '#718096',
-                fontSize: '0.9rem'
-              }} id="lastUpdated">
-                Sample data - API integration coming soon
-              </p>
-            </div>
-
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-              gap: '2rem',
-              margin: '2rem 0'
+              background: 'white',
+              borderRadius: '16px',
+              padding: '2.5rem',
+              marginBottom: '2rem',
+              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)'
             }}>
               <div style={{
-                background: 'white',
-                borderRadius: '16px',
-                padding: '2rem',
                 textAlign: 'center',
-                boxShadow: '0 8px 25px rgba(0, 0, 0, 0.1)',
-                border: '1px solid #f1f3f4'
+                marginBottom: '2rem'
               }}>
-                <div style={{
-                  fontSize: '1.8rem',
-                  marginBottom: '1rem'
-                }}>🌳</div>
-                <div style={{
-                  fontWeight: '600',
+                <h2 style={{
+                  fontSize: '2rem',
+                  fontWeight: '700',
                   color: '#2d3748',
-                  marginBottom: '1rem'
-                }}>Tree Pollen</div>
-                <div style={{
-                  fontSize: '3rem',
-                  fontWeight: '800',
-                  color: '#007AFF',
                   marginBottom: '0.5rem'
-                }} id="treeLevel">
-                  4
-                </div>
-                <div style={{
+                }}>
+                  {pollenData.location}
+                </h2>
+                <p style={{
                   color: '#718096',
-                  fontWeight: '500'
-                }} id="treeStatus">
-                  High
-                </div>
+                  fontSize: '0.9rem'
+                }}>
+                  Last updated: {pollenData.lastUpdated}
+                </p>
               </div>
 
               <div style={{
-                background: 'white',
-                borderRadius: '16px',
-                padding: '2rem',
-                textAlign: 'center',
-                boxShadow: '0 8px 25px rgba(0, 0, 0, 0.1)',
-                border: '1px solid #f1f3f4'
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+                gap: '2rem',
+                margin: '2rem 0'
               }}>
-                <div style={{
-                  fontSize: '1.8rem',
-                  marginBottom: '1rem'
-                }}>🌱</div>
-                <div style={{
-                  fontWeight: '600',
-                  color: '#2d3748',
-                  marginBottom: '1rem'
-                }}>Grass Pollen</div>
-                <div style={{
-                  fontSize: '3rem',
-                  fontWeight: '800',
-                  color: '#007AFF',
-                  marginBottom: '0.5rem'
-                }} id="grassLevel">
-                  2
-                </div>
-                <div style={{
-                  color: '#718096',
-                  fontWeight: '500'
-                }} id="grassLevel">
-                  Low
-                </div>
-              </div>
-
-              <div style={{
-                background: 'white',
-                borderRadius: '16px',
-                padding: '2rem',
-                textAlign: 'center',
-                boxShadow: '0 8px 25px rgba(0, 0, 0, 0.1)',
-                border: '1px solid #f1f3f4'
-              }}>
-                <div style={{
-                  fontSize: '1.8rem',
-                  marginBottom: '1rem'
-                }}>🌿</div>
-                <div style={{
-                  fontWeight: '600',
-                  color: '#2d3748',
-                  marginBottom: '1rem'
-                }}>Weed Pollen</div>
-                <div style={{
-                  fontSize: '3rem',
-                  fontWeight: '800',
-                  color: '#007AFF',
-                  marginBottom: '0.5rem'
-                }} id="weedLevel">
-                  1
-                </div>
-                <div style={{
-                  color: '#718096',
-                  fontWeight: '500'
-                }} id="weedLevel">
-                  Very Low
-                </div>
+                <PollenCard 
+                  type="Tree" 
+                  emoji="🌳" 
+                  level={pollenData.current.tree.level} 
+                  status={pollenData.current.tree.status} 
+                />
+                <PollenCard 
+                  type="Grass" 
+                  emoji="🌱" 
+                  level={pollenData.current.grass.level} 
+                  status={pollenData.current.grass.status} 
+                />
+                <PollenCard 
+                  type="Weed" 
+                  emoji="🌿" 
+                  level={pollenData.current.weed.level} 
+                  status={pollenData.current.weed.status} 
+                />
               </div>
             </div>
-          </div>
+          )}
 
-          {/* Data Sources */}
+          {/* Show sample data if no real data loaded */}
+          {!pollenData && (
+            <div style={{
+              background: 'white',
+              borderRadius: '16px',
+              padding: '2.5rem',
+              marginBottom: '2rem',
+              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)'
+            }}>
+              <div style={{
+                textAlign: 'center',
+                marginBottom: '2rem'
+              }}>
+                <h2 style={{
+                  fontSize: '2rem',
+                  fontWeight: '700',
+                  color: '#2d3748',
+                  marginBottom: '0.5rem'
+                }}>
+                  Carmel, Indiana
+                </h2>
+                <p style={{
+                  color: '#718096',
+                  fontSize: '0.9rem'
+                }}>
+                  Sample data - Enter a location to see real pollen levels
+                </p>
+              </div>
+
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+                gap: '2rem',
+                margin: '2rem 0'
+              }}>
+                <PollenCard type="Tree" emoji="🌳" level="4" status="High" />
+                <PollenCard type="Grass" emoji="🌱" level="2" status="Low" />
+                <PollenCard type="Weed" emoji="🌿" level="1" status="Very Low" />
+              </div>
+            </div>
+          )}
+
+          {/* Rest of your existing content (Data Sources, How It Works, Coming Soon) */}
           <div style={{
             background: 'white',
             borderRadius: '16px',
@@ -435,7 +533,7 @@ export default function Home() {
                   color: '#718096',
                   lineHeight: '1.6'
                 }}>
-                  See current levels for tree, grass, and weed pollen with easy-to-understand severity ratings.
+                  See current levels for tree, grass, and weed pollen with easy-to-understand visual indicators.
                 </p>
               </div>
               
@@ -457,12 +555,12 @@ export default function Home() {
                   color: '#2d3748',
                   marginBottom: '0.5rem',
                   fontSize: '1.2rem'
-                }}>3. Plan Your Day</h4>
+                }}>3. Get Personalized Advice</h4>
                 <p style={{
                   color: '#718096',
                   lineHeight: '1.6'
                 }}>
-                  Make informed decisions about outdoor activities, medication timing, and allergy management.
+                  Receive actionable recommendations for outdoor activities, medication timing, and allergy management.
                 </p>
               </div>
             </div>
@@ -481,14 +579,14 @@ export default function Home() {
               fontWeight: '700',
               marginBottom: '1rem'
             }}>
-              Coming Soon: Real-Time Data
+              Coming Soon: 5-Day Forecasts & Email Alerts
             </h2>
             <p style={{
               fontSize: '1.1rem',
               opacity: 0.9,
               marginBottom: '2rem'
             }}>
-              We're integrating live pollen data to give you accurate, up-to-date information for your area.
+              Plan your week ahead with extended forecasts and never miss a high pollen day again.
             </p>
             <div style={{
               background: 'rgba(255, 255, 255, 0.15)',
@@ -497,7 +595,7 @@ export default function Home() {
               display: 'inline-block',
               fontWeight: '600'
             }}>
-              📧 Email alerts • 📊 Historical trends • 🎯 Personal triggers
+              📧 Email alerts • 📅 5-day forecasts • 🎯 Personal triggers
             </div>
           </div>
         </div>
