@@ -13,6 +13,7 @@ export default function Home() {
   const [pollenData, setPollenData] = useState(null)
   const [loading, setLoading] = useState(false)
   const [hasSearched, setHasSearched] = useState(false)
+  const [forecastData, setForecastData] = useState(null)
 
   // Load Google Places API - simplified approach
   useEffect(() => {
@@ -38,6 +39,9 @@ export default function Home() {
       if (response.ok) {
         setPollenData(data)
         setHasSearched(true)
+        if (data.forecast) {
+          setForecastData(data.forecast)
+        }
         updateDisplay(data)
       } else {
         alert(data.error || 'Unable to fetch pollen data. Please try again.')
@@ -690,41 +694,110 @@ export default function Home() {
                   scrollbarWidth: 'thin',
                   scrollbarColor: '#cbd5e0 #f7fafc'
                 }} className="forecast-container" id="forecastContainer">
-                  {/* Sample forecast cards */}
-                  <div style={{
-                    background: 'white',
-                    borderRadius: '12px',
-                    padding: '1.5rem 1rem',
-                    textAlign: 'center',
-                    boxShadow: '0 4px 15px rgba(0, 0, 0, 0.05)',
-                    border: '1px solid #f1f3f4',
-                    minWidth: '120px'
-                  }}>
-                    <div style={{ fontWeight: '600', color: '#2d3748', marginBottom: '0.5rem', fontSize: '0.9rem' }}>
-                      Today
-                    </div>
-                    <div style={{ fontSize: '0.75rem', color: '#718096', marginBottom: '1rem' }}>
-                      Jul 5
-                    </div>
+                  {forecastData ? forecastData.map((day, index) => {
+                    let date;
+                    let dateDisplay = 'Invalid Date';
+                    
+                    if (day.date && typeof day.date === 'object' && day.date.year) {
+                      date = new Date(day.date.year, day.date.month - 1, day.date.day)
+                    } else if (day.date && typeof day.date === 'string') {
+                      date = new Date(day.date)
+                    } else {
+                      date = new Date()
+                      date.setDate(date.getDate() + index)
+                    }
+
+                    if (!isNaN(date.getTime())) {
+                      dateDisplay = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+                    }
+
+                    const dayName = index === 0 ? 'Today' : (isNaN(date.getTime()) ? 'Day ' + (index + 1) : date.toLocaleDateString('en-US', { weekday: 'short' }))
+                    const maxLevel = Math.max(
+                      parseInt(day.tree?.level) || 0,
+                      parseInt(day.grass?.level) || 0,
+                      parseInt(day.weed?.level) || 0
+                    )
+                    
+                    let color = '#9ca3af'
+                    if (maxLevel === 1) color = '#10b981'
+                    else if (maxLevel === 2) color = '#f59e0b'
+                    else if (maxLevel === 3) color = '#ef4444'
+                    else if (maxLevel >= 4) color = '#7c2d12'
+
+                    return (
+                      <div key={index} style={{
+                        background: 'white',
+                        borderRadius: '12px',
+                        padding: '1.5rem 1rem',
+                        textAlign: 'center',
+                        boxShadow: '0 4px 15px rgba(0, 0, 0, 0.05)',
+                        border: '1px solid #f1f3f4',
+                        minWidth: '120px'
+                      }}>
+                        <div style={{ fontWeight: '600', color: '#2d3748', marginBottom: '0.5rem', fontSize: '0.9rem' }}>
+                          {dayName}
+                        </div>
+                        <div style={{ fontSize: '0.75rem', color: '#718096', marginBottom: '1rem' }}>
+                          {dateDisplay}
+                        </div>
+                        <div style={{
+                          width: '40px',
+                          height: '40px',
+                          borderRadius: '50%',
+                          background: color,
+                          color: 'white',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontWeight: 'bold',
+                          margin: '0 auto 0.5rem',
+                          fontSize: '1.1rem'
+                        }}>
+                          {maxLevel}
+                        </div>
+                        <div style={{ fontSize: '0.75rem', color: '#4a5568', lineHeight: '1.3' }}>
+                          Tree: {day.tree?.level || 0}<br/>
+                          Grass: {day.grass?.level || 0}<br/>
+                          Weed: {day.weed?.level || 0}
+                        </div>
+                      </div>
+                    )
+                  }) : (
                     <div style={{
-                      width: '40px',
-                      height: '40px',
-                      borderRadius: '50%',
-                      background: '#9ca3af',
-                      color: 'white',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      fontWeight: 'bold',
-                      margin: '0 auto 0.5rem',
-                      fontSize: '1.1rem'
+                      background: 'white',
+                      borderRadius: '12px',
+                      padding: '1.5rem 1rem',
+                      textAlign: 'center',
+                      boxShadow: '0 4px 15px rgba(0, 0, 0, 0.05)',
+                      border: '1px solid #f1f3f4',
+                      minWidth: '120px'
                     }}>
-                      0
+                      <div style={{ fontWeight: '600', color: '#2d3748', marginBottom: '0.5rem', fontSize: '0.9rem' }}>
+                        Today
+                      </div>
+                      <div style={{ fontSize: '0.75rem', color: '#718096', marginBottom: '1rem' }}>
+                        Jul 5
+                      </div>
+                      <div style={{
+                        width: '40px',
+                        height: '40px',
+                        borderRadius: '50%',
+                        background: '#9ca3af',
+                        color: 'white',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontWeight: 'bold',
+                        margin: '0 auto 0.5rem',
+                        fontSize: '1.1rem'
+                      }}>
+                        0
+                      </div>
+                      <div style={{ fontSize: '0.75rem', color: '#4a5568', lineHeight: '1.3' }}>
+                        Tree: 0<br/>Grass: 0<br/>Weed: 0
+                      </div>
                     </div>
-                    <div style={{ fontSize: '0.75rem', color: '#4a5568', lineHeight: '1.3' }}>
-                      Tree: 0<br/>Grass: 0<br/>Weed: 0
-                    </div>
-                  </div>
+                  )}
                 </div>
               </div>
             )}
