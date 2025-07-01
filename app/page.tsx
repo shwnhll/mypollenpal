@@ -6,24 +6,44 @@ export default function Home() {
   const [loading, setLoading] = useState(false)
 
   const searchLocation = async () => {
-    const input = document.getElementById('locationInput') as HTMLInputElement
-    const location = input?.value?.trim() || ''
-    
-    if (!location) {
-      alert('Please enter a location')
-      return
-    }
-
-    setLoading(true)
-    try {
-      const response = await fetch(`/api/pollen?location=${encodeURIComponent(location)}`)
-      const data = await response.json()
-      setPollenData(data)
-    } catch (error) {
-      alert('Unable to fetch pollen data. Please try again.')
-    }
-    setLoading(false)
+  const input = document.getElementById('locationInput') as HTMLInputElement
+  const location = input?.value?.trim() || ''
+  
+  if (!location) {
+    alert('Please enter a location')
+    return
   }
+
+  setLoading(true)
+  
+  try {
+    const response = await fetch(`/api/pollen?location=${encodeURIComponent(location)}`)
+    const data = await response.json()
+    
+    // Update the display elements
+    const locationEl = document.getElementById('currentLocation')
+    const treeLevel = document.getElementById('treeLevel')
+    const treeStatus = document.getElementById('treeStatus')
+    const grassLevel = document.getElementById('grassLevel') 
+    const grassStatus = document.getElementById('grassStatus')
+    const weedLevel = document.getElementById('weedLevel')
+    const weedStatus = document.getElementById('weedStatus')
+    const lastUpdated = document.getElementById('lastUpdated')
+    
+    if (locationEl) locationEl.textContent = data.location
+    if (treeLevel) treeLevel.textContent = data.current.tree.level
+    if (treeStatus) treeStatus.textContent = data.current.tree.status
+    if (grassLevel) grassLevel.textContent = data.current.grass.level
+    if (grassStatus) grassStatus.textContent = data.current.grass.status
+    if (weedLevel) weedLevel.textContent = data.current.weed.level
+    if (weedStatus) weedStatus.textContent = data.current.weed.status
+    if (lastUpdated) lastUpdated.textContent = `Last updated: ${data.lastUpdated}`
+    
+  } catch (error) {
+    alert('Unable to fetch pollen data. Please try again.')
+  }
+  setLoading(false)
+}
 
   return (
     <div style={{
