@@ -180,13 +180,13 @@ export default function Home() {
                 fontWeight: '700',
                 color: '#2d3748',
                 marginBottom: '0.5rem'
-              }}>
+              }} id="currentLocation">
                 Carmel, Indiana
               </h2>
               <p style={{
                 color: '#718096',
                 fontSize: '0.9rem'
-              }}>
+              }} id="lastUpdated">
                 Sample data - API integration coming soon
               </p>
             </div>
@@ -219,11 +219,15 @@ export default function Home() {
                   fontWeight: '800',
                   color: '#007AFF',
                   marginBottom: '0.5rem'
-                }}>4</div>
+                }} id="treeLevel">
+                  4
+                </div>
                 <div style={{
                   color: '#718096',
                   fontWeight: '500'
-                }}>High</div>
+                }} id="treeStatus">
+                  High
+                </div>
               </div>
 
               <div style={{
@@ -248,11 +252,15 @@ export default function Home() {
                   fontWeight: '800',
                   color: '#007AFF',
                   marginBottom: '0.5rem'
-                }}>2</div>
+                }} id="grassLevel">
+                  2
+                </div>
                 <div style={{
                   color: '#718096',
                   fontWeight: '500'
-                }}>Low</div>
+                }} id="grassLevel">
+                  Low
+                </div>
               </div>
 
               <div style={{
@@ -277,11 +285,15 @@ export default function Home() {
                   fontWeight: '800',
                   color: '#007AFF',
                   marginBottom: '0.5rem'
-                }}>1</div>
+                }} id="weedLevel">
+                  1
+                </div>
                 <div style={{
                   color: '#718096',
                   fontWeight: '500'
-                }}>Very Low</div>
+                }} id="weedLevel">
+                  Very Low
+                </div>
               </div>
             </div>
           </div>
