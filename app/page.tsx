@@ -1,13 +1,6 @@
-import Head from 'next/head'
-
 export default function Home() {
   return (
-    <>
-      <Head>
-        <title>MyPollenPal - Daily Pollen Levels & Allergy Tracking</title>
-        <meta name="description" content="Check daily pollen levels by ZIP code. Get real-time tree, grass, and weed pollen data to manage your allergies better." />
-      </Head>
-      <div style={{
+    <div style={{
       fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
       background: '#f8f9fa',
       color: '#2d3748',
@@ -60,13 +53,6 @@ export default function Home() {
             Is your pollen level safe today?
           </h1>
           <p style={{
-            fontSize: '1.3rem',
-            marginBottom: '0.5rem',
-            opacity: 0.9
-          }}>
-            Pollen tracking for real life
-          </p>
-          <p style={{
             fontSize: '1.1rem',
             marginBottom: '3rem',
             opacity: 0.8,
@@ -77,7 +63,7 @@ export default function Home() {
             One click to find out exactly what's in your air, anywhere in the United States. Your personal pollen companion.
           </p>
 
-<div style={{
+          <div style={{
             maxWidth: '500px',
             margin: '0 auto',
             position: 'relative'
@@ -100,19 +86,22 @@ export default function Home() {
                 boxSizing: 'border-box'
               }}
             />
-            <button style={{
-              position: 'absolute',
-              right: '6px',
-              top: '50%',
-              transform: 'translateY(-50%)',
-              padding: '0.75rem 1.5rem',
-              background: '#007AFF',
-              color: 'white',
-              border: 'none',
-              borderRadius: '50px',
-              cursor: 'pointer',
-              fontWeight: '600'
-            }}>
+            <button 
+              onClick={() => alert('API integration coming next!')}
+              style={{
+                position: 'absolute',
+                right: '6px',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                padding: '0.75rem 1.5rem',
+                background: '#007AFF',
+                color: 'white',
+                border: 'none',
+                borderRadius: '50px',
+                cursor: 'pointer',
+                fontWeight: '600'
+              }}
+            >
               🔍 Search
             </button>
           </div>
@@ -145,14 +134,14 @@ export default function Home() {
                 fontWeight: '700',
                 color: '#2d3748',
                 marginBottom: '0.5rem'
-              }} id="currentLocation">
+              }}>
                 Carmel, Indiana
               </h2>
               <p style={{
                 color: '#718096',
                 fontSize: '0.9rem'
-              }} id="lastUpdated">
-                Last updated: Today at 12:00 PM
+              }}>
+                Sample data - API integration coming soon
               </p>
             </div>
 
@@ -184,13 +173,11 @@ export default function Home() {
                   fontWeight: '800',
                   color: '#007AFF',
                   marginBottom: '0.5rem'
-                }} id="treeLevel">
-                  4</div>
+                }}>4</div>
                 <div style={{
                   color: '#718096',
                   fontWeight: '500'
-                }} id="treeStatus">
-                  High</div>
+                }}>High</div>
               </div>
 
               <div style={{
@@ -215,13 +202,11 @@ export default function Home() {
                   fontWeight: '800',
                   color: '#007AFF',
                   marginBottom: '0.5rem'
-                }} id="grassLevel">
-                  2</div>
+                }}>2</div>
                 <div style={{
                   color: '#718096',
                   fontWeight: '500'
-                }} id="grassStatus">
-                  Low</div>
+                }}>Low</div>
               </div>
 
               <div style={{
@@ -246,13 +231,11 @@ export default function Home() {
                   fontWeight: '800',
                   color: '#007AFF',
                   marginBottom: '0.5rem'
-                }} id="weedLevel">
-                  1</div>
+                }}>1</div>
                 <div style={{
                   color: '#718096',
                   fontWeight: '500'
-                }} id="weedStatus">
-                  Very Low</div>
+                }}>Very Low</div>
               </div>
             </div>
           </div>
@@ -313,109 +296,109 @@ export default function Home() {
             </div>
           </div>
 
-{/* How It Works */}
-<div style={{
-  background: '#f8fafc',
-  borderRadius: '16px',
-  padding: '3rem 2rem',
-  marginBottom: '2rem'
-}}>
-  <h3 style={{
-    fontSize: '2rem',
-    fontWeight: '700',
-    color: '#2d3748',
-    marginBottom: '3rem',
-    textAlign: 'center'
-  }}>
-    How MyPollenPal Works
-  </h3>
-  <div style={{
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-    gap: '2rem'
-  }}>
-    <div style={{ textAlign: 'center' }}>
-      <div style={{
-        width: '60px',
-        height: '60px',
-        background: '#007AFF',
-        borderRadius: '50%',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        fontSize: '1.8rem',
-        color: 'white',
-        margin: '0 auto 1rem'
-      }}>📍</div>
-      <h4 style={{
-        fontWeight: '700',
-        color: '#2d3748',
-        marginBottom: '0.5rem',
-        fontSize: '1.2rem'
-      }}>1. Enter Your Location</h4>
-      <p style={{
-        color: '#718096',
-        lineHeight: '1.6'
-      }}>
-        Simply enter your ZIP code or city to get hyperlocal pollen data for your exact area.
-      </p>
-    </div>
-    
-    <div style={{ textAlign: 'center' }}>
-      <div style={{
-        width: '60px',
-        height: '60px',
-        background: '#007AFF',
-        borderRadius: '50%',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        fontSize: '1.8rem',
-        color: 'white',
-        margin: '0 auto 1rem'
-      }}>📊</div>
-      <h4 style={{
-        fontWeight: '700',
-        color: '#2d3748',
-        marginBottom: '0.5rem',
-        fontSize: '1.2rem'
-      }}>2. Check Pollen Levels</h4>
-      <p style={{
-        color: '#718096',
-        lineHeight: '1.6'
-      }}>
-        See current levels for tree, grass, and weed pollen with easy-to-understand severity ratings.
-      </p>
-    </div>
-    
-    <div style={{ textAlign: 'center' }}>
-      <div style={{
-        width: '60px',
-        height: '60px',
-        background: '#007AFF',
-        borderRadius: '50%',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        fontSize: '1.8rem',
-        color: 'white',
-        margin: '0 auto 1rem'
-      }}>🎯</div>
-      <h4 style={{
-        fontWeight: '700',
-        color: '#2d3748',
-        marginBottom: '0.5rem',
-        fontSize: '1.2rem'
-      }}>3. Plan Your Day</h4>
-      <p style={{
-        color: '#718096',
-        lineHeight: '1.6'
-      }}>
-        Make informed decisions about outdoor activities, medication timing, and allergy management.
-      </p>
-    </div>
-  </div>
-</div>
+          {/* How It Works */}
+          <div style={{
+            background: '#f8fafc',
+            borderRadius: '16px',
+            padding: '3rem 2rem',
+            marginBottom: '2rem'
+          }}>
+            <h3 style={{
+              fontSize: '2rem',
+              fontWeight: '700',
+              color: '#2d3748',
+              marginBottom: '3rem',
+              textAlign: 'center'
+            }}>
+              How MyPollenPal Works
+            </h3>
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+              gap: '2rem'
+            }}>
+              <div style={{ textAlign: 'center' }}>
+                <div style={{
+                  width: '60px',
+                  height: '60px',
+                  background: '#007AFF',
+                  borderRadius: '50%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '1.8rem',
+                  color: 'white',
+                  margin: '0 auto 1rem'
+                }}>📍</div>
+                <h4 style={{
+                  fontWeight: '700',
+                  color: '#2d3748',
+                  marginBottom: '0.5rem',
+                  fontSize: '1.2rem'
+                }}>1. Enter Your Location</h4>
+                <p style={{
+                  color: '#718096',
+                  lineHeight: '1.6'
+                }}>
+                  Simply enter your ZIP code or city to get hyperlocal pollen data for your exact area.
+                </p>
+              </div>
+              
+              <div style={{ textAlign: 'center' }}>
+                <div style={{
+                  width: '60px',
+                  height: '60px',
+                  background: '#007AFF',
+                  borderRadius: '50%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '1.8rem',
+                  color: 'white',
+                  margin: '0 auto 1rem'
+                }}>📊</div>
+                <h4 style={{
+                  fontWeight: '700',
+                  color: '#2d3748',
+                  marginBottom: '0.5rem',
+                  fontSize: '1.2rem'
+                }}>2. Check Pollen Levels</h4>
+                <p style={{
+                  color: '#718096',
+                  lineHeight: '1.6'
+                }}>
+                  See current levels for tree, grass, and weed pollen with easy-to-understand severity ratings.
+                </p>
+              </div>
+              
+              <div style={{ textAlign: 'center' }}>
+                <div style={{
+                  width: '60px',
+                  height: '60px',
+                  background: '#007AFF',
+                  borderRadius: '50%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '1.8rem',
+                  color: 'white',
+                  margin: '0 auto 1rem'
+                }}>🎯</div>
+                <h4 style={{
+                  fontWeight: '700',
+                  color: '#2d3748',
+                  marginBottom: '0.5rem',
+                  fontSize: '1.2rem'
+                }}>3. Plan Your Day</h4>
+                <p style={{
+                  color: '#718096',
+                  lineHeight: '1.6'
+                }}>
+                  Make informed decisions about outdoor activities, medication timing, and allergy management.
+                </p>
+              </div>
+            </div>
+          </div>
           
           {/* Coming Soon */}
           <div style={{
@@ -452,10 +435,5 @@ export default function Home() {
         </div>
       </section>
     </div>
-    
-  </div>
-      </section>
-    </div>
-    </>
   )
 }
