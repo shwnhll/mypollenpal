@@ -37,7 +37,17 @@ export default function Home() {
     if (grassStatus) grassStatus.textContent = data.current.grass.status
     if (weedLevel) weedLevel.textContent = data.current.weed.level
     if (weedStatus) weedStatus.textContent = data.current.weed.status
-    if (lastUpdated) lastUpdated.textContent = `Last updated: ${data.lastUpdated}`
+    if (lastUpdated) {
+  const now = new Date()
+  const userTime = now.toLocaleString('en-US', {
+    timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+    month: 'short',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit'
+  })
+  lastUpdated.textContent = `Last updated: ${userTime}`
+}
     
   } catch (error) {
     alert('Unable to fetch pollen data. Please try again.')
