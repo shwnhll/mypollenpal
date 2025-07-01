@@ -6,7 +6,7 @@ export default function Home() {
   const [loading, setLoading] = useState(false)
 
   // Handle Enter key press
-  const handleKeyPress = (event) => {
+  const handleKeyPress = (event: any) => {
     if (event.key === 'Enter') {
       searchLocation();
     }
@@ -39,7 +39,7 @@ export default function Home() {
   };
 
   // Get pollen level color and advice
-  const getPollenInfo = (level, type) => {
+  const getPollenInfo = (level: any, type: any) => {
     const levelNum = parseInt(level) || 0;
     
     if (levelNum <= 1) {
@@ -60,7 +60,7 @@ export default function Home() {
     }
   };
 
-  const PollenCard = ({ type, emoji, level, status }) => {
+  const PollenCard = ({ type, emoji, level, status }: any) => {
     const pollenInfo = getPollenInfo(level, type);
     
     return (
