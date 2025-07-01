@@ -236,6 +236,11 @@ export default function Home() {
             grid-template-columns: 1fr;
             gap: 1.5rem;
           }
+          
+          .pollen-cards-grid > div {
+            max-width: none;
+            padding: 1.5rem 1rem;
+          }
         }
       `}</style>
       {/* Header */}
@@ -637,67 +642,65 @@ export default function Home() {
                 Severe pollen levels! Stay indoors if possible and take allergy medication.
               </div>
             </div>
-          </div>
 
-          {/* 5-Day Forecast */}
-          <div style={{
-            background: 'white',
-            borderRadius: '16px',
-            padding: '2.5rem',
-            marginBottom: '2rem',
-            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)'
-          }}>
-            <h3 style={{
-              fontSize: '1.5rem',
-              fontWeight: '700',
-              color: '#2d3748',
-              marginBottom: '2rem',
-              textAlign: 'center'
-            }}>
-              📅 5-Day Pollen Forecast
-            </h3>
-            <div style={{
-              display: 'flex',
-              gap: '1rem',
-              overflowX: 'auto',
-              padding: '0.5rem 0'
-            }} id="forecastContainer">
-              {/* Sample forecast cards */}
+            {/* 5-Day Forecast - only show after search */}
+            {pollenData && (
               <div style={{
-                background: 'white',
-                borderRadius: '12px',
-                padding: '1.5rem 1rem',
-                textAlign: 'center',
-                boxShadow: '0 4px 15px rgba(0, 0, 0, 0.05)',
-                border: '1px solid #f1f3f4',
-                minWidth: '120px'
+                marginTop: '2rem'
               }}>
-                <div style={{ fontWeight: '600', color: '#2d3748', marginBottom: '0.5rem', fontSize: '0.9rem' }}>
-                  Today
-                </div>
-                <div style={{ fontSize: '0.75rem', color: '#718096', marginBottom: '1rem' }}>
-                  Jul 5
-                </div>
-                <div style={{
-                  width: '40px',
-                  height: '40px',
-                  borderRadius: '50%',
-                  background: '#9ca3af',
-                  color: 'white',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontWeight: 'bold',
-                  margin: '0 auto 0.5rem',
-                  fontSize: '1.1rem'
+                <h3 style={{
+                  fontSize: '1.5rem',
+                  fontWeight: '700',
+                  color: '#2d3748',
+                  marginBottom: '2rem',
+                  textAlign: 'center'
                 }}>
-                  0
-                </div>
-                <div style={{ fontSize: '0.75rem', color: '#4a5568', lineHeight: '1.3' }}>
-                  Tree: 0<br/>Grass: 0<br/>Weed: 0
+                  📅 5-Day Pollen Forecast
+                </h3>
+                <div style={{
+                  display: 'flex',
+                  gap: '1rem',
+                  overflowX: 'auto',
+                  padding: '0.5rem 0'
+                }} id="forecastContainer">
+                  {/* Sample forecast cards */}
+                  <div style={{
+                    background: 'white',
+                    borderRadius: '12px',
+                    padding: '1.5rem 1rem',
+                    textAlign: 'center',
+                    boxShadow: '0 4px 15px rgba(0, 0, 0, 0.05)',
+                    border: '1px solid #f1f3f4',
+                    minWidth: '120px'
+                  }}>
+                    <div style={{ fontWeight: '600', color: '#2d3748', marginBottom: '0.5rem', fontSize: '0.9rem' }}>
+                      Today
+                    </div>
+                    <div style={{ fontSize: '0.75rem', color: '#718096', marginBottom: '1rem' }}>
+                      Jul 5
+                    </div>
+                    <div style={{
+                      width: '40px',
+                      height: '40px',
+                      borderRadius: '50%',
+                      background: '#9ca3af',
+                      color: 'white',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontWeight: 'bold',
+                      margin: '0 auto 0.5rem',
+                      fontSize: '1.1rem'
+                    }}>
+                      0
+                    </div>
+                    <div style={{ fontSize: '0.75rem', color: '#4a5568', lineHeight: '1.3' }}>
+                      Tree: 0<br/>Grass: 0<br/>Weed: 0
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
           </div>
 
           {/* Data Sources */}
