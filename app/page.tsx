@@ -6,8 +6,8 @@ export default function Home() {
   const [loading, setLoading] = useState(false)
 
   const searchLocation = async () => {
-    const input = document.getElementById('locationInput')
-    const location = input.value.trim()
+    const input = document.getElementById('locationInput') as HTMLInputElement
+    const location = input?.value?.trim() || ''
     
     if (!location) {
       alert('Please enter a location')
