@@ -13,56 +13,14 @@ export default function Home() {
   const [pollenData, setPollenData] = useState(null)
   const [loading, setLoading] = useState(false)
 
-  // Load Google Places API
+  // Load Google Places API - simplified approach
   useEffect(() => {
-    // For now, let's disable autocomplete to avoid the error icons
-    // We can add it back once we confirm the basic functionality works
+    // Skip autocomplete for now to focus on core functionality
+    // We can add this back once everything else is working perfectly
     
-    // Uncomment below when ready to test autocomplete again:
-    /*
-    const loadGooglePlaces = () => {
-      if (typeof window !== 'undefined' && window.google && window.google.maps && window.google.maps.places) {
-        initializeAutocomplete();
-        return;
-      }
-
-      if (!process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY) {
-        console.log('Google Places API key not found');
-        return;
-      }
-
-      const script = document.createElement('script');
-      script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY}&libraries=places`;
-      script.async = true;
-      script.defer = true;
-      script.onload = initializeAutocomplete;
-      script.onerror = () => console.error('Failed to load Google Places API');
-      document.head.appendChild(script);
-    };
-
-    const initializeAutocomplete = () => {
-      const input = document.getElementById('locationInput') as HTMLInputElement;
-      if (input && window.google && window.google.maps && window.google.maps.places) {
-        try {
-          const autocomplete = new window.google.maps.places.Autocomplete(input, {
-            types: ['(cities)'],
-            componentRestrictions: { country: 'us' }
-          });
-          
-          autocomplete.addListener('place_changed', () => {
-            const place = autocomplete.getPlace();
-            if (place.formatted_address) {
-              input.value = place.formatted_address;
-            }
-          });
-        } catch (error) {
-          console.error('Error initializing autocomplete:', error);
-        }
-      }
-    };
-
-    loadGooglePlaces();
-    */
+    // Simple manual implementation without Google Places:
+    // Users can still type ZIP codes and city names manually
+    
   }, []);
 
   const searchLocation = async () => {
