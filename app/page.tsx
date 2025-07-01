@@ -5,152 +5,59 @@ export default function Home() {
   const [pollenData, setPollenData] = useState(null)
   const [loading, setLoading] = useState(false)
 
-  // Handle Enter key press
-  const handleKeyPress = (event: any) => {
-    if (event.key === 'Enter') {
-      searchLocation();
-    }
-  };
-
   const searchLocation = async () => {
-    const input = document.getElementById('locationInput');
-    const location = input?.value?.trim() || '';
+    const input = document.getElementById('locationInput') as HTMLInputElement
+    const location = input?.value?.trim() || ''
     
     if (!location) {
-      alert('Please enter a location');
-      return;
+      alert('Please enter a location')
+      return
     }
 
-    setLoading(true);
+    setLoading(true)
     
     try {
-      const response = await fetch(`/api/pollen?location=${encodeURIComponent(location)}`);
-      const data = await response.json();
+      const response = await fetch(`/api/pollen?location=${encodeURIComponent(location)}`)
+      const data = await response.json()
       
       if (response.ok) {
-        setPollenData(data);
+        setPollenData(data)
       } else {
-        alert(data.error || 'Unable to fetch pollen data. Please try again.');
+        alert('Unable to fetch pollen data. Please try again.')
       }
     } catch (error) {
-      alert('Unable to fetch pollen data. Please try again.');
+      alert('Unable to fetch pollen data. Please try again.')
     }
-    setLoading(false);
-  };
+    setLoading(false)
+  }
 
-  // Get pollen level color and advice
-  const getPollenInfo = (level: any, type: any) => {
-    const levelNum = parseInt(level) || 0;
+  // Handle Enter key press
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      searchLocation()
+    }
+  }
+
+  // Get pollen info for visual display
+  const getPollenDisplay = (level: number | string, status: string) => {
+    const levelNum = parseInt(level?.toString() || '0')
+    
+    let color = '#10b981' // Green
+    let advice = 'Great day for outdoor activities!'
     
     if (levelNum <= 1) {
-      return {
-        color: '#10b981', // Green
-        advice: `Great day for outdoor activities! ${type} pollen is very low.`
-      };
+      color = '#10b981' // Green
+      advice = 'Great day for outdoor activities! Very low pollen.'
     } else if (levelNum <= 2) {
-      return {
-        color: '#f59e0b', // Yellow/Orange
-        advice: `Moderate ${type.toLowerCase()} pollen. Consider taking allergy meds if you're sensitive.`
-      };
+      color = '#f59e0b' // Yellow
+      advice = 'Moderate pollen. Consider allergy meds if sensitive.'
     } else {
-      return {
-        color: '#ef4444', // Red
-        advice: `High ${type.toLowerCase()} pollen day! Take precautions if you're allergic.`
-      };
+      color = '#ef4444' // Red  
+      advice = 'High pollen day! Take precautions if allergic.'
     }
-  };
 
-  const PollenCard = ({ type, emoji, level, status }: any) => {
-    const pollenInfo = getPollenInfo(level, type);
-    
-    return (
-      <div style={{
-        background: 'white',
-        borderRadius: '16px',
-        padding: '2rem',
-        textAlign: 'center',
-        boxShadow: '0 8px 25px rgba(0, 0, 0, 0.1)',
-        border: '1px solid #f1f3f4',
-        position: 'relative'
-      }}>
-        <div style={{
-          fontSize: '1.8rem',
-          marginBottom: '1rem'
-        }}>{emoji}</div>
-        <div style={{
-          fontWeight: '600',
-          color: '#2d3748',
-          marginBottom: '1.5rem'
-        }}>{type} Pollen</div>
-        
-        {/* Circular Progress Ring */}
-        <div style={{
-          position: 'relative',
-          width: '80px',
-          height: '80px',
-          margin: '0 auto 1rem'
-        }}>
-          <svg width="80" height="80" style={{ transform: 'rotate(-90deg)' }}>
-            {/* Background circle */}
-            <circle
-              cx="40"
-              cy="40"
-              r="32"
-              fill="none"
-              stroke="#e5e7eb"
-              strokeWidth="6"
-            />
-            {/* Progress circle */}
-            <circle
-              cx="40"
-              cy="40"
-              r="32"
-              fill="none"
-              stroke={pollenInfo.color}
-              strokeWidth="6"
-              strokeDasharray={`${(level/5) * 201.06} 201.06`}
-              strokeLinecap="round"
-            />
-          </svg>
-          <div style={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            fontSize: '1.5rem',
-            fontWeight: '800',
-            color: pollenInfo.color
-          }}>
-            {level}
-          </div>
-        </div>
-        
-        <div style={{
-          color: pollenInfo.color,
-          fontWeight: '600',
-          marginBottom: '1rem',
-          textTransform: 'uppercase',
-          fontSize: '0.9rem',
-          letterSpacing: '0.5px'
-        }}>
-          {status}
-        </div>
-        
-        {/* So What Explanation */}
-        <div style={{
-          background: '#f8fafc',
-          padding: '1rem',
-          borderRadius: '8px',
-          fontSize: '0.85rem',
-          color: '#4a5568',
-          lineHeight: '1.4',
-          border: `1px solid ${pollenInfo.color}20`
-        }}>
-          {pollenInfo.advice}
-        </div>
-      </div>
-    );
-  };
+    return { color, advice, levelNum }
+  }
 
   return (
     <div style={{
@@ -242,22 +149,21 @@ export default function Home() {
             />
             <button 
               onClick={searchLocation}
-              disabled={loading}
               style={{
                 position: 'absolute',
                 right: '6px',
                 top: '50%',
                 transform: 'translateY(-50%)',
                 padding: '0.75rem 1.5rem',
-                background: loading ? '#94a3b8' : '#007AFF',
+                background: '#007AFF',
                 color: 'white',
                 border: 'none',
                 borderRadius: '50px',
-                cursor: loading ? 'not-allowed' : 'pointer',
+                cursor: 'pointer',
                 fontWeight: '600'
               }}
             >
-              {loading ? '⏳ Loading...' : '🔍 Search'}
+               {loading ? '⏳ Loading...' : '🔍 Search'}
             </button>
           </div>
         </div>
@@ -273,103 +179,197 @@ export default function Home() {
           padding: '0 20px'
         }}>
           {/* Pollen Data Card */}
-          {pollenData && (
+          <div style={{
+            background: 'white',
+            borderRadius: '16px',
+            padding: '2.5rem',
+            marginBottom: '2rem',
+            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)'
+          }}>
             <div style={{
-              background: 'white',
-              borderRadius: '16px',
-              padding: '2.5rem',
-              marginBottom: '2rem',
-              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)'
+              textAlign: 'center',
+              marginBottom: '2rem'
             }}>
-              <div style={{
-                textAlign: 'center',
-                marginBottom: '2rem'
+              <h2 style={{
+                fontSize: '2rem',
+                fontWeight: '700',
+                color: '#2d3748',
+                marginBottom: '0.5rem'
               }}>
-                <h2 style={{
-                  fontSize: '2rem',
-                  fontWeight: '700',
-                  color: '#2d3748',
-                  marginBottom: '0.5rem'
-                }}>
-                  {pollenData.location}
-                </h2>
-                <p style={{
-                  color: '#718096',
-                  fontSize: '0.9rem'
-                }}>
-                  Last updated: {pollenData.lastUpdated}
-                </p>
-              </div>
-
-              <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-                gap: '2rem',
-                margin: '2rem 0'
+                {pollenData ? pollenData.location : 'Carmel, Indiana'}
+              </h2>
+              <p style={{
+                color: '#718096',
+                fontSize: '0.9rem'
               }}>
-                <PollenCard 
-                  type="Tree" 
-                  emoji="🌳" 
-                  level={pollenData.current.tree.level} 
-                  status={pollenData.current.tree.status} 
-                />
-                <PollenCard 
-                  type="Grass" 
-                  emoji="🌱" 
-                  level={pollenData.current.grass.level} 
-                  status={pollenData.current.grass.status} 
-                />
-                <PollenCard 
-                  type="Weed" 
-                  emoji="🌿" 
-                  level={pollenData.current.weed.level} 
-                  status={pollenData.current.weed.status} 
-                />
-              </div>
+                {pollenData ? `Last updated: ${pollenData.lastUpdated}` : 'Sample data - Enter a location to see real pollen levels'}
+              </p>
             </div>
-          )}
 
-          {/* Show sample data if no real data loaded */}
-          {!pollenData && (
             <div style={{
-              background: 'white',
-              borderRadius: '16px',
-              padding: '2.5rem',
-              marginBottom: '2rem',
-              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)'
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+              gap: '2rem',
+              margin: '2rem 0'
             }}>
-              <div style={{
-                textAlign: 'center',
-                marginBottom: '2rem'
-              }}>
-                <h2 style={{
-                  fontSize: '2rem',
-                  fontWeight: '700',
-                  color: '#2d3748',
-                  marginBottom: '0.5rem'
-                }}>
-                  Carmel, Indiana
-                </h2>
-                <p style={{
-                  color: '#718096',
-                  fontSize: '0.9rem'
-                }}>
-                  Sample data - Enter a location to see real pollen levels
-                </p>
-              </div>
+              {/* Tree Pollen Card */}
+              {(() => {
+                const level = pollenData ? pollenData.current.tree.level : '4'
+                const status = pollenData ? pollenData.current.tree.status : 'High'
+                const display = getPollenDisplay(level, status)
+                
+                return (
+                  <div style={{
+                    background: 'white',
+                    borderRadius: '16px',
+                    padding: '2rem',
+                    textAlign: 'center',
+                    boxShadow: '0 8px 25px rgba(0, 0, 0, 0.1)',
+                    border: '1px solid #f1f3f4'
+                  }}>
+                    <div style={{ fontSize: '1.8rem', marginBottom: '1rem' }}>🌳</div>
+                    <div style={{ fontWeight: '600', color: '#2d3748', marginBottom: '1.5rem' }}>Tree Pollen</div>
+                    
+                    {/* Circular Ring */}
+                    <div style={{ position: 'relative', width: '80px', height: '80px', margin: '0 auto 1rem' }}>
+                      <svg width="80" height="80" style={{ transform: 'rotate(-90deg)' }}>
+                        <circle cx="40" cy="40" r="32" fill="none" stroke="#e5e7eb" strokeWidth="6" />
+                        <circle
+                          cx="40" cy="40" r="32" fill="none" stroke={display.color} strokeWidth="6"
+                          strokeDasharray={`${(display.levelNum/5) * 201.06} 201.06`} strokeLinecap="round"
+                        />
+                      </svg>
+                      <div style={{
+                        position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
+                        fontSize: '1.5rem', fontWeight: '800', color: display.color
+                      }}>
+                        {level}
+                      </div>
+                    </div>
+                    
+                    <div style={{
+                      color: display.color, fontWeight: '600', marginBottom: '1rem',
+                      textTransform: 'uppercase', fontSize: '0.9rem', letterSpacing: '0.5px'
+                    }}>
+                      {status}
+                    </div>
+                    
+                    <div style={{
+                      background: '#f8fafc', padding: '1rem', borderRadius: '8px',
+                      fontSize: '0.85rem', color: '#4a5568', lineHeight: '1.4',
+                      border: `1px solid ${display.color}20`
+                    }}>
+                      {display.advice}
+                    </div>
+                  </div>
+                )
+              })()}
 
-              <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-                gap: '2rem',
-                margin: '2rem 0'
-              }}>
-                <PollenCard type="Tree" emoji="🌳" level="4" status="High" />
-                <PollenCard type="Grass" emoji="🌱" level="2" status="Low" />
-                <PollenCard type="Weed" emoji="🌿" level="1" status="Very Low" />
-              </div>
+              {/* Grass Pollen Card */}
+              {(() => {
+                const level = pollenData ? pollenData.current.grass.level : '2'
+                const status = pollenData ? pollenData.current.grass.status : 'Low'
+                const display = getPollenDisplay(level, status)
+                
+                return (
+                  <div style={{
+                    background: 'white',
+                    borderRadius: '16px',
+                    padding: '2rem',
+                    textAlign: 'center',
+                    boxShadow: '0 8px 25px rgba(0, 0, 0, 0.1)',
+                    border: '1px solid #f1f3f4'
+                  }}>
+                    <div style={{ fontSize: '1.8rem', marginBottom: '1rem' }}>🌱</div>
+                    <div style={{ fontWeight: '600', color: '#2d3748', marginBottom: '1.5rem' }}>Grass Pollen</div>
+                    
+                    <div style={{ position: 'relative', width: '80px', height: '80px', margin: '0 auto 1rem' }}>
+                      <svg width="80" height="80" style={{ transform: 'rotate(-90deg)' }}>
+                        <circle cx="40" cy="40" r="32" fill="none" stroke="#e5e7eb" strokeWidth="6" />
+                        <circle
+                          cx="40" cy="40" r="32" fill="none" stroke={display.color} strokeWidth="6"
+                          strokeDasharray={`${(display.levelNum/5) * 201.06} 201.06`} strokeLinecap="round"
+                        />
+                      </svg>
+                      <div style={{
+                        position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
+                        fontSize: '1.5rem', fontWeight: '800', color: display.color
+                      }}>
+                        {level}
+                      </div>
+                    </div>
+                    
+                    <div style={{
+                      color: display.color, fontWeight: '600', marginBottom: '1rem',
+                      textTransform: 'uppercase', fontSize: '0.9rem', letterSpacing: '0.5px'
+                    }}>
+                      {status}
+                    </div>
+                    
+                    <div style={{
+                      background: '#f8fafc', padding: '1rem', borderRadius: '8px',
+                      fontSize: '0.85rem', color: '#4a5568', lineHeight: '1.4',
+                      border: `1px solid ${display.color}20`
+                    }}>
+                      {display.advice}
+                    </div>
+                  </div>
+                )
+              })()}
+
+              {/* Weed Pollen Card */}
+              {(() => {
+                const level = pollenData ? pollenData.current.weed.level : '1'
+                const status = pollenData ? pollenData.current.weed.status : 'Very Low'
+                const display = getPollenDisplay(level, status)
+                
+                return (
+                  <div style={{
+                    background: 'white',
+                    borderRadius: '16px',
+                    padding: '2rem',
+                    textAlign: 'center',
+                    boxShadow: '0 8px 25px rgba(0, 0, 0, 0.1)',
+                    border: '1px solid #f1f3f4'
+                  }}>
+                    <div style={{ fontSize: '1.8rem', marginBottom: '1rem' }}>🌿</div>
+                    <div style={{ fontWeight: '600', color: '#2d3748', marginBottom: '1.5rem' }}>Weed Pollen</div>
+                    
+                    <div style={{ position: 'relative', width: '80px', height: '80px', margin: '0 auto 1rem' }}>
+                      <svg width="80" height="80" style={{ transform: 'rotate(-90deg)' }}>
+                        <circle cx="40" cy="40" r="32" fill="none" stroke="#e5e7eb" strokeWidth="6" />
+                        <circle
+                          cx="40" cy="40" r="32" fill="none" stroke={display.color} strokeWidth="6"
+                          strokeDasharray={`${(display.levelNum/5) * 201.06} 201.06`} strokeLinecap="round"
+                        />
+                      </svg>
+                      <div style={{
+                        position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
+                        fontSize: '1.5rem', fontWeight: '800', color: display.color
+                      }}>
+                        {level}
+                      </div>
+                    </div>
+                    
+                    <div style={{
+                      color: display.color, fontWeight: '600', marginBottom: '1rem',
+                      textTransform: 'uppercase', fontSize: '0.9rem', letterSpacing: '0.5px'
+                    }}>
+                      {status}
+                    </div>
+                    
+                    <div style={{
+                      background: '#f8fafc', padding: '1rem', borderRadius: '8px',
+                      fontSize: '0.85rem', color: '#4a5568', lineHeight: '1.4',
+                      border: `1px solid ${display.color}20`
+                    }}>
+                      {display.advice}
+                    </div>
+                  </div>
+                )
+              })()}
             </div>
-          )}
+          </div>
 
           {/* Data Sources */}
           <div style={{
