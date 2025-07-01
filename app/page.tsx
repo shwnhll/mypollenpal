@@ -79,27 +79,31 @@ export default function Home() {
 
   const updateRing = (type: string, level: string, status: string) => {
     const levelNum = parseInt(level) || 0
-    let color = '#10b981'
+    let color = '#9ca3af' // Gray for 0/None
     
-    if (levelNum <= 1) {
-      color = '#10b981'
-    } else if (levelNum <= 2) {
-      color = '#f59e0b'
-    } else {
-      color = '#ef4444'
+    if (levelNum === 0) {
+      color = '#9ca3af' // Gray for None
+    } else if (levelNum === 1) {
+      color = '#10b981' // Green for Low
+    } else if (levelNum === 2) {
+      color = '#f59e0b' // Yellow for Medium
+    } else if (levelNum === 3) {
+      color = '#ef4444' // Red for High
+    } else if (levelNum >= 4) {
+      color = '#7c2d12' // Dark red for Severe
     }
 
-    // Update ring color and status (use the actual status from API)
+    // Update ring color and status (use the actual status from API, but fix colors)
     const ring = document.getElementById(`${type}Ring`)
     const level_el = document.getElementById(`${type}LevelDisplay`)
     const status_el = document.getElementById(`${type}StatusDisplay`)
     const status_span = document.getElementById(`${type}Status`)
     
     if (ring) ring.setAttribute('stroke', color)
-    if (ring) ring.setAttribute('stroke-dasharray', `${(levelNum/5) * 201.06} 201.06`)
+    if (ring) ring.setAttribute('stroke-dasharray', `${(levelNum/4) * 201.06} 201.06`) // Changed to /4 since scale is 0-4
     if (level_el) level_el.style.color = color
     if (status_el) status_el.style.color = color
-    if (status_span) status_span.textContent = status // Use actual API status
+    if (status_span) status_span.textContent = status // Keep using actual API status
   }
 
   const updateOverallAdvice = (treeLevel: number, grassLevel: number, weedLevel: number) => {
@@ -107,12 +111,16 @@ export default function Home() {
     const advice_el = document.getElementById('overallAdvice')
     
     let advice = ''
-    if (maxLevel <= 1) {
-      advice = "Perfect day for outdoor activities! All pollen levels are very low."
-    } else if (maxLevel <= 2) {
-      advice = "Good day for most outdoor activities. Consider allergy meds if you're sensitive."
+    if (maxLevel === 0) {
+      advice = "No significant pollen detected. Perfect day for all outdoor activities!"
+    } else if (maxLevel === 1) {
+      advice = "Low pollen levels. Great day for outdoor activities with minimal allergy risk."
+    } else if (maxLevel === 2) {
+      advice = "Medium pollen levels. Consider allergy meds if you're sensitive."
+    } else if (maxLevel === 3) {
+      advice = "High pollen day! Take precautions - consider staying indoors or taking medication."
     } else {
-      advice = "High pollen day! Take precautions if you have allergies - consider staying indoors or taking medication."
+      advice = "Severe pollen levels! Stay indoors if possible and take allergy medication."
     }
     
     if (advice_el) advice_el.textContent = advice
@@ -447,7 +455,38 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Overall advice section */}
+            {/* Scale indicator */}
+            <div style={{
+              background: '#f8fafc',
+              padding: '1rem',
+              borderRadius: '8px',
+              textAlign: 'center',
+              marginBottom: '2rem',
+              border: '1px solid #e2e8f0'
+            }}>
+              <div style={{
+                fontSize: '0.9rem',
+                fontWeight: '600',
+                color: '#4a5568',
+                marginBottom: '0.5rem'
+              }}>
+                📊 Pollen Scale (0-4)
+              </div>
+              <div style={{
+                display: 'flex',
+                justifyContent: 'center',
+                gap: '1rem',
+                flexWrap: 'wrap',
+                fontSize: '0.75rem',
+                color: '#6b7280'
+              }}>
+                <span style={{ color: '#9ca3af' }}>0: None</span>
+                <span style={{ color: '#10b981' }}>1: Low</span>
+                <span style={{ color: '#f59e0b' }}>2: Medium</span>
+                <span style={{ color: '#ef4444' }}>3: High</span>
+                <span style={{ color: '#7c2d12' }}>4: Severe</span>
+              </div>
+            </div>
             <div style={{
               background: '#f8fafc',
               padding: '1.5rem',
