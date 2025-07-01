@@ -8,7 +8,7 @@ export default function Home() {
   // Load Google Places API
   useEffect(() => {
     const loadGooglePlaces = () => {
-      if (window.google) return;
+      if ((window as any).google) return;
       
       const script = document.createElement('script');
       script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY}&libraries=places`;
@@ -19,8 +19,8 @@ export default function Home() {
 
     const initializeAutocomplete = () => {
       const input = document.getElementById('locationInput');
-      if (input && window.google) {
-        const autocomplete = new window.google.maps.places.Autocomplete(input, {
+      if (input && (window as any).google) {
+        const autocomplete = new (window as any).google.maps.places.Autocomplete(input, {
           types: ['(cities)'],
           componentRestrictions: { country: 'us' }
         });
