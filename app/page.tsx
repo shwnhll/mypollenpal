@@ -20,43 +20,85 @@ export default function Home() {
       const response = await fetch(`/api/pollen?location=${encodeURIComponent(location)}`)
       const data = await response.json()
       
-      if (response.ok) {
-        setPollenData(data)
-      } else {
-        alert('Unable to fetch pollen data. Please try again.')
+      // Update the display elements - exactly like your original
+      const locationEl = document.getElementById('currentLocation')
+      const treeLevel = document.getElementById('treeLevel')
+      const treeStatus = document.getElementById('treeStatus')
+      const grassLevel = document.getElementById('grassLevel') 
+      const grassStatus = document.getElementById('grassStatus')
+      const weedLevel = document.getElementById('weedLevel')
+      const weedStatus = document.getElementById('weedStatus')
+      const lastUpdated = document.getElementById('lastUpdated')
+      
+      if (locationEl) locationEl.textContent = data.location
+      if (treeLevel) treeLevel.textContent = data.current.tree.level
+      if (treeStatus) treeStatus.textContent = data.current.tree.status
+      if (grassLevel) grassLevel.textContent = data.current.grass.level
+      if (grassStatus) grassStatus.textContent = data.current.grass.status
+      if (weedLevel) weedLevel.textContent = data.current.weed.level
+      if (weedStatus) weedStatus.textContent = data.current.weed.status
+      if (lastUpdated) {
+        const now = new Date()
+        const userTime = now.toLocaleString('en-US', {
+          timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+          month: 'short',
+          day: 'numeric',
+          hour: 'numeric',
+          minute: '2-digit'
+        })
+        lastUpdated.textContent = `Last updated: ${userTime}`
       }
+
+      // Update the visual elements
+      updateVisualRings(data)
+      
     } catch (error) {
       alert('Unable to fetch pollen data. Please try again.')
     }
     setLoading(false)
   }
 
-  // Handle Enter key press
-  const handleKeyPress = (e: React.KeyboardEvent) => {
+  // Handle Enter key
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       searchLocation()
     }
   }
 
-  // Get pollen info for visual display
-  const getPollenDisplay = (level: number | string, status: string) => {
-    const levelNum = parseInt(level?.toString() || '0')
-    
-    let color = '#10b981' // Green
+  // Update visual rings
+  const updateVisualRings = (data: any) => {
+    updateRing('tree', data.current.tree.level, data.current.tree.status)
+    updateRing('grass', data.current.grass.level, data.current.grass.status)
+    updateRing('weed', data.current.weed.level, data.current.weed.status)
+  }
+
+  const updateRing = (type: string, level: string, status: string) => {
+    const levelNum = parseInt(level) || 0
+    let color = '#10b981'
     let advice = 'Great day for outdoor activities!'
     
     if (levelNum <= 1) {
-      color = '#10b981' // Green
-      advice = 'Great day for outdoor activities! Very low pollen.'
+      color = '#10b981'
+      advice = `Great day for outdoor activities! ${type} pollen is very low.`
     } else if (levelNum <= 2) {
-      color = '#f59e0b' // Yellow
-      advice = 'Moderate pollen. Consider allergy meds if sensitive.'
+      color = '#f59e0b'
+      advice = `Moderate ${type} pollen. Consider allergy meds if sensitive.`
     } else {
-      color = '#ef4444' // Red  
-      advice = 'High pollen day! Take precautions if allergic.'
+      color = '#ef4444'
+      advice = `High ${type} pollen day! Take precautions if allergic.`
     }
 
-    return { color, advice, levelNum }
+    // Update ring color
+    const ring = document.getElementById(`${type}Ring`)
+    const advice_el = document.getElementById(`${type}Advice`)
+    const level_el = document.getElementById(`${type}LevelDisplay`)
+    const status_el = document.getElementById(`${type}StatusDisplay`)
+    
+    if (ring) ring.setAttribute('stroke', color)
+    if (ring) ring.setAttribute('stroke-dasharray', `${(levelNum/5) * 201.06} 201.06`)
+    if (advice_el) advice_el.textContent = advice
+    if (level_el) level_el.style.color = color
+    if (status_el) status_el.style.color = color
   }
 
   return (
@@ -195,14 +237,14 @@ export default function Home() {
                 fontWeight: '700',
                 color: '#2d3748',
                 marginBottom: '0.5rem'
-              }}>
-                {pollenData ? pollenData.location : 'Carmel, Indiana'}
+              }} id="currentLocation">
+                Carmel, Indiana
               </h2>
               <p style={{
                 color: '#718096',
                 fontSize: '0.9rem'
-              }}>
-                {pollenData ? `Last updated: ${pollenData.lastUpdated}` : 'Sample data - Enter a location to see real pollen levels'}
+              }} id="lastUpdated">
+                Sample data - Enter a location to see real pollen levels
               </p>
             </div>
 
@@ -213,165 +255,219 @@ export default function Home() {
               margin: '2rem 0'
             }}>
               {/* Tree Pollen Card */}
-              {(() => {
-                const level = pollenData ? pollenData.current.tree.level : '4'
-                const status = pollenData ? pollenData.current.tree.status : 'High'
-                const display = getPollenDisplay(level, status)
+              <div style={{
+                background: 'white',
+                borderRadius: '16px',
+                padding: '2rem',
+                textAlign: 'center',
+                boxShadow: '0 8px 25px rgba(0, 0, 0, 0.1)',
+                border: '1px solid #f1f3f4'
+              }}>
+                <div style={{
+                  fontSize: '1.8rem',
+                  marginBottom: '1rem'
+                }}>🌳</div>
+                <div style={{
+                  fontWeight: '600',
+                  color: '#2d3748',
+                  marginBottom: '1.5rem'
+                }}>Tree Pollen</div>
                 
-                return (
+                {/* Circular Progress Ring */}
+                <div style={{
+                  position: 'relative',
+                  width: '80px',
+                  height: '80px',
+                  margin: '0 auto 1rem'
+                }}>
+                  <svg width="80" height="80" style={{ transform: 'rotate(-90deg)' }}>
+                    <circle cx="40" cy="40" r="32" fill="none" stroke="#e5e7eb" strokeWidth="6" />
+                    <circle
+                      id="treeRing"
+                      cx="40" cy="40" r="32" fill="none" stroke="#ef4444" strokeWidth="6"
+                      strokeDasharray="160.85 201.06" strokeLinecap="round"
+                    />
+                  </svg>
                   <div style={{
-                    background: 'white',
-                    borderRadius: '16px',
-                    padding: '2rem',
-                    textAlign: 'center',
-                    boxShadow: '0 8px 25px rgba(0, 0, 0, 0.1)',
-                    border: '1px solid #f1f3f4'
-                  }}>
-                    <div style={{ fontSize: '1.8rem', marginBottom: '1rem' }}>🌳</div>
-                    <div style={{ fontWeight: '600', color: '#2d3748', marginBottom: '1.5rem' }}>Tree Pollen</div>
-                    
-                    {/* Circular Ring */}
-                    <div style={{ position: 'relative', width: '80px', height: '80px', margin: '0 auto 1rem' }}>
-                      <svg width="80" height="80" style={{ transform: 'rotate(-90deg)' }}>
-                        <circle cx="40" cy="40" r="32" fill="none" stroke="#e5e7eb" strokeWidth="6" />
-                        <circle
-                          cx="40" cy="40" r="32" fill="none" stroke={display.color} strokeWidth="6"
-                          strokeDasharray={`${(display.levelNum/5) * 201.06} 201.06`} strokeLinecap="round"
-                        />
-                      </svg>
-                      <div style={{
-                        position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
-                        fontSize: '1.5rem', fontWeight: '800', color: display.color
-                      }}>
-                        {level}
-                      </div>
-                    </div>
-                    
-                    <div style={{
-                      color: display.color, fontWeight: '600', marginBottom: '1rem',
-                      textTransform: 'uppercase', fontSize: '0.9rem', letterSpacing: '0.5px'
-                    }}>
-                      {status}
-                    </div>
-                    
-                    <div style={{
-                      background: '#f8fafc', padding: '1rem', borderRadius: '8px',
-                      fontSize: '0.85rem', color: '#4a5568', lineHeight: '1.4',
-                      border: `1px solid ${display.color}20`
-                    }}>
-                      {display.advice}
-                    </div>
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    fontSize: '1.5rem',
+                    fontWeight: '800',
+                    color: '#ef4444'
+                  }} id="treeLevelDisplay">
+                    <span id="treeLevel">4</span>
                   </div>
-                )
-              })()}
+                </div>
+                
+                <div style={{
+                  color: '#ef4444',
+                  fontWeight: '600',
+                  marginBottom: '1rem',
+                  textTransform: 'uppercase',
+                  fontSize: '0.9rem',
+                  letterSpacing: '0.5px'
+                }} id="treeStatusDisplay">
+                  <span id="treeStatus">High</span>
+                </div>
+                
+                <div style={{
+                  background: '#f8fafc',
+                  padding: '1rem',
+                  borderRadius: '8px',
+                  fontSize: '0.85rem',
+                  color: '#4a5568',
+                  lineHeight: '1.4',
+                  border: '1px solid #ef444420'
+                }} id="treeAdvice">
+                  High tree pollen day! Take precautions if allergic.
+                </div>
+              </div>
 
               {/* Grass Pollen Card */}
-              {(() => {
-                const level = pollenData ? pollenData.current.grass.level : '2'
-                const status = pollenData ? pollenData.current.grass.status : 'Low'
-                const display = getPollenDisplay(level, status)
+              <div style={{
+                background: 'white',
+                borderRadius: '16px',
+                padding: '2rem',
+                textAlign: 'center',
+                boxShadow: '0 8px 25px rgba(0, 0, 0, 0.1)',
+                border: '1px solid #f1f3f4'
+              }}>
+                <div style={{
+                  fontSize: '1.8rem',
+                  marginBottom: '1rem'
+                }}>🌱</div>
+                <div style={{
+                  fontWeight: '600',
+                  color: '#2d3748',
+                  marginBottom: '1.5rem'
+                }}>Grass Pollen</div>
                 
-                return (
+                <div style={{
+                  position: 'relative',
+                  width: '80px',
+                  height: '80px',
+                  margin: '0 auto 1rem'
+                }}>
+                  <svg width="80" height="80" style={{ transform: 'rotate(-90deg)' }}>
+                    <circle cx="40" cy="40" r="32" fill="none" stroke="#e5e7eb" strokeWidth="6" />
+                    <circle
+                      id="grassRing"
+                      cx="40" cy="40" r="32" fill="none" stroke="#f59e0b" strokeWidth="6"
+                      strokeDasharray="80.42 201.06" strokeLinecap="round"
+                    />
+                  </svg>
                   <div style={{
-                    background: 'white',
-                    borderRadius: '16px',
-                    padding: '2rem',
-                    textAlign: 'center',
-                    boxShadow: '0 8px 25px rgba(0, 0, 0, 0.1)',
-                    border: '1px solid #f1f3f4'
-                  }}>
-                    <div style={{ fontSize: '1.8rem', marginBottom: '1rem' }}>🌱</div>
-                    <div style={{ fontWeight: '600', color: '#2d3748', marginBottom: '1.5rem' }}>Grass Pollen</div>
-                    
-                    <div style={{ position: 'relative', width: '80px', height: '80px', margin: '0 auto 1rem' }}>
-                      <svg width="80" height="80" style={{ transform: 'rotate(-90deg)' }}>
-                        <circle cx="40" cy="40" r="32" fill="none" stroke="#e5e7eb" strokeWidth="6" />
-                        <circle
-                          cx="40" cy="40" r="32" fill="none" stroke={display.color} strokeWidth="6"
-                          strokeDasharray={`${(display.levelNum/5) * 201.06} 201.06`} strokeLinecap="round"
-                        />
-                      </svg>
-                      <div style={{
-                        position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
-                        fontSize: '1.5rem', fontWeight: '800', color: display.color
-                      }}>
-                        {level}
-                      </div>
-                    </div>
-                    
-                    <div style={{
-                      color: display.color, fontWeight: '600', marginBottom: '1rem',
-                      textTransform: 'uppercase', fontSize: '0.9rem', letterSpacing: '0.5px'
-                    }}>
-                      {status}
-                    </div>
-                    
-                    <div style={{
-                      background: '#f8fafc', padding: '1rem', borderRadius: '8px',
-                      fontSize: '0.85rem', color: '#4a5568', lineHeight: '1.4',
-                      border: `1px solid ${display.color}20`
-                    }}>
-                      {display.advice}
-                    </div>
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    fontSize: '1.5rem',
+                    fontWeight: '800',
+                    color: '#f59e0b'
+                  }} id="grassLevelDisplay">
+                    <span id="grassLevel">2</span>
                   </div>
-                )
-              })()}
+                </div>
+                
+                <div style={{
+                  color: '#f59e0b',
+                  fontWeight: '600',
+                  marginBottom: '1rem',
+                  textTransform: 'uppercase',
+                  fontSize: '0.9rem',
+                  letterSpacing: '0.5px'
+                }} id="grassStatusDisplay">
+                  <span id="grassStatus">Low</span>
+                </div>
+                
+                <div style={{
+                  background: '#f8fafc',
+                  padding: '1rem',
+                  borderRadius: '8px',
+                  fontSize: '0.85rem',
+                  color: '#4a5568',
+                  lineHeight: '1.4',
+                  border: '1px solid #f59e0b20'
+                }} id="grassAdvice">
+                  Moderate grass pollen. Consider allergy meds if sensitive.
+                </div>
+              </div>
 
               {/* Weed Pollen Card */}
-              {(() => {
-                const level = pollenData ? pollenData.current.weed.level : '1'
-                const status = pollenData ? pollenData.current.weed.status : 'Very Low'
-                const display = getPollenDisplay(level, status)
+              <div style={{
+                background: 'white',
+                borderRadius: '16px',
+                padding: '2rem',
+                textAlign: 'center',
+                boxShadow: '0 8px 25px rgba(0, 0, 0, 0.1)',
+                border: '1px solid #f1f3f4'
+              }}>
+                <div style={{
+                  fontSize: '1.8rem',
+                  marginBottom: '1rem'
+                }}>🌿</div>
+                <div style={{
+                  fontWeight: '600',
+                  color: '#2d3748',
+                  marginBottom: '1.5rem'
+                }}>Weed Pollen</div>
                 
-                return (
+                <div style={{
+                  position: 'relative',
+                  width: '80px',
+                  height: '80px',
+                  margin: '0 auto 1rem'
+                }}>
+                  <svg width="80" height="80" style={{ transform: 'rotate(-90deg)' }}>
+                    <circle cx="40" cy="40" r="32" fill="none" stroke="#e5e7eb" strokeWidth="6" />
+                    <circle
+                      id="weedRing"
+                      cx="40" cy="40" r="32" fill="none" stroke="#10b981" strokeWidth="6"
+                      strokeDasharray="40.21 201.06" strokeLinecap="round"
+                    />
+                  </svg>
                   <div style={{
-                    background: 'white',
-                    borderRadius: '16px',
-                    padding: '2rem',
-                    textAlign: 'center',
-                    boxShadow: '0 8px 25px rgba(0, 0, 0, 0.1)',
-                    border: '1px solid #f1f3f4'
-                  }}>
-                    <div style={{ fontSize: '1.8rem', marginBottom: '1rem' }}>🌿</div>
-                    <div style={{ fontWeight: '600', color: '#2d3748', marginBottom: '1.5rem' }}>Weed Pollen</div>
-                    
-                    <div style={{ position: 'relative', width: '80px', height: '80px', margin: '0 auto 1rem' }}>
-                      <svg width="80" height="80" style={{ transform: 'rotate(-90deg)' }}>
-                        <circle cx="40" cy="40" r="32" fill="none" stroke="#e5e7eb" strokeWidth="6" />
-                        <circle
-                          cx="40" cy="40" r="32" fill="none" stroke={display.color} strokeWidth="6"
-                          strokeDasharray={`${(display.levelNum/5) * 201.06} 201.06`} strokeLinecap="round"
-                        />
-                      </svg>
-                      <div style={{
-                        position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
-                        fontSize: '1.5rem', fontWeight: '800', color: display.color
-                      }}>
-                        {level}
-                      </div>
-                    </div>
-                    
-                    <div style={{
-                      color: display.color, fontWeight: '600', marginBottom: '1rem',
-                      textTransform: 'uppercase', fontSize: '0.9rem', letterSpacing: '0.5px'
-                    }}>
-                      {status}
-                    </div>
-                    
-                    <div style={{
-                      background: '#f8fafc', padding: '1rem', borderRadius: '8px',
-                      fontSize: '0.85rem', color: '#4a5568', lineHeight: '1.4',
-                      border: `1px solid ${display.color}20`
-                    }}>
-                      {display.advice}
-                    </div>
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    fontSize: '1.5rem',
+                    fontWeight: '800',
+                    color: '#10b981'
+                  }} id="weedLevelDisplay">
+                    <span id="weedLevel">1</span>
                   </div>
-                )
-              })()}
+                </div>
+                
+                <div style={{
+                  color: '#10b981',
+                  fontWeight: '600',
+                  marginBottom: '1rem',
+                  textTransform: 'uppercase',
+                  fontSize: '0.9rem',
+                  letterSpacing: '0.5px'
+                }} id="weedStatusDisplay">
+                  <span id="weedStatus">Very Low</span>
+                </div>
+                
+                <div style={{
+                  background: '#f8fafc',
+                  padding: '1rem',
+                  borderRadius: '8px',
+                  fontSize: '0.85rem',
+                  color: '#4a5568',
+                  lineHeight: '1.4',
+                  border: '1px solid #10b98120'
+                }} id="weedAdvice">
+                  Great day for outdoor activities! Weed pollen is very low.
+                </div>
+              </div>
             </div>
           </div>
 
-          {/* Data Sources */}
+          {/* Rest of your original content */}
           <div style={{
             background: 'white',
             borderRadius: '16px',
