@@ -4,7 +4,8 @@ export default function Home() {
       fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
       background: '#f8f9fa',
       color: '#2d3748',
-      lineHeight: '1.6'
+      lineHeight: '1.6',
+      minHeight: '100vh'
     }}>
       {/* Header */}
       <header style={{
@@ -14,14 +15,14 @@ export default function Home() {
         top: 0,
         zIndex: 100
       }}>
-<nav style={{
-  maxWidth: '1000px',
-  margin: '0 auto',
-  padding: '1rem 20px',
-  display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'center'
-}}>
+        <nav style={{
+          maxWidth: '1000px',
+          margin: '0 auto',
+          padding: '1rem 20px',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center'
+        }}>
           <div style={{
             fontSize: '1.5rem',
             fontWeight: '600',
@@ -56,7 +57,7 @@ export default function Home() {
             marginBottom: '0.5rem',
             opacity: 0.9
           }}>
-            #1 pollen tracking for real life
+            Pollen tracking for real life
           </p>
           <p style={{
             fontSize: '1.1rem',
@@ -83,7 +84,10 @@ export default function Home() {
                 fontSize: '1rem',
                 border: 'none',
                 borderRadius: '50px',
-                outline: 'none'
+                outline: 'none',
+                boxShadow: '0 4px 15px rgba(0, 0, 0, 0.1)',
+                background: 'white',
+                color: '#2d3748'
               }}
             />
             <button style={{
@@ -113,6 +117,7 @@ export default function Home() {
           margin: '0 auto',
           padding: '0 20px'
         }}>
+          {/* Pollen Data Card */}
           <div style={{
             background: 'white',
             borderRadius: '16px',
@@ -152,7 +157,7 @@ export default function Home() {
                 padding: '2rem',
                 textAlign: 'center',
                 boxShadow: '0 8px 25px rgba(0, 0, 0, 0.1)',
-                position: 'relative'
+                border: '1px solid #f1f3f4'
               }}>
                 <div style={{
                   fontSize: '1.8rem',
@@ -180,7 +185,8 @@ export default function Home() {
                 borderRadius: '16px',
                 padding: '2rem',
                 textAlign: 'center',
-                boxShadow: '0 8px 25px rgba(0, 0, 0, 0.1)'
+                boxShadow: '0 8px 25px rgba(0, 0, 0, 0.1)',
+                border: '1px solid #f1f3f4'
               }}>
                 <div style={{
                   fontSize: '1.8rem',
@@ -208,7 +214,8 @@ export default function Home() {
                 borderRadius: '16px',
                 padding: '2rem',
                 textAlign: 'center',
-                boxShadow: '0 8px 25px rgba(0, 0, 0, 0.1)'
+                boxShadow: '0 8px 25px rgba(0, 0, 0, 0.1)',
+                border: '1px solid #f1f3f4'
               }}>
                 <div style={{
                   fontSize: '1.8rem',
@@ -233,18 +240,23 @@ export default function Home() {
             </div>
           </div>
 
+          {/* Data Sources */}
           <div style={{
             background: 'white',
             borderRadius: '16px',
             padding: '2.5rem',
             boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
-            textAlign: 'center'
+            textAlign: 'center',
+            marginBottom: '2rem'
           }}>
             <h3 style={{
               fontSize: '1.3rem',
               color: '#2d3748',
-              marginBottom: '1.5rem'
-            }}>Powered by trusted sources</h3>
+              marginBottom: '1.5rem',
+              fontWeight: '600'
+            }}>
+              Powered by trusted sources
+            </h3>
             <div style={{
               display: 'flex',
               justifyContent: 'center',
@@ -258,7 +270,9 @@ export default function Home() {
                 border: '2px solid #e2e8f0',
                 borderRadius: '8px',
                 background: '#f8fafc'
-              }}>Google Pollen API</div>
+              }}>
+                Google Pollen API
+              </div>
               <div style={{
                 color: '#718096',
                 fontWeight: '600',
@@ -266,7 +280,9 @@ export default function Home() {
                 border: '2px solid #e2e8f0',
                 borderRadius: '8px',
                 background: '#f8fafc'
-              }}>NOAA Weather</div>
+              }}>
+                NOAA Weather
+              </div>
               <div style={{
                 color: '#718096',
                 fontWeight: '600',
@@ -274,7 +290,42 @@ export default function Home() {
                 border: '2px solid #e2e8f0',
                 borderRadius: '8px',
                 background: '#f8fafc'
-              }}>CDC Health Data</div>
+              }}>
+                CDC Health Data
+              </div>
+            </div>
+          </div>
+
+          {/* Coming Soon */}
+          <div style={{
+            background: 'linear-gradient(135deg, #007AFF 0%, #0051D5 100%)',
+            color: 'white',
+            padding: '3rem 2rem',
+            textAlign: 'center',
+            borderRadius: '16px'
+          }}>
+            <h2 style={{
+              fontSize: '2rem',
+              fontWeight: '700',
+              marginBottom: '1rem'
+            }}>
+              Coming Soon: Real-Time Data
+            </h2>
+            <p style={{
+              fontSize: '1.1rem',
+              opacity: 0.9,
+              marginBottom: '2rem'
+            }}>
+              We're integrating live pollen data to give you accurate, up-to-date information for your area.
+            </p>
+            <div style={{
+              background: 'rgba(255, 255, 255, 0.15)',
+              padding: '1rem 2rem',
+              borderRadius: '50px',
+              display: 'inline-block',
+              fontWeight: '600'
+            }}>
+              📧 Email alerts • 📊 Historical trends • 🎯 Personal triggers
             </div>
           </div>
         </div>
