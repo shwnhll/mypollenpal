@@ -1,4 +1,83 @@
-'use client'
+{/* Scale indicator */}
+            <div style={{
+              background: '#f8fafc',
+              padding: '1rem',
+              borderRadius: '8px',
+              textAlign: 'center',
+              marginBottom: '2rem',
+              border: '1px solid #e2e8f0'
+            }}>
+              <div style={{
+                fontSize: '0.9rem',
+                fontWeight: '600',
+                color: '#4a5568',
+                marginBottom: '0.5rem'
+              }}>
+                📊 Pollen Scale (0-4)
+              </div>
+              <div style={{
+                display: 'flex',
+                justifyContent: 'center',
+                gap: '1rem',
+                flexWrap: 'wrap',
+                fontSize: '0.75rem',
+                color: '#6b7280'
+              }}>
+                <span style={{ color: '#9ca3af' }}>0: None</span>
+                <span style={{ color: '#10b981' }}>1: Low</span>
+                <span style={{ color: '#f59e0b' }}>2: Medium</span>
+                <span style={{ color: '#ef4444' }}>3: High</span>
+                <span style={{ color: '#7c2d12' }}>4: Severe</span>
+              </div>
+            </div>            {/* Scale indicator - moved above cards */}
+            <div style={{
+              background: '#f8fafc',
+              padding: '1rem',
+              borderRadius: '8px',
+              textAlign: 'center',
+              marginBottom: '2rem',
+              border: '1px solid #e2e8f0'
+            }}>
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '0.5rem',
+                fontSize: '0.9rem',
+                fontWeight: '600',
+                color: '#4a5568',
+                marginBottom: '0.5rem'
+              }}>
+                📊 Universal Pollen Index (0-4)
+                <span style={{
+                  width: '16px',
+                  height: '16px',
+                  borderRadius: '50%',
+                  background: '#6b7280',
+                  color: 'white',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '10px',
+                  fontWeight: 'bold',
+                  cursor: 'help'
+                }} title="Standardized scale used globally by health organizations to measure pollen levels and allergy risk">?</span>
+              </div>
+              <div style={{
+                display: 'flex',
+                justifyContent: 'center',
+                gap: '0.75rem',
+                flexWrap: 'wrap',
+                fontSize: '0.75rem',
+                color: '#6b7280'
+              }}>
+                <span style={{ color: '#9ca3af' }}>0: None</span>
+                <span style={{ color: '#10b981' }}>1: Low</span>
+                <span style={{ color: '#f59e0b' }}>2: Medium</span>
+                <span style={{ color: '#ef4444' }}>3: High</span>
+                <span style={{ color: '#7c2d12' }}>4: Severe</span>
+              </div>
+            </div>'use client'
 import { useState, useEffect } from 'react'
 
 // Declare Google types to avoid TypeScript errors
@@ -353,7 +432,7 @@ export default function Home() {
 
             <div style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(3, 1fr)',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
               gap: '2rem',
               margin: '2rem 0'
             }}>
@@ -908,7 +987,7 @@ export default function Home() {
             </h3>
             <div style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(3, 1fr)',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
               gap: '2rem'
             }}>
               <div style={{ textAlign: 'center' }}>
