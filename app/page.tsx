@@ -918,28 +918,7 @@ export default function Home() {
       </section>
     </div>
   )
-}>
-                  Jul 1
-                </div>
-                <div style={{
-                  width: '40px',
-                  height: '40px',
-                  borderRadius: '50%',
-                  background: '#7c2d12',
-                  color: 'white',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontWeight: 'bold',
-                  margin: '0 auto 0.5rem',
-                  fontSize: '1.1rem'
-                }}>
-                  4
-                </div>
-                <div style={{ fontSize: '0.75rem', color: '#4a5568', lineHeight: '1.3' }}>
-                  Tree: 4<br/>Grass: 2<br/>Weed: 1
-                </div>
-              </div>
+}
               
               <div style={{
                 background: 'white',
