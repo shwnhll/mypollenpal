@@ -1,41 +1,9 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 
 export default function Home() {
   const [pollenData, setPollenData] = useState(null)
   const [loading, setLoading] = useState(false)
-
-  // Load Google Places API
-  useEffect(() => {
-    const loadGooglePlaces = () => {
-      if ((window as any).google) return;
-      
-      const script = document.createElement('script');
-      script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY}&libraries=places`;
-      script.async = true;
-      script.onload = initializeAutocomplete;
-      document.head.appendChild(script);
-    };
-
-    const initializeAutocomplete = () => {
-      const input = document.getElementById('locationInput');
-      if (input && (window as any).google) {
-        const autocomplete = new (window as any).google.maps.places.Autocomplete(input, {
-          types: ['(cities)'],
-          componentRestrictions: { country: 'us' }
-        });
-        
-        autocomplete.addListener('place_changed', () => {
-          const place = autocomplete.getPlace();
-          if (place.formatted_address) {
-            input.value = place.formatted_address;
-          }
-        });
-      }
-    };
-
-    loadGooglePlaces();
-  }, []);
 
   // Handle Enter key press
   const handleKeyPress = (event) => {
@@ -77,19 +45,16 @@ export default function Home() {
     if (levelNum <= 1) {
       return {
         color: '#10b981', // Green
-        ring: '0 0 0 4px rgba(16, 185, 129, 0.2)',
         advice: `Great day for outdoor activities! ${type} pollen is very low.`
       };
     } else if (levelNum <= 2) {
       return {
         color: '#f59e0b', // Yellow/Orange
-        ring: '0 0 0 4px rgba(245, 158, 11, 0.2)',
         advice: `Moderate ${type.toLowerCase()} pollen. Consider taking allergy meds if you're sensitive.`
       };
     } else {
       return {
         color: '#ef4444', // Red
-        ring: '0 0 0 4px rgba(239, 68, 68, 0.2)',
         advice: `High ${type.toLowerCase()} pollen day! Take precautions if you're allergic.`
       };
     }
@@ -406,7 +371,7 @@ export default function Home() {
             </div>
           )}
 
-          {/* Rest of your existing content (Data Sources, How It Works, Coming Soon) */}
+          {/* Data Sources */}
           <div style={{
             background: 'white',
             borderRadius: '16px',
