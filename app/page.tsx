@@ -12,6 +12,7 @@ declare global {
 export default function Home() {
   const [pollenData, setPollenData] = useState(null)
   const [loading, setLoading] = useState(false)
+  const [hasSearched, setHasSearched] = useState(false)
 
   // Load Google Places API - simplified approach
   useEffect(() => {
@@ -36,6 +37,7 @@ export default function Home() {
       
       if (response.ok) {
         setPollenData(data)
+        setHasSearched(true)
         updateDisplay(data)
       } else {
         alert(data.error || 'Unable to fetch pollen data. Please try again.')
@@ -666,7 +668,7 @@ export default function Home() {
             </div>
 
             {/* 5-Day Forecast - only show after search */}
-            {pollenData && (
+            {hasSearched && (
               <div style={{
                 marginTop: '2rem'
               }}>
