@@ -15,14 +15,17 @@ export default function Home() {
 
   // Load Google Places API
   useEffect(() => {
+    // For now, let's disable autocomplete to avoid the error icons
+    // We can add it back once we confirm the basic functionality works
+    
+    // Uncomment below when ready to test autocomplete again:
+    /*
     const loadGooglePlaces = () => {
-      // Check if Google Places is already loaded
       if (typeof window !== 'undefined' && window.google && window.google.maps && window.google.maps.places) {
         initializeAutocomplete();
         return;
       }
 
-      // Only load if we have the API key
       if (!process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY) {
         console.log('Google Places API key not found');
         return;
@@ -59,6 +62,7 @@ export default function Home() {
     };
 
     loadGooglePlaces();
+    */
   }, []);
 
   const searchLocation = async () => {
