@@ -83,6 +83,7 @@ export default function Home() {
             position: 'relative'
           }}>
             <input 
+              id="locationInput"
               type="text" 
               placeholder="Enter your ZIP code or city..."
               style={{
@@ -144,13 +145,13 @@ export default function Home() {
                 fontWeight: '700',
                 color: '#2d3748',
                 marginBottom: '0.5rem'
-              }}>
+              }} id="currentLocation">
                 Carmel, Indiana
               </h2>
               <p style={{
                 color: '#718096',
                 fontSize: '0.9rem'
-              }}>
+              }} id="lastUpdated">
                 Last updated: Today at 12:00 PM
               </p>
             </div>
@@ -183,11 +184,13 @@ export default function Home() {
                   fontWeight: '800',
                   color: '#007AFF',
                   marginBottom: '0.5rem'
-                }}>4</div>
+                }} id="treeLevel">
+                  4</div>
                 <div style={{
                   color: '#718096',
                   fontWeight: '500'
-                }}>High</div>
+                }} id="treeStatus">
+                  High</div>
               </div>
 
               <div style={{
@@ -212,11 +215,13 @@ export default function Home() {
                   fontWeight: '800',
                   color: '#007AFF',
                   marginBottom: '0.5rem'
-                }}>2</div>
+                }} id="grassLevel">
+                  2</div>
                 <div style={{
                   color: '#718096',
                   fontWeight: '500'
-                }}>Low</div>
+                }} id="grassStatus">
+                  Low</div>
               </div>
 
               <div style={{
@@ -241,11 +246,13 @@ export default function Home() {
                   fontWeight: '800',
                   color: '#007AFF',
                   marginBottom: '0.5rem'
-                }}>1</div>
+                }} id="weedLevel">
+                  1</div>
                 <div style={{
                   color: '#718096',
                   fontWeight: '500'
-                }}>Very Low</div>
+                }} id="weedStatus">
+                  Very Low</div>
               </div>
             </div>
           </div>
@@ -445,6 +452,79 @@ export default function Home() {
         </div>
       </section>
     </div>
+    
+    <script dangerouslySetInnerHTML={{
+      __html: `
+        async function fetchPollenData(location = 'Carmel, Indiana') {
+          try {
+            showLoading();
+            
+            const response = await fetch('/api/pollen?location=' + encodeURIComponent(location));
+            
+            if (!response.ok) {
+              throw new Error('API Error: ' + response.status);
+            }
+            
+            const data = await response.json();
+            return data;
+            
+          } catch (error) {
+            console.error('Error fetching pollen data:', error);
+            throw error;
+          }
+        }
+
+        function updatePollenDisplay(data) {
+          document.getElementById('currentLocation').textContent = data.location;
+          document.getElementById('lastUpdated').textContent = 'Last updated: ' + data.lastUpdated;
+          
+          document.getElementById('treeLevel').textContent = data.current.tree.level;
+          document.getElementById('treeStatus').textContent = data.current.tree.status;
+          document.getElementById('grassLevel').textContent = data.current.grass.level;
+          document.getElementById('grassStatus').textContent = data.current.grass.status;
+          document.getElementById('weedLevel').textContent = data.current.weed.level;
+          document.getElementById('weedStatus').textContent = data.current.weed.status;
+        }
+
+        function showLoading() {
+          document.getElementById('treeLevel').textContent = '...';
+          document.getElementById('grassLevel').textContent = '...';
+          document.getElementById('weedLevel').textContent = '...';
+        }
+
+        async function searchLocation() {
+          const input = document.getElementById('locationInput');
+          const location = input.value.trim();
+          
+          if (!location) {
+            alert('Please enter a location');
+            return;
+          }
+
+          try {
+            const data = await fetchPollenData(location);
+            updatePollenDisplay(data);
+          } catch (error) {
+            alert('Unable to fetch pollen data. Please try again.');
+          }
+        }
+
+        // Test with real data on page load
+        window.addEventListener('load', async function() {
+          try {
+            const data = await fetchPollenData();
+            updatePollenDisplay(data);
+          } catch (error) {
+            console.error('Failed to load initial data');
+          }
+        });
+      `
+    }} />
+    </>
+  )
+}
+
+      
     </>
   )
 }
