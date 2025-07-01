@@ -327,7 +327,7 @@ export default function Home() {
                 </div>
                 
                 <div style={{
-                  color: '#10b981',
+                  color: '#ef4444',
                   fontWeight: '600',
                   marginBottom: '1rem',
                   textTransform: 'uppercase',
@@ -385,14 +385,14 @@ export default function Home() {
                 </div>
                 
                 <div style={{
-                  color: '#10b981',
+                  color: '#f59e0b',
                   fontWeight: '600',
                   marginBottom: '1rem',
                   textTransform: 'uppercase',
                   fontSize: '0.9rem',
                   letterSpacing: '0.5px'
                 }} id="grassStatusDisplay">
-                  <span id="grassStatus">Low</span>
+                  <span id="grassStatus">Medium</span>
                 </div>
               </div>
 
@@ -450,7 +450,7 @@ export default function Home() {
                   fontSize: '0.9rem',
                   letterSpacing: '0.5px'
                 }} id="weedStatusDisplay">
-                  <span id="weedStatus">Very Low</span>
+                  <span id="weedStatus">Low</span>
                 </div>
               </div>
             </div>
@@ -507,8 +507,8 @@ export default function Home() {
                 fontSize: '0.9rem',
                 color: '#4a5568',
                 lineHeight: '1.5'
-              }} id="overallAdvice">
-                High tree pollen day! Take precautions if you have allergies - consider staying indoors or taking medication.
+              }              } id="overallAdvice">
+                High pollen day! Take precautions if you have allergies - consider staying indoors or taking medication.
               </div>
             </div>
           </div>
