@@ -16,30 +16,45 @@ export default function Home() {
   // Load Google Places API
   useEffect(() => {
     const loadGooglePlaces = () => {
-      if (typeof window !== 'undefined' && window.google) return;
-      
+      // Check if Google Places is already loaded
+      if (typeof window !== 'undefined' && window.google && window.google.maps && window.google.maps.places) {
+        initializeAutocomplete();
+        return;
+      }
+
+      // Only load if we have the API key
+      if (!process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY) {
+        console.log('Google Places API key not found');
+        return;
+      }
+
       const script = document.createElement('script');
-      script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY}&libraries=places&callback=initAutocomplete`;
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY}&libraries=places`;
       script.async = true;
       script.defer = true;
+      script.onload = initializeAutocomplete;
+      script.onerror = () => console.error('Failed to load Google Places API');
       document.head.appendChild(script);
     };
 
-    // Global callback function
-    window.initAutocomplete = () => {
+    const initializeAutocomplete = () => {
       const input = document.getElementById('locationInput') as HTMLInputElement;
-      if (input && window.google) {
-        const autocomplete = new window.google.maps.places.Autocomplete(input, {
-          types: ['(cities)'],
-          componentRestrictions: { country: 'us' }
-        });
-        
-        autocomplete.addListener('place_changed', () => {
-          const place = autocomplete.getPlace();
-          if (place.formatted_address) {
-            input.value = place.formatted_address;
-          }
-        });
+      if (input && window.google && window.google.maps && window.google.maps.places) {
+        try {
+          const autocomplete = new window.google.maps.places.Autocomplete(input, {
+            types: ['(cities)'],
+            componentRestrictions: { country: 'us' }
+          });
+          
+          autocomplete.addListener('place_changed', () => {
+            const place = autocomplete.getPlace();
+            if (place.formatted_address) {
+              input.value = place.formatted_address;
+            }
+          });
+        } catch (error) {
+          console.error('Error initializing autocomplete:', error);
+        }
       }
     };
 
