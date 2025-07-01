@@ -241,6 +241,28 @@ export default function Home() {
             max-width: none;
             padding: 1.5rem 1rem;
           }
+          
+          .forecast-container {
+            justify-content: flex-start !important;
+            padding-left: 1rem;
+            padding-right: 1rem;
+          }
+          
+          .forecast-container::after {
+            content: "← Swipe to see more →";
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.75rem;
+            color: #9ca3af;
+            white-space: nowrap;
+          }
+          
+          .forecast-container {
+            position: relative;
+            margin-bottom: 2rem;
+          }
         }
       `}</style>
       {/* Header */}
@@ -661,8 +683,11 @@ export default function Home() {
                   display: 'flex',
                   gap: '1rem',
                   overflowX: 'auto',
-                  padding: '0.5rem 0'
-                }} id="forecastContainer">
+                  padding: '0.5rem 0',
+                  justifyContent: 'center',
+                  scrollbarWidth: 'thin',
+                  scrollbarColor: '#cbd5e0 #f7fafc'
+                }} className="forecast-container" id="forecastContainer">
                   {/* Sample forecast cards */}
                   <div style={{
                     background: 'white',
