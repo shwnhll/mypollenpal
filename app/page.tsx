@@ -254,44 +254,12 @@ export default function Home() {
       else if (maxLevel === 3) color = '#ef4444'
       else if (maxLevel >= 4) color = '#7c2d12'
 
-      return `
-        <div style="
-          background: white;
-          border-radius: 12px;
-          padding: 1.5rem 1rem;
-          text-align: center;
-          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-          border: 1px solid #f1f3f4;
-          min-width: 120px;
-        ">
-          <div style="font-weight: 600; color: #2d3748; margin-bottom: 0.5rem; font-size: 0.9rem;">
-            ${dayName}
-          </div>
-          <div style="font-size: 0.75rem; color: #718096; margin-bottom: 1rem;">
-            ${dateDisplay}
-          </div>
-          <div style="
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: ${color};
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            margin: 0 auto 0.5rem;
-            font-size: 1.1rem;
-          ">
-            ${maxLevel}
-          </div>
-          <div style="font-size: 0.75rem; color: #4a5568; line-height: 1.3;">
-            Tree: ${day.tree?.level || 0}<br>
-            Grass: ${day.grass?.level || 0}<br>
-            Weed: ${day.weed?.level || 0}
-          </div>
-        </div>
-      `
+      return `<div style="background: white; border-radius: 12px; padding: 1.5rem 1rem; text-align: center; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); border: 1px solid #f1f3f4; min-width: 120px;">
+    <div style="font-weight: 600; color: #2d3748; margin-bottom: 0.5rem; font-size: 0.9rem;">${dayName}</div>
+    <div style="font-size: 0.75rem; color: #718096; margin-bottom: 1rem;">${dateDisplay}</div>
+    <div style="width: 40px; height: 40px; border-radius: 50%; background: ${color}; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; margin: 0 auto 0.5rem; font-size: 1.1rem;">${maxLevel}</div>
+    <div style="font-size: 0.75rem; color: #4a5568; line-height: 1.3;">Tree: ${day.tree?.level || 0}<br>Grass: ${day.grass?.level || 0}<br>Weed: ${day.weed?.level || 0}</div>
+  </div>`
     }).join('')
   }
 
