@@ -220,79 +220,80 @@ export default function Home() {
     if (level_span) level_span.textContent = level
   }
 
-  const updateForecast = (forecast: any[]) => {
-    const forecastContainer = document.getElementById('forecastContainer')
-    if (!forecastContainer || !forecast) return
+const updateForecast = (forecast: any[]) => {
+  const forecastContainer = document.getElementById('forecastContainer')
+  if (!forecastContainer || !forecast) return
 
-    forecastContainer.innerHTML = forecast.map((day: any, index: number) => {
-      let date: Date;
-      let dateDisplay = 'Invalid Date';
-      
-      if (day.date && typeof day.date === 'object' && day.date.year) {
-        date = new Date(day.date.year, day.date.month - 1, day.date.day)
-      } else if (day.date && typeof day.date === 'string') {
-        date = new Date(day.date)
-      } else {
-        date = new Date()
-        date.setDate(date.getDate() + index)
-      }
+  forecastContainer.innerHTML = forecast.map((day: any, index: number) => {
+    let date: Date;
+    let dateDisplay = 'Invalid Date';
+    
+    if (day.date && typeof day.date === 'object' && day.date.year) {
+      date = new Date(day.date.year, day.date.month - 1, day.date.day)
+    } else if (day.date && typeof day.date === 'string') {
+      date = new Date(day.date)
+    } else {
+      date = new Date()
+      date.setDate(date.getDate() + index)
+    }
 
-      if (!isNaN(date.getTime())) {
-        dateDisplay = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
-      }
+    if (!isNaN(date.getTime())) {
+      dateDisplay = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+    }
 
-      const dayName = index === 0 ? 'Today' : (isNaN(date.getTime()) ? 'Day ' + (index + 1) : date.toLocaleDateString('en-US', { weekday: 'short' }))
-      const maxLevel = Math.max(
-        parseInt(day.tree?.level) || 0,
-        parseInt(day.grass?.level) || 0,
-        parseInt(day.weed?.level) || 0
-      )
-      
-      let color = '#9ca3af'
-      if (maxLevel === 1) color = '#10b981'
-      else if (maxLevel === 2) color = '#f59e0b'
-      else if (maxLevel === 3) color = '#ef4444'
-      else if (maxLevel >= 4) color = '#7c2d12'
+    const dayName = index === 0 ? 'Today' : (isNaN(date.getTime()) ? 'Day ' + (index + 1) : date.toLocaleDateString('en-US', { weekday: 'short' }))
+    const maxLevel = Math.max(
+      parseInt(day.tree?.level) || 0,
+      parseInt(day.grass?.level) || 0,
+      parseInt(day.weed?.level) || 0
+    )
+    
+    let color = '#9ca3af'
+    if (maxLevel === 1) color = '#10b981'
+    else if (maxLevel === 2) color = '#f59e0b'
+    else if (maxLevel === 3) color = '#ef4444'
+    else if (maxLevel >= 4) color = '#7c2d12'
 
-        <div style="
-          background: white;
-          border-radius: 12px;
-          padding: 1.5rem 1rem;
-          text-align: center;
-          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-          border: 1px solid #f1f3f4;
-          min-width: 120px;
-        ">
-          <div style="font-weight: 600; color: #2d3748; margin-bottom: 0.5rem; font-size: 0.9rem;">
-            ${dayName}
-          </div>
-          <div style="font-size: 0.75rem; color: #718096; margin-bottom: 1rem;">
-            ${dateDisplay}
-          </div>
-          <div style="
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: ${color};
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            margin: 0 auto 0.5rem;
-            font-size: 1.1rem;
-          ">
-            ${maxLevel}
-          </div>
-          <div style="font-size: 0.75rem; color: #4a5568; line-height: 1.3;">
-            Tree: ${day.tree?.level || 0}<br>
-            Grass: ${day.grass?.level || 0}<br>
-            Weed: ${day.weed?.level || 0}
-          </div>
+    return `
+      <div style="
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem 1rem;
+        text-align: center;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        border: 1px solid #f1f3f4;
+        min-width: 120px;
+      ">
+        <div style="font-weight: 600; color: #2d3748; margin-bottom: 0.5rem; font-size: 0.9rem;">
+          ${dayName}
         </div>
-      `
-    }).join('')
-  }
+        <div style="font-size: 0.75rem; color: #718096; margin-bottom: 1rem;">
+          ${dateDisplay}
+        </div>
+        <div style="
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          background: ${color};
+          color: white;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: bold;
+          margin: 0 auto 0.5rem;
+          font-size: 1.1rem;
+        ">
+          ${maxLevel}
+        </div>
+        <div style="font-size: 0.75rem; color: #4a5568; line-height: 1.3;">
+          Tree: ${day.tree?.level || 0}<br>
+          Grass: ${day.grass?.level || 0}<br>
+          Weed: ${day.weed?.level || 0}
+        </div>
+      </div>
+    `
+  }).join('')
+}
 
   const updateOverallAdvice = (treeLevel: number, grassLevel: number, weedLevel: number, airLevel: number = 1) => {
     const maxPollenLevel = Math.max(treeLevel, grassLevel, weedLevel)
