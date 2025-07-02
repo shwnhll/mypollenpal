@@ -643,60 +643,6 @@ const updateForecast = (forecast: any[]) => {
               </p>
             </div>
 
-{/* Scale indicator */}
-<div style={{
-  background: '#f8fafc',
-  padding: '1rem',
-  borderRadius: '8px',
-  textAlign: 'center',
-  marginBottom: '2rem',
-  border: '1px solid #e2e8f0'
-}}>
-  <div style={{
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: '0.5rem',
-    fontSize: '0.9rem',
-    fontWeight: '600',
-    color: '#4a5568',
-    marginBottom: '0.5rem'
-  }}>
-    📊 Universal Pollen Index (0-4)
-    <span 
-      style={{
-        width: '16px',
-        height: '16px',
-        borderRadius: '50%',
-        background: '#6b7280',
-        color: 'white',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        fontSize: '10px',
-        fontWeight: 'bold',
-        cursor: 'help'
-      }} 
-      title="Standardized scale used globally by health organizations to measure pollen levels and allergy risk"
-      onClick={() => alert('Universal Pollen Index (0-4):\n\n0: None - No pollen detected\n1: Low - Minimal allergy risk\n2: Medium - Moderate allergy symptoms possible\n3: High - Significant allergy symptoms likely\n4: Severe - Very high allergy risk, stay indoors if possible\n\nThis standardized scale is used globally by health organizations to measure pollen levels and allergy risk.')}
-    >?</span>
-  </div>
-  <div style={{
-    display: 'flex',
-    justifyContent: 'center',
-    gap: '0.75rem',
-    flexWrap: 'wrap',
-    fontSize: '0.75rem',
-    color: '#6b7280'
-  }}>
-    <span style={{ color: '#9ca3af' }}>0: None</span>
-    <span style={{ color: '#10b981' }}>1: Low</span>
-    <span style={{ color: '#f59e0b' }}>2: Medium</span>
-    <span style={{ color: '#ef4444' }}>3: High</span>
-    <span style={{ color: '#7c2d12' }}>4: Severe</span>
-  </div>
-</div>
-
 <div style={{
   display: 'grid',
   gridTemplateColumns: 'repeat(4, 1fr)',
@@ -935,7 +881,25 @@ const updateForecast = (forecast: any[]) => {
     </div>
   </div>
 </div>
+
+            {/* Scale explanation */}
+<div style={{
+  textAlign: 'center',
+  fontSize: '0.8rem',
+  color: '#6b7280',
+  marginTop: '1.5rem',
+  marginBottom: '1rem',
+  display: 'flex',
+  justifyContent: 'center',
+  gap: '2rem',
+  flexWrap: 'wrap'
+}}>
+  <div>📊 Pollen levels use international 0-4 scale</div>
+  <div>🌬️ Air quality uses US EPA's AQI standard</div>
+</div>
+            
             {/* Overall advice section with inline email signup */}
+            {hasSearched && (
             <div style={{
               background: '#f8fafc',
               padding: '1.5rem',
@@ -1032,6 +996,7 @@ const updateForecast = (forecast: any[]) => {
                 </div>
               </div>
             </div>
+  )}
 
             {/* 5-Day Forecast - only show after search */}
             {hasSearched && (
