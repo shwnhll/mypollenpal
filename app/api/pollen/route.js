@@ -63,6 +63,8 @@ export async function GET(request) {
     let airQualityData = null
     if (airQualityResponse.ok) {
       const airData = await airQualityResponse.json()
+      console.log('Air Quality Raw Data:', airData) // Debug logging
+      
       if (airData && airData.length > 0) {
         // Find the PM2.5 reading (most important for health)
         const pm25Data = airData.find(reading => reading.ParameterName === 'PM2.5')
@@ -70,17 +72,21 @@ export async function GET(request) {
         
         // Use PM2.5 if available, otherwise use the first available reading
         const primaryReading = pm25Data || ozoneData || airData[0]
+        console.log('Primary Reading:', primaryReading) // Debug logging
         
         if (primaryReading) {
           airQualityData = {
             aqi: primaryReading.AQI,
             level: getAQILevel(primaryReading.AQI),
-            status: getAQIStatus(primaryReading.AQI),
+            status: primaryReading.Category?.Name || getAQIStatus(primaryReading.AQI),
             parameter: primaryReading.ParameterName,
-            lastUpdated: primaryReading.DateObserved
+            lastUpdated: primaryReading.DateObserved,
+            reportingArea: primaryReading.ReportingArea
           }
         }
       }
+    } else {
+      console.log('Air Quality API Error:', airQualityResponse.status, await airQualityResponse.text())
     }
     
     // Process the multi-day pollen response
