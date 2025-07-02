@@ -54,6 +54,14 @@ export default function Home() {
       script.defer = true;
       
       script.onload = () => {
+        // Hide any Google Maps error dialogs immediately after loading
+        setTimeout(() => {
+          const errorContainers = document.querySelectorAll('.gm-err-container, .gm-err-autocomplete');
+          errorContainers.forEach(container => {
+            (container as HTMLElement).style.display = 'none';
+          });
+        }, 100);
+        
         setTimeout(initializeAutocomplete, 200);
       };
       
@@ -368,6 +376,17 @@ export default function Home() {
             position: relative;
             margin-bottom: 2rem;
           }
+        }
+        
+        /* Hide Google Maps error dialogs */
+        .gm-err-container,
+        .gm-err-autocomplete {
+          display: none !important;
+        }
+        
+        /* Hide any Google Maps error overlays */
+        div[style*="background-color: rgba(0, 0, 0, 0.5)"] {
+          display: none !important;
         }
       `}</style>
       {/* Header */}
