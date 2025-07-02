@@ -346,7 +346,7 @@ export default function Home() {
     if (status_span) status_span.textContent = status
     if (level_span) level_span.textContent = aqi.toString()
   }
-}
+
   return (
     <div style={{
       fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
@@ -355,7 +355,7 @@ export default function Home() {
       lineHeight: '1.6',
       minHeight: '100vh'
     }}>
-      <style jsx>{`
+      {/*<style jsx>{`
         .pollen-cards-grid {
           display: grid;
           grid-template-columns: repeat(4, 1fr);
@@ -432,7 +432,7 @@ export default function Home() {
           }
         
         /* Hide Google Maps error dialogs - no longer needed */
-      `}</style>
+      `}</style>*/}
       {/* Header */}
       <header style={{
         background: 'white',
