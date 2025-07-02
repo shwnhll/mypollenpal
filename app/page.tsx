@@ -490,13 +490,6 @@ const updateForecast = (forecast: any[]) => {
           }}>
             Your personal pollen companion that delivers hyperlocal forecasts and actionable advice. Never be caught off guard again.
           </p>
-          <div style={{
-            fontSize: '0.8rem',
-            opacity: 0.7,
-            marginBottom: '3rem'
-          }}>
-            Powered by <span style={{ fontWeight: '600' }}>Google</span> • <span style={{ fontWeight: '600' }}>NOAA</span> • <span style={{ fontWeight: '600' }}>EPA</span>
-          </div>
 
           <div style={{
             maxWidth: '500px',
@@ -598,6 +591,14 @@ const updateForecast = (forecast: any[]) => {
                {loading ? '⏳ Loading...' : '🔍 Search'}
             </button>
           </div>
+          <div style={{
+            fontSize: '0.75rem',
+            opacity: 0.7,
+            marginTop: '1rem',
+            textAlign: 'center'
+}}>
+  Powered by <span style={{ fontWeight: '600' }}>Google</span> • <span style={{ fontWeight: '600' }}>NOAA</span> • <span style={{ fontWeight: '600' }}>EPA</span>
+</div>
         </div>
       </section>
 
