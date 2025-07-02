@@ -8,7 +8,7 @@ export async function GET(request) {
   if (!location) {
     return NextResponse.json({ error: 'Location is required' }, { status: 400 })
   }
-
+  
   try {
     // Geocoding (same as before)
     const geocodeUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(location)}&key=${process.env.GOOGLE_POLLEN_API_KEY}`
@@ -22,16 +22,33 @@ export async function GET(request) {
     const { lat, lng } = geocodeData.results[0].geometry.location
     const locationName = geocodeData.results[0].formatted_address
     
-    // Updated: Use the days parameter
-    const pollenUrl = `https://pollen.googleapis.com/v1/forecast:lookup?location.latitude=${lat}&location.longitude=${lng}&days=${days}&key=${process.env.GOOGLE_POLLEN_API_KEY}`
-    
-    const pollenResponse = await fetch(pollenUrl, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
+    // Extract ZIP code for AirNow API (it works better with ZIP codes)
+    let zipCode = null
+    const addressComponents = geocodeData.results[0].address_components
+    for (const component of addressComponents) {
+      if (component.types.includes('postal_code')) {
+        zipCode = component.long_name
+        break
       }
-    })
-
+    }
+    
+    // Parallel API calls for better performance
+    const [pollenResponse, airQualityResponse] = await Promise.all([
+      // Pollen API call
+      fetch(`https://pollen.googleapis.com/v1/forecast:lookup?location.latitude=${lat}&location.longitude=${lng}&days=${days}&key=${process.env.GOOGLE_POLLEN_API_KEY}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      }),
+      
+      // Air Quality API call (use ZIP if available, otherwise lat/lng)
+      zipCode 
+        ? fetch(`https://www.airnowapi.org/aq/observation/zipCode/current/?format=application/json&zipCode=${zipCode}&distance=25&API_KEY=${process.env.AIRNOW_API_KEY}`)
+        : fetch(`https://www.airnowapi.org/aq/observation/latLong/current/?format=application/json&latitude=${lat}&longitude=${lng}&distance=25&API_KEY=${process.env.AIRNOW_API_KEY}`)
+    ])
+    
+    // Check pollen response
     if (!pollenResponse.ok) {
       const errorData = await pollenResponse.text()
       return NextResponse.json({ 
@@ -39,16 +56,40 @@ export async function GET(request) {
         details: errorData 
       }, { status: 500 })
     }
-
+    
     const pollenData = await pollenResponse.json()
     
-    // Process the multi-day response
+    // Process air quality data (it might fail, so handle gracefully)
+    let airQualityData = null
+    if (airQualityResponse.ok) {
+      const airData = await airQualityResponse.json()
+      if (airData && airData.length > 0) {
+        // Find the PM2.5 reading (most important for health)
+        const pm25Data = airData.find(reading => reading.ParameterName === 'PM2.5')
+        const ozoneData = airData.find(reading => reading.ParameterName === 'O3')
+        
+        // Use PM2.5 if available, otherwise use the first available reading
+        const primaryReading = pm25Data || ozoneData || airData[0]
+        
+        if (primaryReading) {
+          airQualityData = {
+            aqi: primaryReading.AQI,
+            level: getAQILevel(primaryReading.AQI),
+            status: getAQIStatus(primaryReading.AQI),
+            parameter: primaryReading.ParameterName,
+            lastUpdated: primaryReading.DateObserved
+          }
+        }
+      }
+    }
+    
+    // Process the multi-day pollen response
     const dailyInfo = pollenData.dailyInfo || []
     
     if (dailyInfo.length === 0) {
       return NextResponse.json({ error: 'No pollen data available' }, { status: 404 })
     }
-
+    
     // Helper function to extract pollen info
     const getPollenInfo = (pollenTypes, code) => {
       const pollen = pollenTypes.find(p => p.code === code)
@@ -60,15 +101,16 @@ export async function GET(request) {
         status: pollen.indexInfo.category || 'Low'
       }
     }
-
-    // Structure response with current + forecast
+    
+    // Structure response with current + forecast + air quality
     const result = {
       location: locationName,
       lastUpdated: new Date().toLocaleString(),
       current: null,
-      forecast: []
+      forecast: [],
+      airQuality: airQualityData
     }
-
+    
     // Process each day
     dailyInfo.forEach((dayData, index) => {
       const pollenTypes = dayData.pollenTypeInfo || []
@@ -78,23 +120,45 @@ export async function GET(request) {
         grass: getPollenInfo(pollenTypes, 'GRASS'),
         weed: getPollenInfo(pollenTypes, 'WEED')
       }
-
+      
       if (index === 0) {
-        // First day is "current"
-        result.current = dayResult
+        // First day is "current" - add air quality here too
+        result.current = {
+          ...dayResult,
+          airQuality: airQualityData
+        }
       }
       
       // All days go in forecast array
       result.forecast.push(dayResult)
     })
-
+    
     return NextResponse.json(result)
     
   } catch (error) {
     console.error('API Error:', error)
     return NextResponse.json({ 
-      error: 'Failed to fetch pollen data',
+      error: 'Failed to fetch data',
       details: error.message 
     }, { status: 500 })
   }
+}
+
+// Helper functions for AQI processing
+function getAQILevel(aqi) {
+  if (aqi <= 50) return 1      // Good
+  if (aqi <= 100) return 2     // Moderate  
+  if (aqi <= 150) return 3     // Unhealthy for Sensitive Groups
+  if (aqi <= 200) return 4     // Unhealthy
+  if (aqi <= 300) return 5     // Very Unhealthy
+  return 6                     // Hazardous
+}
+
+function getAQIStatus(aqi) {
+  if (aqi <= 50) return 'Good'
+  if (aqi <= 100) return 'Moderate'
+  if (aqi <= 150) return 'Unhealthy for Sensitive Groups'
+  if (aqi <= 200) return 'Unhealthy'
+  if (aqi <= 300) return 'Very Unhealthy'
+  return 'Hazardous'
 }
