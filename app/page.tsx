@@ -358,7 +358,7 @@ export default function Home() {
       <style jsx>{`
         .pollen-cards-grid {
           display: grid;
-          grid-template-columns: repeat(3, 1fr);
+          grid-template-columns: repeat(4, 1fr);
           gap: 2rem;
           margin: 2rem 0;
         }
@@ -430,7 +430,6 @@ export default function Home() {
             position: relative;
             margin-bottom: 2rem;
           }
-        }
         
         /* Hide Google Maps error dialogs - no longer needed */
       `}</style>
