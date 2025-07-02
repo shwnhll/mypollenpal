@@ -454,7 +454,7 @@ const updateForecast = (forecast: any[]) => {
           <div style={{
             fontSize: '1.5rem',
             fontWeight: '600',
-            color: '#2d3748'
+            color: '#ffffff'
           }}>
             🤧 mypollenpal
           </div>
