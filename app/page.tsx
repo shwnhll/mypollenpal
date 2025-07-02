@@ -690,65 +690,6 @@ export default function Home() {
                 <span style={{ color: '#7c2d12' }}>4: Severe</span>
               </div>
 
-              {/* Air Quality Card */}
-              <div className="pollen-card" style={{
-                background: 'white',
-                borderRadius: '16px',
-                padding: '2rem',
-                textAlign: 'center',
-                boxShadow: '0 8px 25px rgba(0, 0, 0, 0.1)',
-                border: '1px solid #f1f3f4'
-              }}>
-                <div style={{
-                  fontSize: '1.8rem',
-                  marginBottom: '1rem'
-                }}>🌬️</div>
-                <div style={{
-                  fontWeight: '600',
-                  color: '#2d3748',
-                  marginBottom: '1.5rem'
-                }}>Air Quality</div>
-                
-                <div style={{
-                  position: 'relative',
-                  width: '80px',
-                  height: '80px',
-                  margin: '0 auto 1rem'
-                }}>
-                  <svg width="80" height="80" style={{ transform: 'rotate(-90deg)' }}>
-                    <circle cx="40" cy="40" r="32" fill="none" stroke="#e5e7eb" strokeWidth="6" />
-                    <circle
-                      id="airRing"
-                      cx="40" cy="40" r="32" fill="none" stroke="#10b981" strokeWidth="6"
-                      strokeDasharray="100.53 201.06" strokeLinecap="round"
-                    />
-                  </svg>
-                  <div style={{
-                    position: 'absolute',
-                    top: '50%',
-                    left: '50%',
-                    transform: 'translate(-50%, -50%)',
-                    fontSize: '1.2rem',
-                    fontWeight: '800',
-                    color: '#10b981'
-                  }} id="airLevelDisplay">
-                    <span id="airLevel">51</span>
-                  </div>
-                </div>
-                
-                <div style={{
-                  color: '#10b981',
-                  fontWeight: '600',
-                  marginBottom: '1rem',
-                  textTransform: 'uppercase',
-                  fontSize: '0.9rem',
-                  letterSpacing: '0.5px'
-                }} id="airStatusDisplay">
-                  <span id="airStatus">Good</span>
-                </div>
-              </div>
-            </div>
-
             <div style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(4, 1fr)',
@@ -926,6 +867,64 @@ export default function Home() {
                   letterSpacing: '0.5px'
                 }} id="weedStatusDisplay">
                   <span id="weedStatus">Low</span>
+                </div>
+              </div>
+
+                            {/* Air Quality Card */}
+              <div className="pollen-card" style={{
+                background: 'white',
+                borderRadius: '16px',
+                padding: '2rem',
+                textAlign: 'center',
+                boxShadow: '0 8px 25px rgba(0, 0, 0, 0.1)',
+                border: '1px solid #f1f3f4'
+              }}>
+                <div style={{
+                  fontSize: '1.8rem',
+                  marginBottom: '1rem'
+                }}>🌬️</div>
+                <div style={{
+                  fontWeight: '600',
+                  color: '#2d3748',
+                  marginBottom: '1.5rem'
+                }}>Air Quality</div>
+                
+                <div style={{
+                  position: 'relative',
+                  width: '80px',
+                  height: '80px',
+                  margin: '0 auto 1rem'
+                }}>
+                  <svg width="80" height="80" style={{ transform: 'rotate(-90deg)' }}>
+                    <circle cx="40" cy="40" r="32" fill="none" stroke="#e5e7eb" strokeWidth="6" />
+                    <circle
+                      id="airRing"
+                      cx="40" cy="40" r="32" fill="none" stroke="#10b981" strokeWidth="6"
+                      strokeDasharray="100.53 201.06" strokeLinecap="round"
+                    />
+                  </svg>
+                  <div style={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    fontSize: '1.2rem',
+                    fontWeight: '800',
+                    color: '#10b981'
+                  }} id="airLevelDisplay">
+                    <span id="airLevel">51</span>
+                  </div>
+                </div>
+                
+                <div style={{
+                  color: '#10b981',
+                  fontWeight: '600',
+                  marginBottom: '1rem',
+                  textTransform: 'uppercase',
+                  fontSize: '0.9rem',
+                  letterSpacing: '0.5px'
+                }} id="airStatusDisplay">
+                  <span id="airStatus">Good</span>
                 </div>
               </div>
             </div>
