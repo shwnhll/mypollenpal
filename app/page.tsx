@@ -463,7 +463,11 @@ const updateForecast = (forecast: any[]) => {
 
       {/* Hero Section */}
       <section style={{
-        background: 'linear-gradient(135deg, #1E90FF 0%, #0051D5 50%, #003AAF 100%)',
+        background: `
+          radial-gradient(circle at 20px 20px, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+          linear-gradient(135deg, #1E90FF 0%, #0051D5 50%, #003AAF 100%)
+        `,
+        backgroundSize: '20px 20px, cover',
         color: 'white',
         padding: '6rem 0 4rem 0',
         textAlign: 'center'
@@ -495,7 +499,7 @@ const updateForecast = (forecast: any[]) => {
             maxWidth: '500px',
             margin: '0 auto',
             position: 'relative',
-            boxShadow: '0 0 60px rgba(255, 255, 255, 0.15)'
+            boxShadow: '0 0 60px rgba(255, 255, 255, 0.25)'
           }}>
             <input 
               id="locationInput"
