@@ -327,14 +327,28 @@ export default function Home() {
         
         @media (max-width: 768px) {
           .pollen-cards-grid {
-            grid-template-columns: 1fr;
-            gap: 1.5rem;
+            grid-template-columns: 1fr !important;
+            gap: 1.5rem !important;
+            display: grid !important;
           }
           
-          .pollen-cards-grid > div {
-            max-width: none;
-            padding: 1.5rem 1rem;
+          .pollen-card {
+            max-width: none !important;
+            width: 100% !important;
+            margin: 0 auto !important;
           }
+        }
+        
+        @media (max-width: 480px) {
+          .pollen-cards-grid {
+            grid-template-columns: 1fr !important;
+            gap: 1rem !important;
+          }
+          
+          .pollen-card {
+            padding: 1.5rem 1rem !important;
+          }
+        }
           
           .forecast-container {
             justify-content: flex-start !important;
@@ -618,7 +632,7 @@ export default function Home() {
               margin: '2rem 0'
             }} className="pollen-cards-grid">
               {/* Tree Pollen Card */}
-              <div style={{
+              <div className="pollen-card" style={{
                 background: 'white',
                 borderRadius: '16px',
                 padding: '2rem',
@@ -676,7 +690,7 @@ export default function Home() {
               </div>
 
               {/* Grass Pollen Card */}
-              <div style={{
+              <div className="pollen-card" style={{
                 background: 'white',
                 borderRadius: '16px',
                 padding: '2rem',
@@ -734,7 +748,7 @@ export default function Home() {
               </div>
 
               {/* Weed Pollen Card */}
-              <div style={{
+              <div className="pollen-card" style={{
                 background: 'white',
                 borderRadius: '16px',
                 padding: '2rem',
