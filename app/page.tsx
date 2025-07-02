@@ -489,13 +489,6 @@ export default function Home() {
           }}>
             Your personal pollen companion that delivers hyperlocal forecasts and actionable advice. Never be caught off guard again.
           </p>
-          <div style={{
-            fontSize: '0.8rem',
-            opacity: 0.7,
-            marginBottom: '3rem'
-          }}>
-            Powered by <span style={{ fontWeight: '600' }}>Google</span> • <span style={{ fontWeight: '600' }}>NOAA</span> • <span style={{ fontWeight: '600' }}>EPA</span>
-          </div>
 
           <div style={{
             maxWidth: '500px',
@@ -597,6 +590,14 @@ export default function Home() {
                {loading ? '⏳ Loading...' : '🔍 Search'}
             </button>
           </div>
+          
+          <div style={{
+            fontSize: '0.8rem',
+            opacity: 0.7,
+            marginTop: '1rem'
+          }}>
+            Powered by <span style={{ fontWeight: '600' }}>Google</span> • <span style={{ fontWeight: '600' }}>NOAA</span> • <span style={{ fontWeight: '600' }}>EPA</span>
+          </div>
         </div>
       </section>
 
@@ -609,7 +610,8 @@ export default function Home() {
           margin: '0 auto',
           padding: '0 20px'
         }}>
-          {/* Current Pollen Data Card */}
+          {/* Current Pollen Data Card - only show after search */}
+          {hasSearched && (
           <div style={{
             background: 'white',
             borderRadius: '16px',
@@ -1158,7 +1160,7 @@ export default function Home() {
                 </div>
               </div>
             )}
-          </div>
+          )}
 
           {/* Data Sources */}
           <div style={{
