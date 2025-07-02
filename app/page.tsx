@@ -47,9 +47,9 @@ export default function Home() {
         return; // Don't load multiple times
       }
 
-      // Load the Google Places API script with proper async loading
+      // Load the Google Places API script with only places library (no maps)
       const script = document.createElement('script');
-      script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY}&libraries=places&loading=async`;
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY}&libraries=places&loading=async&v=3.55`;
       script.async = true;
       script.defer = true;
       
@@ -85,7 +85,13 @@ export default function Home() {
         const autocompleteInstance = new window.google.maps.places.Autocomplete(input, {
           types: ['(cities)'],
           componentRestrictions: { country: 'us' },
-          fields: ['formatted_address', 'geometry', 'place_id']
+          fields: ['formatted_address', 'place_id', 'name']
+        });
+        
+        // Disable the default map info window that causes the error
+        autocompleteInstance.setOptions({
+          strictBounds: false,
+          types: ['(cities)']
         });
         
         autocompleteInstance.addListener('place_changed', () => {
