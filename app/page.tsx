@@ -697,14 +697,7 @@ export default function Home() {
               margin: '2rem 0'
             }} className="pollen-cards-grid">
               {/* Tree Pollen Card */}
-              <div className="pollen-card" style={{
-                background: 'white',
-                borderRadius: '16px',
-                padding: '2rem',
-                textAlign: 'center',
-                boxShadow: '0 8px 25px rgba(0, 0, 0, 0.1)',
-                border: '1px solid #f1f3f4'
-              }}>
+              <div className="pollen-card">
                 <div style={{
                   fontSize: '1.8rem',
                   marginBottom: '1rem'
@@ -762,7 +755,7 @@ export default function Home() {
                 textAlign: 'center',
                 boxShadow: '0 8px 25px rgba(0, 0, 0, 0.1)',
                 border: '1px solid #f1f3f4'
-              }}>
+              <div className="pollen-card">
                 <div style={{
                   fontSize: '1.8rem',
                   marginBottom: '1rem'
@@ -795,13 +788,6 @@ export default function Home() {
                     fontSize: '1.5rem',
                     fontWeight: '800',
                     color: '#f59e0b'
-                  }} id="grassLevelDisplay">
-                    <span id="grassLevel">2</span>
-                  </div>
-                </div>
-                
-                <div style={{
-                  color: '#f59e0b',
                   fontWeight: '600',
                   marginBottom: '1rem',
                   textTransform: 'uppercase',
@@ -821,6 +807,13 @@ export default function Home() {
                 boxShadow: '0 8px 25px rgba(0, 0, 0, 0.1)',
                 border: '1px solid #f1f3f4'
               }}>
+                <div style={{
+                  fontSize: '1.8rem',
+                  marginBottom: '1rem'
+                }}>🌿</div>
+                <div style={{
+                  fontWeight: '600',
+              <div className="pollen-card">
                 <div style={{
                   fontSize: '1.8rem',
                   marginBottom: '1rem'
@@ -853,20 +846,6 @@ export default function Home() {
                     fontSize: '1.5rem',
                     fontWeight: '800',
                     color: '#10b981'
-                  }} id="weedLevelDisplay">
-                    <span id="weedLevel">1</span>
-                  </div>
-                </div>
-                
-                <div style={{
-                  color: '#10b981',
-                  fontWeight: '600',
-                  marginBottom: '1rem',
-                  textTransform: 'uppercase',
-                  fontSize: '0.9rem',
-                  letterSpacing: '0.5px'
-                }} id="weedStatusDisplay">
-                  <span id="weedStatus">Low</span>
                 </div>
               </div>
 
@@ -879,6 +858,20 @@ export default function Home() {
                 boxShadow: '0 8px 25px rgba(0, 0, 0, 0.1)',
                 border: '1px solid #f1f3f4'
               }}>
+                <div style={{
+                  fontSize: '1.8rem',
+                  marginBottom: '1rem'
+                }}>🌬️</div>
+                <div style={{
+                  fontWeight: '600',
+                  color: '#2d3748',
+                  marginBottom: '1.5rem'
+                }}>Air Quality</div>
+                
+                <div style={{
+                  position: 'relative',
+                  width: '80px',
+              <div className="pollen-card">
                 <div style={{
                   fontSize: '1.8rem',
                   marginBottom: '1rem'
@@ -911,27 +904,6 @@ export default function Home() {
                     fontSize: '1.2rem',
                     fontWeight: '800',
                     color: '#10b981'
-                  }} id="airLevelDisplay">
-                    <span id="airLevel">51</span>
-                  </div>
-                </div>
-                
-                <div style={{
-                  color: '#10b981',
-                  fontWeight: '600',
-                  marginBottom: '1rem',
-                  textTransform: 'uppercase',
-                  fontSize: '0.9rem',
-                  letterSpacing: '0.5px'
-                }} id="airStatusDisplay">
-                  <span id="airStatus">Good</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Overall advice section with inline email signup */}
-            <div style={{
-              background: '#f8fafc',
               padding: '1.5rem',
               borderRadius: '12px',
               textAlign: 'center',
