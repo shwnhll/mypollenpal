@@ -30,32 +30,32 @@ export default function Home() {
   // Load Google Places API
   useEffect(() => {
     const loadGooglePlaces = () => {
+      // Skip if no API key
+      if (!process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY) {
+        console.warn('Google Places API key not found. Autocomplete disabled.');
+        return;
+      }
+
       // Check if Google Places API is already loaded
       if (window.google && window.google.maps && window.google.maps.places) {
-        initializeAutocomplete();
+        setTimeout(initializeAutocomplete, 100);
         return;
       }
 
       // Check if script is already being loaded
       if (document.querySelector('script[src*="maps.googleapis.com"]')) {
-        // Wait for it to load
-        const checkLoaded = setInterval(() => {
-          if (window.google && window.google.maps && window.google.maps.places) {
-            clearInterval(checkLoaded);
-            initializeAutocomplete();
-          }
-        }, 100);
-        return;
+        return; // Don't load multiple times
       }
 
-      // Load the Google Places API script
+      // Load the Google Places API script with proper async loading
       const script = document.createElement('script');
-      script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY}&libraries=places&callback=initAutocomplete`;
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY}&libraries=places&loading=async`;
       script.async = true;
       script.defer = true;
       
-      // Define the callback function globally
-      window.initAutocomplete = initializeAutocomplete;
+      script.onload = () => {
+        setTimeout(initializeAutocomplete, 200);
+      };
       
       script.onerror = () => {
         console.warn('Google Places API failed to load. Autocomplete will not be available.');
@@ -67,30 +67,52 @@ export default function Home() {
     const initializeAutocomplete = () => {
       try {
         const input = document.getElementById('locationInput') as HTMLInputElement;
-        if (input && window.google && window.google.maps && window.google.maps.places) {
-          const autocompleteInstance = new window.google.maps.places.Autocomplete(input, {
-            types: ['(cities)'],
-            componentRestrictions: { country: 'us' }
-          });
-          
-          autocompleteInstance.addListener('place_changed', () => {
-            const place: GooglePlace = autocompleteInstance.getPlace();
-            if (place && place.formatted_address) {
-              input.value = place.formatted_address;
-              // Optionally trigger search automatically
-              // searchLocation();
-            }
-          });
-          
-          setAutocomplete(autocompleteInstance);
+        if (!input) {
+          return;
         }
+        
+        if (!window.google?.maps?.places?.Autocomplete) {
+          console.warn('Google Places Autocomplete not available');
+          return;
+        }
+        
+        // Don't initialize if already initialized
+        if (autocomplete) {
+          return;
+        }
+        
+        // Use the current (non-deprecated) Autocomplete constructor
+        const autocompleteInstance = new window.google.maps.places.Autocomplete(input, {
+          types: ['(cities)'],
+          componentRestrictions: { country: 'us' },
+          fields: ['formatted_address', 'geometry', 'place_id']
+        });
+        
+        autocompleteInstance.addListener('place_changed', () => {
+          try {
+            const place = autocompleteInstance.getPlace();
+            if (place?.formatted_address) {
+              input.value = place.formatted_address;
+            }
+          } catch (error) {
+            console.warn('Error handling place selection:', error);
+          }
+        });
+        
+        setAutocomplete(autocompleteInstance);
+        
       } catch (error) {
         console.warn('Failed to initialize Google Places autocomplete:', error);
+        // Continue without autocomplete - input will still work normally
       }
     };
 
-    loadGooglePlaces();
-  }, []);
+    // Only load if we don't have autocomplete yet
+    if (!autocomplete) {
+      const timer = setTimeout(loadGooglePlaces, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [autocomplete]);
 
   const searchLocation = async () => {
     const input = document.getElementById('locationInput') as HTMLInputElement
