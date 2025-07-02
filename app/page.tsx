@@ -171,10 +171,16 @@ export default function Home() {
       updatePollenCard('grass', data.current.grass.level, data.current.grass.status)
       updatePollenCard('weed', data.current.weed.level, data.current.weed.status)
       
+      // Update air quality card
+      if (data.current.airQuality) {
+        updateAirQualityCard(data.current.airQuality.aqi, data.current.airQuality.status)
+      }
+      
       updateOverallAdvice(
         parseInt(data.current.tree.level) || 0,
         parseInt(data.current.grass.level) || 0, 
-        parseInt(data.current.weed.level) || 0
+        parseInt(data.current.weed.level) || 0,
+        data.current.airQuality ? data.current.airQuality.level : 1
       )
     }
 
@@ -289,24 +295,56 @@ export default function Home() {
     }).join('')
   }
 
-  const updateOverallAdvice = (treeLevel: number, grassLevel: number, weedLevel: number) => {
-    const maxLevel = Math.max(treeLevel, grassLevel, weedLevel)
+  const updateOverallAdvice = (treeLevel: number, grassLevel: number, weedLevel: number, airLevel: number = 1) => {
+    const maxPollenLevel = Math.max(treeLevel, grassLevel, weedLevel)
+    const maxOverallLevel = Math.max(maxPollenLevel, airLevel)
     const advice_el = document.getElementById('overallAdvice')
     
     let advice = ''
-    if (maxLevel === 0) {
-      advice = "No significant pollen detected. Perfect day for all outdoor activities!"
-    } else if (maxLevel === 1) {
-      advice = "Low pollen levels. Great day for outdoor activities with minimal allergy risk."
-    } else if (maxLevel === 2) {
-      advice = "Medium pollen levels. Consider allergy meds if you're sensitive."
-    } else if (maxLevel === 3) {
-      advice = "High pollen day! Take precautions - consider staying indoors or taking medication."
+    if (maxOverallLevel === 0 || maxOverallLevel === 1) {
+      advice = "Great day for outdoor activities! Low pollen and good air quality."
+    } else if (maxOverallLevel === 2) {
+      advice = "Good day for most outdoor activities. Some sensitive individuals may experience mild symptoms."
+    } else if (maxOverallLevel === 3) {
+      advice = "Moderate conditions. Consider taking allergy medication if you're sensitive."
+    } else if (maxOverallLevel === 4) {
+      advice = "Poor conditions for outdoor activities. Take precautions and consider staying indoors."
     } else {
-      advice = "Severe pollen levels! Stay indoors if possible and take allergy medication."
+      advice = "Severe conditions! Stay indoors if possible and take allergy medication."
     }
     
     if (advice_el) advice_el.textContent = advice
+  }
+
+  const updateAirQualityCard = (aqi: number, status: string) => {
+    // Convert AQI to 1-6 scale for visual consistency
+    let level = 1
+    if (aqi <= 50) level = 1      // Good
+    else if (aqi <= 100) level = 2     // Moderate  
+    else if (aqi <= 150) level = 3     // Unhealthy for Sensitive Groups
+    else if (aqi <= 200) level = 4     // Unhealthy
+    else if (aqi <= 300) level = 5     // Very Unhealthy
+    else level = 6                     // Hazardous
+
+    let color = '#10b981' // Default green
+    if (level === 1) color = '#10b981'      // Green
+    else if (level === 2) color = '#f59e0b' // Yellow
+    else if (level === 3) color = '#f59e0b' // Orange
+    else if (level === 4) color = '#ef4444' // Red
+    else if (level >= 5) color = '#7c2d12'  // Dark red
+
+    const ring = document.getElementById('airRing')
+    const level_el = document.getElementById('airLevelDisplay')
+    const status_el = document.getElementById('airStatusDisplay')
+    const status_span = document.getElementById('airStatus')
+    const level_span = document.getElementById('airLevel')
+    
+    if (ring) ring.setAttribute('stroke', color)
+    if (ring) ring.setAttribute('stroke-dasharray', `${(level/6) * 201.06} 201.06`)
+    if (level_el) level_el.style.color = color
+    if (status_el) status_el.style.color = color
+    if (status_span) status_span.textContent = status
+    if (level_span) level_span.textContent = aqi.toString()
   }
 
   return (
@@ -336,6 +374,27 @@ export default function Home() {
             max-width: none !important;
             width: 100% !important;
             margin: 0 auto !important;
+          }
+          
+          .email-signup-inline {
+            flex-direction: column !important;
+          }
+          
+          .email-signup-inline input,
+          .email-signup-inline button {
+            width: 100% !important;
+            flex: none !important;
+            min-width: auto !important;
+          }
+          
+          .email-signup-hero {
+            flex-direction: column !important;
+            gap: 1rem !important;
+          }
+          
+          .email-signup-hero > div {
+            flex: none !important;
+            width: 100% !important;
           }
         }
         
@@ -430,6 +489,13 @@ export default function Home() {
           }}>
             Your personal pollen companion that delivers hyperlocal forecasts and actionable advice. Never be caught off guard again.
           </p>
+          <div style={{
+            fontSize: '0.8rem',
+            opacity: 0.7,
+            marginBottom: '3rem'
+          }}>
+            Powered by <span style={{ fontWeight: '600' }}>Google</span> • <span style={{ fontWeight: '600' }}>NOAA</span> • <span style={{ fontWeight: '600' }}>EPA</span>
+          </div>
 
           <div style={{
             maxWidth: '500px',
@@ -623,11 +689,69 @@ export default function Home() {
                 <span style={{ color: '#ef4444' }}>3: High</span>
                 <span style={{ color: '#7c2d12' }}>4: Severe</span>
               </div>
+
+              {/* Air Quality Card */}
+              <div className="pollen-card" style={{
+                background: 'white',
+                borderRadius: '16px',
+                padding: '2rem',
+                textAlign: 'center',
+                boxShadow: '0 8px 25px rgba(0, 0, 0, 0.1)',
+                border: '1px solid #f1f3f4'
+              }}>
+                <div style={{
+                  fontSize: '1.8rem',
+                  marginBottom: '1rem'
+                }}>🌬️</div>
+                <div style={{
+                  fontWeight: '600',
+                  color: '#2d3748',
+                  marginBottom: '1.5rem'
+                }}>Air Quality</div>
+                
+                <div style={{
+                  position: 'relative',
+                  width: '80px',
+                  height: '80px',
+                  margin: '0 auto 1rem'
+                }}>
+                  <svg width="80" height="80" style={{ transform: 'rotate(-90deg)' }}>
+                    <circle cx="40" cy="40" r="32" fill="none" stroke="#e5e7eb" strokeWidth="6" />
+                    <circle
+                      id="airRing"
+                      cx="40" cy="40" r="32" fill="none" stroke="#10b981" strokeWidth="6"
+                      strokeDasharray="100.53 201.06" strokeLinecap="round"
+                    />
+                  </svg>
+                  <div style={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    fontSize: '1.2rem',
+                    fontWeight: '800',
+                    color: '#10b981'
+                  }} id="airLevelDisplay">
+                    <span id="airLevel">51</span>
+                  </div>
+                </div>
+                
+                <div style={{
+                  color: '#10b981',
+                  fontWeight: '600',
+                  marginBottom: '1rem',
+                  textTransform: 'uppercase',
+                  fontSize: '0.9rem',
+                  letterSpacing: '0.5px'
+                }} id="airStatusDisplay">
+                  <span id="airStatus">Good</span>
+                </div>
+              </div>
             </div>
 
             <div style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(3, 1fr)',
+              gridTemplateColumns: 'repeat(4, 1fr)',
               gap: '2rem',
               margin: '2rem 0'
             }} className="pollen-cards-grid">
@@ -806,7 +930,7 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Overall advice section */}
+            {/* Overall advice section with inline email signup */}
             <div style={{
               background: '#f8fafc',
               padding: '1.5rem',
@@ -826,9 +950,81 @@ export default function Home() {
               <div style={{
                 fontSize: '0.9rem',
                 color: '#4a5568',
-                lineHeight: '1.5'
+                lineHeight: '1.5',
+                marginBottom: '1.5rem'
               }} id="overallAdvice">
                 Severe pollen levels! Stay indoors if possible and take allergy medication.
+              </div>
+              
+              {/* Inline Email Signup */}
+              <div style={{
+                borderTop: '1px solid #e2e8f0',
+                paddingTop: '1.5rem',
+                marginTop: '1.5rem'
+              }}>
+                <div style={{
+                  fontSize: '0.9rem',
+                  fontWeight: '600',
+                  color: '#2d3748',
+                  marginBottom: '1rem'
+                }}>
+                  📧 Get alerts like this daily
+                </div>
+                <div style={{
+                  display: 'flex',
+                  gap: '0.5rem',
+                  maxWidth: '400px',
+                  margin: '0 auto',
+                  flexWrap: 'wrap'
+                }} className="email-signup-inline">
+                  <input
+                    type="email"
+                    placeholder="your-email@example.com"
+                    style={{
+                      flex: '1',
+                      minWidth: '200px',
+                      padding: '0.75rem 1rem',
+                      border: '1px solid #d1d5db',
+                      borderRadius: '8px',
+                      fontSize: '0.9rem',
+                      outline: 'none'
+                    }}
+                  />
+                  <input
+                    type="text"
+                    placeholder="ZIP or City"
+                    style={{
+                      flex: '0 0 120px',
+                      padding: '0.75rem 1rem',
+                      border: '1px solid #d1d5db',
+                      borderRadius: '8px',
+                      fontSize: '0.9rem',
+                      outline: 'none'
+                    }}
+                  />
+                  <button
+                    style={{
+                      padding: '0.75rem 1.5rem',
+                      background: '#007AFF',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '8px',
+                      fontSize: '0.9rem',
+                      fontWeight: '600',
+                      cursor: 'pointer',
+                      whiteSpace: 'nowrap'
+                    }}
+                  >
+                    Subscribe
+                  </button>
+                </div>
+                <div style={{
+                  fontSize: '0.75rem',
+                  color: '#9ca3af',
+                  marginTop: '0.5rem'
+                }}>
+                  Daily alerts for your specific location
+                </div>
               </div>
             </div>
 
@@ -1165,7 +1361,7 @@ export default function Home() {
             </div>
           </div>
           
-          {/* Coming Soon */}
+          {/* Email Signup Section - Replace Coming Soon */}
           <div style={{
             background: 'linear-gradient(135deg, #007AFF 0%, #0051D5 100%)',
             color: 'white',
@@ -1178,23 +1374,85 @@ export default function Home() {
               fontWeight: '700',
               marginBottom: '1rem'
             }}>
-              Coming Soon: Email Alerts & Personal Tracking
+              📧 Never Miss a High Pollen Day
             </h2>
             <p style={{
               fontSize: '1.1rem',
               opacity: 0.9,
               marginBottom: '2rem'
             }}>
-              Get daily email alerts and track your personal allergy triggers with our upcoming premium features.
+              Get personalized daily alerts when pollen or air quality spike in your area.
             </p>
+            
             <div style={{
-              background: 'rgba(255, 255, 255, 0.15)',
-              padding: '1rem 2rem',
-              borderRadius: '50px',
-              display: 'inline-block',
-              fontWeight: '600'
+              maxWidth: '500px',
+              margin: '0 auto',
+              display: 'flex',
+              gap: '0.75rem',
+              flexWrap: 'wrap',
+              justifyContent: 'center',
+              alignItems: 'end'
+            }} className="email-signup-hero">
+              <div style={{ flex: '1', minWidth: '250px' }}>
+                <input
+                  type="email"
+                  placeholder="Enter your email address"
+                  style={{
+                    width: '100%',
+                    padding: '1rem 1.25rem',
+                    fontSize: '1rem',
+                    border: 'none',
+                    borderRadius: '12px',
+                    outline: 'none',
+                    boxShadow: '0 4px 15px rgba(0, 0, 0, 0.1)',
+                    background: 'white',
+                    color: '#2d3748',
+                    boxSizing: 'border-box'
+                  }}
+                />
+              </div>
+              <div style={{ flex: '0 0 140px' }}>
+                <input
+                  type="text"
+                  placeholder="ZIP or City"
+                  style={{
+                    width: '100%',
+                    padding: '1rem 1.25rem',
+                    fontSize: '1rem',
+                    border: 'none',
+                    borderRadius: '12px',
+                    outline: 'none',
+                    boxShadow: '0 4px 15px rgba(0, 0, 0, 0.1)',
+                    background: 'white',
+                    color: '#2d3748',
+                    boxSizing: 'border-box'
+                  }}
+                />
+              </div>
+              <button
+                style={{
+                  padding: '1rem 2rem',
+                  background: 'rgba(255, 255, 255, 0.2)',
+                  color: 'white',
+                  border: '2px solid rgba(255, 255, 255, 0.3)',
+                  borderRadius: '12px',
+                  fontSize: '1rem',
+                  fontWeight: '600',
+                  cursor: 'pointer',
+                  whiteSpace: 'nowrap',
+                  backdropFilter: 'blur(10px)'
+                }}
+              >
+                Get Daily Alerts
+              </button>
+            </div>
+            
+            <div style={{
+              marginTop: '1.5rem',
+              fontSize: '0.9rem',
+              opacity: 0.8
             }}>
-              📧 Email alerts • 📊 Symptom tracking • 🎯 Personal triggers
+              ✨ Personalized for your location • 📱 Mobile-friendly alerts • 🔒 Unsubscribe anytime
             </div>
           </div>
         </div>
