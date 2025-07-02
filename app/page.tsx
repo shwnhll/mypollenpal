@@ -463,7 +463,7 @@ const updateForecast = (forecast: any[]) => {
 
       {/* Hero Section */}
       <section style={{
-        background: 'linear-gradient(135deg, #007AFF 0%, #0051D5 100%)',
+        background: 'linear-gradient(135deg, #1E90FF 0%, #0051D5 50%, #003AAF 100%)',
         color: 'white',
         padding: '6rem 0 4rem 0',
         textAlign: 'center'
