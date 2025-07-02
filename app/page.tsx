@@ -638,300 +638,298 @@ const updateForecast = (forecast: any[]) => {
               </p>
             </div>
 
-            {/* Scale indicator - moved above cards */}
-            <div style={{
-              background: '#f8fafc',
-              padding: '1rem',
-              borderRadius: '8px',
-              textAlign: 'center',
-              marginBottom: '2rem',
-              border: '1px solid #e2e8f0'
-            }}>
-              <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '0.5rem',
-                fontSize: '0.9rem',
-                fontWeight: '600',
-                color: '#4a5568',
-                marginBottom: '0.5rem'
-              }}>
-                📊 Universal Pollen Index (0-4)
-                <span 
-                  style={{
-                    width: '16px',
-                    height: '16px',
-                    borderRadius: '50%',
-                    background: '#6b7280',
-                    color: 'white',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: '10px',
-                    fontWeight: 'bold',
-                    cursor: 'help'
-                  }} 
-                  title="Standardized scale used globally by health organizations to measure pollen levels and allergy risk"
-                  onClick={() => alert('Universal Pollen Index (0-4):\n\n0: None - No pollen detected\n1: Low - Minimal allergy risk\n2: Medium - Moderate allergy symptoms possible\n3: High - Significant allergy symptoms likely\n4: Severe - Very high allergy risk, stay indoors if possible\n\nThis standardized scale is used globally by health organizations to measure pollen levels and allergy risk.')}
-                >?</span>
-              </div>
-              <div style={{
-                display: 'flex',
-                justifyContent: 'center',
-                gap: '0.75rem',
-                flexWrap: 'wrap',
-                fontSize: '0.75rem',
-                color: '#6b7280'
-              }}>
-                <span style={{ color: '#9ca3af' }}>0: None</span>
-                <span style={{ color: '#10b981' }}>1: Low</span>
-                <span style={{ color: '#f59e0b' }}>2: Medium</span>
-                <span style={{ color: '#ef4444' }}>3: High</span>
-                <span style={{ color: '#7c2d12' }}>4: Severe</span>
-              </div>
-            </div>
-          </div>
+{/* Scale indicator */}
+<div style={{
+  background: '#f8fafc',
+  padding: '1rem',
+  borderRadius: '8px',
+  textAlign: 'center',
+  marginBottom: '2rem',
+  border: '1px solid #e2e8f0'
+}}>
+  <div style={{
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '0.5rem',
+    fontSize: '0.9rem',
+    fontWeight: '600',
+    color: '#4a5568',
+    marginBottom: '0.5rem'
+  }}>
+    📊 Universal Pollen Index (0-4)
+    <span 
+      style={{
+        width: '16px',
+        height: '16px',
+        borderRadius: '50%',
+        background: '#6b7280',
+        color: 'white',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontSize: '10px',
+        fontWeight: 'bold',
+        cursor: 'help'
+      }} 
+      title="Standardized scale used globally by health organizations to measure pollen levels and allergy risk"
+      onClick={() => alert('Universal Pollen Index (0-4):\n\n0: None - No pollen detected\n1: Low - Minimal allergy risk\n2: Medium - Moderate allergy symptoms possible\n3: High - Significant allergy symptoms likely\n4: Severe - Very high allergy risk, stay indoors if possible\n\nThis standardized scale is used globally by health organizations to measure pollen levels and allergy risk.')}
+    >?</span>
+  </div>
+  <div style={{
+    display: 'flex',
+    justifyContent: 'center',
+    gap: '0.75rem',
+    flexWrap: 'wrap',
+    fontSize: '0.75rem',
+    color: '#6b7280'
+  }}>
+    <span style={{ color: '#9ca3af' }}>0: None</span>
+    <span style={{ color: '#10b981' }}>1: Low</span>
+    <span style={{ color: '#f59e0b' }}>2: Medium</span>
+    <span style={{ color: '#ef4444' }}>3: High</span>
+    <span style={{ color: '#7c2d12' }}>4: Severe</span>
+  </div>
+</div>
 
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(4, 1fr)',
-              gap: '2rem',
-              margin: '2rem 0'
-            }} className="pollen-cards-grid">
-              {/* Tree Pollen Card */}
-              <div className="pollen-card" style={{
-                background: 'white',
-                borderRadius: '16px',
-                padding: '2rem',
-                textAlign: 'center',
-                boxShadow: '0 8px 25px rgba(0, 0, 0, 0.1)',
-                border: '1px solid #f1f3f4'
-              }}>
-                <div style={{
-                  fontSize: '1.8rem',
-                  marginBottom: '1rem'
-                }}>🌳</div>
-                <div style={{
-                  fontWeight: '600',
-                  color: '#2d3748',
-                  marginBottom: '1.5rem'
-                }}>Tree Pollen</div>
-                
-                <div style={{
-                  position: 'relative',
-                  width: '80px',
-                  height: '80px',
-                  margin: '0 auto 1rem'
-                }}>
-                  <svg width="80" height="80" style={{ transform: 'rotate(-90deg)' }}>
-                    <circle cx="40" cy="40" r="32" fill="none" stroke="#e5e7eb" strokeWidth="6" />
-                    <circle
-                      id="treeRing"
-                      cx="40" cy="40" r="32" fill="none" stroke="#7c2d12" strokeWidth="6"
-                      strokeDasharray="201.06 201.06" strokeLinecap="round"
-                    />
-                  </svg>
-                  <div style={{
-                    position: 'absolute',
-                    top: '50%',
-                    left: '50%',
-                    transform: 'translate(-50%, -50%)',
-                    fontSize: '1.5rem',
-                    fontWeight: '800',
-                    color: '#7c2d12'
-                  }} id="treeLevelDisplay">
-                    <span id="treeLevel">4</span>
-                  </div>
-                </div>
-                
-                <div style={{
-                  color: '#7c2d12',
-                  fontWeight: '600',
-                  marginBottom: '1rem',
-                  textTransform: 'uppercase',
-                  fontSize: '0.9rem',
-                  letterSpacing: '0.5px'
-                }} id="treeStatusDisplay">
-                  <span id="treeStatus">Severe</span>
-                </div>
-              </div>
+<div style={{
+  display: 'grid',
+  gridTemplateColumns: 'repeat(4, 1fr)',
+  gap: '2rem',
+  margin: '2rem 0'
+}} className="pollen-cards-grid">
+  {/* Tree Pollen Card */}
+  <div className="pollen-card" style={{
+    background: 'white',
+    borderRadius: '16px',
+    padding: '2rem',
+    textAlign: 'center',
+    boxShadow: '0 8px 25px rgba(0, 0, 0, 0.1)',
+    border: '1px solid #f1f3f4'
+  }}>
+    <div style={{
+      fontSize: '1.8rem',
+      marginBottom: '1rem'
+    }}>🌳</div>
+    <div style={{
+      fontWeight: '600',
+      color: '#2d3748',
+      marginBottom: '1.5rem'
+    }}>Tree Pollen</div>
+    
+    <div style={{
+      position: 'relative',
+      width: '80px',
+      height: '80px',
+      margin: '0 auto 1rem'
+    }}>
+      <svg width="80" height="80" style={{ transform: 'rotate(-90deg)' }}>
+        <circle cx="40" cy="40" r="32" fill="none" stroke="#e5e7eb" strokeWidth="6" />
+        <circle
+          id="treeRing"
+          cx="40" cy="40" r="32" fill="none" stroke="#7c2d12" strokeWidth="6"
+          strokeDasharray="201.06 201.06" strokeLinecap="round"
+        />
+      </svg>
+      <div style={{
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        fontSize: '1.5rem',
+        fontWeight: '800',
+        color: '#7c2d12'
+      }} id="treeLevelDisplay">
+        <span id="treeLevel">4</span>
+      </div>
+    </div>
+    
+    <div style={{
+      color: '#7c2d12',
+      fontWeight: '600',
+      marginBottom: '1rem',
+      textTransform: 'uppercase',
+      fontSize: '0.9rem',
+      letterSpacing: '0.5px'
+    }} id="treeStatusDisplay">
+      <span id="treeStatus">Severe</span>
+    </div>
+  </div>
 
-              {/* Grass Pollen Card */}
-              <div className="pollen-card" style={{
-                background: 'white',
-                borderRadius: '16px',
-                padding: '2rem',
-                textAlign: 'center',
-                boxShadow: '0 8px 25px rgba(0, 0, 0, 0.1)',
-                border: '1px solid #f1f3f4'
-              }}>
-                <div style={{
-                  fontSize: '1.8rem',
-                  marginBottom: '1rem'
-                }}>🌱</div>
-                <div style={{
-                  fontWeight: '600',
-                  color: '#2d3748',
-                  marginBottom: '1.5rem'
-                }}>Grass Pollen</div>
-                
-                <div style={{
-                  position: 'relative',
-                  width: '80px',
-                  height: '80px',
-                  margin: '0 auto 1rem'
-                }}>
-                  <svg width="80" height="80" style={{ transform: 'rotate(-90deg)' }}>
-                    <circle cx="40" cy="40" r="32" fill="none" stroke="#e5e7eb" strokeWidth="6" />
-                    <circle
-                      id="grassRing"
-                      cx="40" cy="40" r="32" fill="none" stroke="#f59e0b" strokeWidth="6"
-                      strokeDasharray="100.53 201.06" strokeLinecap="round"
-                    />
-                  </svg>
-                  <div style={{
-                    position: 'absolute',
-                    top: '50%',
-                    left: '50%',
-                    transform: 'translate(-50%, -50%)',
-                    fontSize: '1.5rem',
-                    fontWeight: '800',
-                    color: '#f59e0b'
-                  }} id="grassLevelDisplay">
-                    <span id="grassLevel">2</span>
-                  </div>
-                </div>
-                
-                <div style={{
-                  color: '#f59e0b',
-                  fontWeight: '600',
-                  marginBottom: '1rem',
-                  textTransform: 'uppercase',
-                  fontSize: '0.9rem',
-                  letterSpacing: '0.5px'
-                }} id="grassStatusDisplay">
-                  <span id="grassStatus">Medium</span>
-                </div>
-              </div>
+  {/* Grass Pollen Card */}
+  <div className="pollen-card" style={{
+    background: 'white',
+    borderRadius: '16px',
+    padding: '2rem',
+    textAlign: 'center',
+    boxShadow: '0 8px 25px rgba(0, 0, 0, 0.1)',
+    border: '1px solid #f1f3f4'
+  }}>
+    <div style={{
+      fontSize: '1.8rem',
+      marginBottom: '1rem'
+    }}>🌱</div>
+    <div style={{
+      fontWeight: '600',
+      color: '#2d3748',
+      marginBottom: '1.5rem'
+    }}>Grass Pollen</div>
+    
+    <div style={{
+      position: 'relative',
+      width: '80px',
+      height: '80px',
+      margin: '0 auto 1rem'
+    }}>
+      <svg width="80" height="80" style={{ transform: 'rotate(-90deg)' }}>
+        <circle cx="40" cy="40" r="32" fill="none" stroke="#e5e7eb" strokeWidth="6" />
+        <circle
+          id="grassRing"
+          cx="40" cy="40" r="32" fill="none" stroke="#f59e0b" strokeWidth="6"
+          strokeDasharray="100.53 201.06" strokeLinecap="round"
+        />
+      </svg>
+      <div style={{
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        fontSize: '1.5rem',
+        fontWeight: '800',
+        color: '#f59e0b'
+      }} id="grassLevelDisplay">
+        <span id="grassLevel">2</span>
+      </div>
+    </div>
+    
+    <div style={{
+      color: '#f59e0b',
+      fontWeight: '600',
+      marginBottom: '1rem',
+      textTransform: 'uppercase',
+      fontSize: '0.9rem',
+      letterSpacing: '0.5px'
+    }} id="grassStatusDisplay">
+      <span id="grassStatus">Medium</span>
+    </div>
+  </div>
 
-              {/* Weed Pollen Card */}
-              <div className="pollen-card" style={{
-                background: 'white',
-                borderRadius: '16px',
-                padding: '2rem',
-                textAlign: 'center',
-                boxShadow: '0 8px 25px rgba(0, 0, 0, 0.1)',
-                border: '1px solid #f1f3f4'
-              }}>
-                <div style={{
-                  fontSize: '1.8rem',
-                  marginBottom: '1rem'
-                }}>🌿</div>
-                <div style={{
-                  fontWeight: '600',
-                  color: '#2d3748',
-                  marginBottom: '1.5rem'
-                }}>Weed Pollen</div>
-                
-                <div style={{
-                  position: 'relative',
-                  width: '80px',
-                  height: '80px',
-                  margin: '0 auto 1rem'
-                }}>
-                  <svg width="80" height="80" style={{ transform: 'rotate(-90deg)' }}>
-                    <circle cx="40" cy="40" r="32" fill="none" stroke="#e5e7eb" strokeWidth="6" />
-                    <circle
-                      id="weedRing"
-                      cx="40" cy="40" r="32" fill="none" stroke="#10b981" strokeWidth="6"
-                      strokeDasharray="50.27 201.06" strokeLinecap="round"
-                    />
-                  </svg>
-                  <div style={{
-                    position: 'absolute',
-                    top: '50%',
-                    left: '50%',
-                    transform: 'translate(-50%, -50%)',
-                    fontSize: '1.5rem',
-                    fontWeight: '800',
-                    color: '#10b981'
-                  }} id="weedLevelDisplay">
-                    <span id="weedLevel">1</span>
-                  </div>
-                </div>
-                
-                <div style={{
-                  color: '#10b981',
-                  fontWeight: '600',
-                  marginBottom: '1rem',
-                  textTransform: 'uppercase',
-                  fontSize: '0.9rem',
-                  letterSpacing: '0.5px'
-                }} id="weedStatusDisplay">
-                  <span id="weedStatus">Low</span>
-                </div>
-              </div>
+  {/* Weed Pollen Card */}
+  <div className="pollen-card" style={{
+    background: 'white',
+    borderRadius: '16px',
+    padding: '2rem',
+    textAlign: 'center',
+    boxShadow: '0 8px 25px rgba(0, 0, 0, 0.1)',
+    border: '1px solid #f1f3f4'
+  }}>
+    <div style={{
+      fontSize: '1.8rem',
+      marginBottom: '1rem'
+    }}>🌿</div>
+    <div style={{
+      fontWeight: '600',
+      color: '#2d3748',
+      marginBottom: '1.5rem'
+    }}>Weed Pollen</div>
+    
+    <div style={{
+      position: 'relative',
+      width: '80px',
+      height: '80px',
+      margin: '0 auto 1rem'
+    }}>
+      <svg width="80" height="80" style={{ transform: 'rotate(-90deg)' }}>
+        <circle cx="40" cy="40" r="32" fill="none" stroke="#e5e7eb" strokeWidth="6" />
+        <circle
+          id="weedRing"
+          cx="40" cy="40" r="32" fill="none" stroke="#10b981" strokeWidth="6"
+          strokeDasharray="50.27 201.06" strokeLinecap="round"
+        />
+      </svg>
+      <div style={{
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        fontSize: '1.5rem',
+        fontWeight: '800',
+        color: '#10b981'
+      }} id="weedLevelDisplay">
+        <span id="weedLevel">1</span>
+      </div>
+    </div>
+    
+    <div style={{
+      color: '#10b981',
+      fontWeight: '600',
+      marginBottom: '1rem',
+      textTransform: 'uppercase',
+      fontSize: '0.9rem',
+      letterSpacing: '0.5px'
+    }} id="weedStatusDisplay">
+      <span id="weedStatus">Low</span>
+    </div>
+  </div>
 
-                            {/* Air Quality Card */}
-              <div className="pollen-card" style={{
-                background: 'white',
-                borderRadius: '16px',
-                padding: '2rem',
-                textAlign: 'center',
-                boxShadow: '0 8px 25px rgba(0, 0, 0, 0.1)',
-                border: '1px solid #f1f3f4'
-              }}>
-                <div style={{
-                  fontSize: '1.8rem',
-                  marginBottom: '1rem'
-                }}>🌬️</div>
-                <div style={{
-                  fontWeight: '600',
-                  color: '#2d3748',
-                  marginBottom: '1.5rem'
-                }}>Air Quality</div>
-                
-                <div style={{
-                  position: 'relative',
-                  width: '80px',
-                  height: '80px',
-                  margin: '0 auto 1rem'
-                }}>
-                  <svg width="80" height="80" style={{ transform: 'rotate(-90deg)' }}>
-                    <circle cx="40" cy="40" r="32" fill="none" stroke="#e5e7eb" strokeWidth="6" />
-                    <circle
-                      id="airRing"
-                      cx="40" cy="40" r="32" fill="none" stroke="#10b981" strokeWidth="6"
-                      strokeDasharray="100.53 201.06" strokeLinecap="round"
-                    />
-                  </svg>
-                  <div style={{
-                    position: 'absolute',
-                    top: '50%',
-                    left: '50%',
-                    transform: 'translate(-50%, -50%)',
-                    fontSize: '1.2rem',
-                    fontWeight: '800',
-                    color: '#10b981'
-                  }} id="airLevelDisplay">
-                    <span id="airLevel">51</span>
-                  </div>
-                </div>
-                
-                <div style={{
-                  color: '#10b981',
-                  fontWeight: '600',
-                  marginBottom: '1rem',
-                  textTransform: 'uppercase',
-                  fontSize: '0.9rem',
-                  letterSpacing: '0.5px'
-                }} id="airStatusDisplay">
-                  <span id="airStatus">Good</span>
-                </div>
-              </div>
-            </div>
-
+  {/* Air Quality Card */}
+  <div className="pollen-card" style={{
+    background: 'white',
+    borderRadius: '16px',
+    padding: '2rem',
+    textAlign: 'center',
+    boxShadow: '0 8px 25px rgba(0, 0, 0, 0.1)',
+    border: '1px solid #f1f3f4'
+  }}>
+    <div style={{
+      fontSize: '1.8rem',
+      marginBottom: '1rem'
+    }}>🌬️</div>
+    <div style={{
+      fontWeight: '600',
+      color: '#2d3748',
+      marginBottom: '1.5rem'
+    }}>Air Quality</div>
+    
+    <div style={{
+      position: 'relative',
+      width: '80px',
+      height: '80px',
+      margin: '0 auto 1rem'
+    }}>
+      <svg width="80" height="80" style={{ transform: 'rotate(-90deg)' }}>
+        <circle cx="40" cy="40" r="32" fill="none" stroke="#e5e7eb" strokeWidth="6" />
+        <circle
+          id="airRing"
+          cx="40" cy="40" r="32" fill="none" stroke="#10b981" strokeWidth="6"
+          strokeDasharray="100.53 201.06" strokeLinecap="round"
+        />
+      </svg>
+      <div style={{
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        fontSize: '1.2rem',
+        fontWeight: '800',
+        color: '#10b981'
+      }} id="airLevelDisplay">
+        <span id="airLevel">51</span>
+      </div>
+    </div>
+    
+    <div style={{
+      color: '#10b981',
+      fontWeight: '600',
+      marginBottom: '1rem',
+      textTransform: 'uppercase',
+      fontSize: '0.9rem',
+      letterSpacing: '0.5px'
+    }} id="airStatusDisplay">
+      <span id="airStatus">Good</span>
+    </div>
+  </div>
+</div>
             {/* Overall advice section with inline email signup */}
             <div style={{
               background: '#f8fafc',
