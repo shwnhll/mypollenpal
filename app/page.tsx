@@ -1078,21 +1078,16 @@ export default function Home() {
                       else if (maxLevel === 3) color = '#ef4444'
                       else if (maxLevel >= 4) color = '#7c2d12'
 
-                      return (
+              return (
                         <div key={index} style={{
                           background: 'white',
                           borderRadius: '12px',
                           padding: '1.5rem 1rem',
                           textAlign: 'center',
-                          boxShadow: '0 4px 15px rgba(0, 0, 0, 0.1)',
-                    background: 'white',
-                    color: '#2d3748',
-                    boxSizing: 'border-box'
-                  }}
-                />
-              </div>
-              <div style={{ flex: '0 0 140px' }}>
-                <input
+                          boxShadow: '0 4px 15px rgba(0, 0, 0, 0.05)',
+                          border: '1px solid #f1f3f4',
+                          minWidth: '120px'
+                        }}>
                   type="text"
                   placeholder="ZIP or City"
                   style={{
@@ -1464,52 +1459,3 @@ export default function Home() {
                   }}
                 />
               </div>
-              <div style={{ flex: '0 0 140px' }}>
-                <input
-                  type="text"
-                  placeholder="ZIP or City"
-                  style={{
-                    width: '100%',
-                    padding: '1rem 1.25rem',
-                    fontSize: '1rem',
-                    border: 'none',
-                    borderRadius: '12px',
-                    outline: 'none',
-                    boxShadow: '0 4px 15px rgba(0, 0, 0, 0.1)',
-                    background: 'white',
-                    color: '#2d3748',
-                    boxSizing: 'border-box'
-                  }}
-                />
-              </div>
-              <button
-                style={{
-                  padding: '1rem 2rem',
-                  background: 'rgba(255, 255, 255, 0.2)',
-                  color: 'white',
-                  border: '2px solid rgba(255, 255, 255, 0.3)',
-                  borderRadius: '12px',
-                  fontSize: '1rem',
-                  fontWeight: '600',
-                  cursor: 'pointer',
-                  whiteSpace: 'nowrap',
-                  backdropFilter: 'blur(10px)'
-                }}
-              >
-                Get Daily Alerts
-              </button>
-            </div>
-            
-            <div style={{
-              marginTop: '1.5rem',
-              fontSize: '0.9rem',
-              opacity: 0.8
-            }}>
-              ✨ Personalized for your location • 📱 Mobile-friendly alerts • 🔒 Unsubscribe anytime
-            </div>
-          </div>
-        </div>
-      </section>
-    </div>
-  )
-}
