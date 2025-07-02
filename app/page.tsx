@@ -430,6 +430,7 @@ export default function Home() {
             position: relative;
             margin-bottom: 2rem;
           }
+        }
         
         /* Hide Google Maps error dialogs - no longer needed */
       `}</style>*/}
