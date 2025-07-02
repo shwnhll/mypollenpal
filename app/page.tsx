@@ -338,7 +338,8 @@ export default function Home() {
     if (status_el) status_el.style.color = color
     if (status_span) status_span.textContent = status
     if (level_span) level_span.textContent = aqi.toString()
-
+  }
+  
   return (
     <div style={{
       fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
@@ -1456,4 +1457,59 @@ export default function Home() {
                     border: 'none',
                     borderRadius: '12px',
                     outline: 'none',
-                    boxShadow: '0
+                    boxShadow: '0 4px 15px rgba(0, 0, 0, 0.1)',
+                    background: 'white',
+                    color: '#2d3748',
+                    boxSizing: 'border-box'
+                  }}
+                />
+              </div>
+              <div style={{ flex: '0 0 140px' }}>
+                <input
+                  type="text"
+                  placeholder="ZIP or City"
+                  style={{
+                    width: '100%',
+                    padding: '1rem 1.25rem',
+                    fontSize: '1rem',
+                    border: 'none',
+                    borderRadius: '12px',
+                    outline: 'none',
+                    boxShadow: '0 4px 15px rgba(0, 0, 0, 0.1)',
+                    background: 'white',
+                    color: '#2d3748',
+                    boxSizing: 'border-box'
+                  }}
+                />
+              </div>
+              <button
+                style={{
+                  padding: '1rem 2rem',
+                  background: 'rgba(255, 255, 255, 0.2)',
+                  color: 'white',
+                  border: '2px solid rgba(255, 255, 255, 0.3)',
+                  borderRadius: '12px',
+                  fontSize: '1rem',
+                  fontWeight: '600',
+                  cursor: 'pointer',
+                  whiteSpace: 'nowrap',
+                  backdropFilter: 'blur(10px)'
+                }}
+              >
+                Get Daily Alerts
+              </button>
+            </div>
+            
+            <div style={{
+              marginTop: '1.5rem',
+              fontSize: '0.9rem',
+              opacity: 0.8
+            }}>
+              ✨ Personalized for your location • 📱 Mobile-friendly alerts • 🔒 Unsubscribe anytime
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  )
+}
