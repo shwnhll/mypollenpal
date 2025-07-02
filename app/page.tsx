@@ -338,7 +338,6 @@ export default function Home() {
     if (status_el) status_el.style.color = color
     if (status_span) status_span.textContent = status
     if (level_span) level_span.textContent = aqi.toString()
-  }
 
   return (
     <div style={{
