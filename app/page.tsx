@@ -346,7 +346,7 @@ export default function Home() {
     if (status_span) status_span.textContent = status
     if (level_span) level_span.textContent = aqi.toString()
   }
-
+}
   return (
     <div style={{
       fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
