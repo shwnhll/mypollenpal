@@ -33,19 +33,28 @@ export async function GET(request) {
     }
     
     // Parallel API calls for better performance
+    const pollenUrl = `https://pollen.googleapis.com/v1/forecast:lookup?location.latitude=${lat}&location.longitude=${lng}&days=${days}&key=${process.env.GOOGLE_POLLEN_API_KEY}`
+    
+    // Build air quality URL
+    const airQualityUrl = zipCode 
+      ? `https://www.airnowapi.org/aq/observation/zipCode/current/?format=application/json&zipCode=${zipCode}&distance=25&API_KEY=${process.env.NEXT_PUBLIC_AIRNOW_API_KEY}`
+      : `https://www.airnowapi.org/aq/observation/latLong/current/?format=application/json&latitude=${lat}&longitude=${lng}&distance=25&API_KEY=${process.env.NEXT_PUBLIC_AIRNOW_API_KEY}`
+    
+    console.log('Air Quality URL:', airQualityUrl.replace(process.env.NEXT_PUBLIC_AIRNOW_API_KEY, 'HIDDEN_KEY'))
+    console.log('ZIP Code found:', zipCode)
+    console.log('AirNow API Key exists:', !!process.env.NEXT_PUBLIC_AIRNOW_API_KEY)
+    
     const [pollenResponse, airQualityResponse] = await Promise.all([
       // Pollen API call
-      fetch(`https://pollen.googleapis.com/v1/forecast:lookup?location.latitude=${lat}&location.longitude=${lng}&days=${days}&key=${process.env.GOOGLE_POLLEN_API_KEY}`, {
+      fetch(pollenUrl, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
         }
       }),
       
-      // Air Quality API call (use ZIP if available, otherwise lat/lng)
-      zipCode 
-        ? fetch(`https://www.airnowapi.org/aq/observation/zipCode/current/?format=application/json&zipCode=${zipCode}&distance=25&API_KEY=${process.env.AIRNOW_API_KEY}`)
-        : fetch(`https://www.airnowapi.org/aq/observation/latLong/current/?format=application/json&latitude=${lat}&longitude=${lng}&distance=25&API_KEY=${process.env.AIRNOW_API_KEY}`)
+      // Air Quality API call
+      fetch(airQualityUrl)
     ])
     
     // Check pollen response
