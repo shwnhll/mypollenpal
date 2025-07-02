@@ -346,7 +346,6 @@ const updateForecast = (forecast: any[]) => {
     if (status_span) status_span.textContent = status
     if (level_span) level_span.textContent = aqi.toString()
   }
-}
 
   return (
     <div style={{
