@@ -140,6 +140,13 @@ export default function Home() {
     setLoading(false)
   }
 
+  // Handle Enter key
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      searchLocation()
+    }
+  }
+
   const updateDisplay = (data: any) => {
     // Update current day display
     const locationEl = document.getElementById('currentLocation')
@@ -339,7 +346,7 @@ export default function Home() {
     if (status_span) status_span.textContent = status
     if (level_span) level_span.textContent = aqi.toString()
   }
-  
+
   return (
     <div style={{
       fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
@@ -351,16 +358,9 @@ export default function Home() {
       <style jsx>{`
         .pollen-cards-grid {
           display: grid;
-          grid-template-columns: repeat(4, 1fr);
+          grid-template-columns: repeat(3, 1fr);
           gap: 2rem;
           margin: 2rem 0;
-        }
-        
-        @media (max-width: 1024px) {
-          .pollen-cards-grid {
-            grid-template-columns: repeat(2, 1fr) !important;
-            gap: 1.5rem !important;
-          }
         }
         
         @media (max-width: 768px) {
@@ -407,13 +407,12 @@ export default function Home() {
           .pollen-card {
             padding: 1.5rem 1rem !important;
           }
+        }
           
           .forecast-container {
             justify-content: flex-start !important;
             padding-left: 1rem;
             padding-right: 1rem;
-            position: relative;
-            margin-bottom: 2rem;
           }
           
           .forecast-container::after {
@@ -426,9 +425,15 @@ export default function Home() {
             color: #9ca3af;
             white-space: nowrap;
           }
+          
+          .forecast-container {
+            position: relative;
+            margin-bottom: 2rem;
+          }
         }
+        
+        /* Hide Google Maps error dialogs - no longer needed */
       `}</style>
-      
       {/* Header */}
       <header style={{
         background: 'white',
@@ -607,567 +612,479 @@ export default function Home() {
         }}>
           {/* Current Pollen Data Card - only show after search */}
           {hasSearched && (
+          <div style={{
+            background: 'white',
+            borderRadius: '16px',
+            padding: '2.5rem',
+            marginBottom: '2rem',
+            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)'
+          }}>
             <div style={{
-              background: 'white',
-              borderRadius: '16px',
-              padding: '2.5rem',
+              textAlign: 'center',
+              marginBottom: '2rem'
+            }}>
+              <h2 style={{
+                fontSize: '2rem',
+                fontWeight: '700',
+                color: '#2d3748',
+                marginBottom: '0.5rem'
+              }} id="currentLocation">
+                Carmel, Indiana
+              </h2>
+              <p style={{
+                color: '#718096',
+                fontSize: '0.9rem'
+              }} id="lastUpdated">
+                Sample data - Enter a location to see real pollen levels
+              </p>
+            </div>
+
+            {/* Scale indicator - moved above cards */}
+            <div style={{
+              background: '#f8fafc',
+              padding: '1rem',
+              borderRadius: '8px',
+              textAlign: 'center',
               marginBottom: '2rem',
-              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)'
+              border: '1px solid #e2e8f0'
             }}>
               <div style={{
-                textAlign: 'center',
-                marginBottom: '2rem'
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '0.5rem',
+                fontSize: '0.9rem',
+                fontWeight: '600',
+                color: '#4a5568',
+                marginBottom: '0.5rem'
               }}>
-                <h2 style={{
-                  fontSize: '2rem',
-                  fontWeight: '700',
-                  color: '#2d3748',
-                  marginBottom: '0.5rem'
-                }} id="currentLocation">
-                  Carmel, Indiana
-                </h2>
-                <p style={{
-                  color: '#718096',
-                  fontSize: '0.9rem'
-                }} id="lastUpdated">
-                  Sample data - Enter a location to see real pollen levels
-                </p>
+                📊 Universal Pollen Index (0-4)
+                <span 
+                  style={{
+                    width: '16px',
+                    height: '16px',
+                    borderRadius: '50%',
+                    background: '#6b7280',
+                    color: 'white',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '10px',
+                    fontWeight: 'bold',
+                    cursor: 'help'
+                  }} 
+                  title="Standardized scale used globally by health organizations to measure pollen levels and allergy risk"
+                  onClick={() => alert('Universal Pollen Index (0-4):\n\n0: None - No pollen detected\n1: Low - Minimal allergy risk\n2: Medium - Moderate allergy symptoms possible\n3: High - Significant allergy symptoms likely\n4: Severe - Very high allergy risk, stay indoors if possible\n\nThis standardized scale is used globally by health organizations to measure pollen levels and allergy risk.')}
+                >?</span>
               </div>
-
-              {/* Scale indicator - moved above cards */}
               <div style={{
-                background: '#f8fafc',
-                padding: '1rem',
-                borderRadius: '8px',
-                textAlign: 'center',
-                marginBottom: '2rem',
-                border: '1px solid #e2e8f0'
+                display: 'flex',
+                justifyContent: 'center',
+                gap: '0.75rem',
+                flexWrap: 'wrap',
+                fontSize: '0.75rem',
+                color: '#6b7280'
               }}>
-                <div style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '0.5rem',
-                  fontSize: '0.9rem',
-                  fontWeight: '600',
-                  color: '#4a5568',
-                  marginBottom: '0.5rem'
-                }}>
-                  📊 Universal Pollen Index (0-4)
-                  <span 
-                    style={{
-                      width: '16px',
-                      height: '16px',
-                      borderRadius: '50%',
-                      background: '#6b7280',
-                      color: 'white',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      fontSize: '10px',
-                      fontWeight: 'bold',
-                      cursor: 'help'
-                    }} 
-                    title="Standardized scale used globally by health organizations to measure pollen levels and allergy risk"
-                    onClick={() => alert('Universal Pollen Index (0-4):\n\n0: None - No pollen detected\n1: Low - Minimal allergy risk\n2: Medium - Moderate allergy symptoms possible\n3: High - Significant allergy symptoms likely\n4: Severe - Very high allergy risk, stay indoors if possible\n\nThis standardized scale is used globally by health organizations to measure pollen levels and allergy risk.')}
-                  >?</span>
-                </div>
-                <div style={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  gap: '0.75rem',
-                  flexWrap: 'wrap',
-                  fontSize: '0.75rem',
-                  color: '#6b7280'
-                }}>
-                  <span style={{ color: '#9ca3af' }}>0: None</span>
-                  <span style={{ color: '#10b981' }}>1: Low</span>
-                  <span style={{ color: '#f59e0b' }}>2: Medium</span>
-                  <span style={{ color: '#ef4444' }}>3: High</span>
-                  <span style={{ color: '#7c2d12' }}>4: Severe</span>
-                </div>
+                <span style={{ color: '#9ca3af' }}>0: None</span>
+                <span style={{ color: '#10b981' }}>1: Low</span>
+                <span style={{ color: '#f59e0b' }}>2: Medium</span>
+                <span style={{ color: '#ef4444' }}>3: High</span>
+                <span style={{ color: '#7c2d12' }}>4: Severe</span>
               </div>
+            </div>
 
-              <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(4, 1fr)',
-                gap: '2rem',
-                margin: '2rem 0'
-              }} className="pollen-cards-grid">
-                {/* Tree Pollen Card */}
-                <div className="pollen-card" style={{
-                  background: 'white',
-                  borderRadius: '16px',
-                  padding: '2rem',
-                  textAlign: 'center',
-                  boxShadow: '0 8px 25px rgba(0, 0, 0, 0.1)',
-                  border: '1px solid #f1f3f4'
-                }}>
-                  <div style={{
-                    fontSize: '1.8rem',
-                    marginBottom: '1rem'
-                  }}>🌳</div>
-                  <div style={{
-                    fontWeight: '600',
-                    color: '#2d3748',
-                    marginBottom: '1.5rem'
-                  }}>Tree Pollen</div>
-                  
-                  <div style={{
-                    position: 'relative',
-                    width: '80px',
-                    height: '80px',
-                    margin: '0 auto 1rem'
-                  }}>
-                    <svg width="80" height="80" style={{ transform: 'rotate(-90deg)' }}>
-                      <circle cx="40" cy="40" r="32" fill="none" stroke="#e5e7eb" strokeWidth="6" />
-                      <circle
-                        id="treeRing"
-                        cx="40" cy="40" r="32" fill="none" stroke="#7c2d12" strokeWidth="6"
-                        strokeDasharray="201.06 201.06" strokeLinecap="round"
-                      />
-                    </svg>
-                    <div style={{
-                      position: 'absolute',
-                      top: '50%',
-                      left: '50%',
-                      transform: 'translate(-50%, -50%)',
-                      fontSize: '1.5rem',
-                      fontWeight: '800',
-                      color: '#7c2d12'
-                    }} id="treeLevelDisplay">
-                      <span id="treeLevel">4</span>
-                    </div>
-                  </div>
-                  
-                  <div style={{
-                    color: '#7c2d12',
-                    fontWeight: '600',
-                    marginBottom: '1rem',
-                    textTransform: 'uppercase',
-                    fontSize: '0.9rem',
-                    letterSpacing: '0.5px'
-                  }} id="treeStatusDisplay">
-                    <span id="treeStatus">Severe</span>
-                  </div>
-                </div>
-
-                {/* Grass Pollen Card */}
-                <div className="pollen-card" style={{
-                  background: 'white',
-                  borderRadius: '16px',
-                  padding: '2rem',
-                  textAlign: 'center',
-                  boxShadow: '0 8px 25px rgba(0, 0, 0, 0.1)',
-                  border: '1px solid #f1f3f4'
-                }}>
-                  <div style={{
-                    fontSize: '1.8rem',
-                    marginBottom: '1rem'
-                  }}>🌱</div>
-                  <div style={{
-                    fontWeight: '600',
-                    color: '#2d3748',
-                    marginBottom: '1.5rem'
-                  }}>Grass Pollen</div>
-                  
-                  <div style={{
-                    position: 'relative',
-                    width: '80px',
-                    height: '80px',
-                    margin: '0 auto 1rem'
-                  }}>
-                    <svg width="80" height="80" style={{ transform: 'rotate(-90deg)' }}>
-                      <circle cx="40" cy="40" r="32" fill="none" stroke="#e5e7eb" strokeWidth="6" />
-                      <circle
-                        id="grassRing"
-                        cx="40" cy="40" r="32" fill="none" stroke="#f59e0b" strokeWidth="6"
-                        strokeDasharray="100.53 201.06" strokeLinecap="round"
-                      />
-                    </svg>
-                    <div style={{
-                      position: 'absolute',
-                      top: '50%',
-                      left: '50%',
-                      transform: 'translate(-50%, -50%)',
-                      fontSize: '1.5rem',
-                      fontWeight: '800',
-                      color: '#f59e0b'
-                    }} id="grassLevelDisplay">
-                      <span id="grassLevel">2</span>
-                    </div>
-                  </div>
-                  
-                  <div style={{
-                    color: '#f59e0b',
-                    fontWeight: '600',
-                    marginBottom: '1rem',
-                    textTransform: 'uppercase',
-                    fontSize: '0.9rem',
-                    letterSpacing: '0.5px'
-                  }} id="grassStatusDisplay">
-                    <span id="grassStatus">Medium</span>
-                  </div>
-                </div>
-
-                {/* Weed Pollen Card */}
-                <div className="pollen-card" style={{
-                  background: 'white',
-                  borderRadius: '16px',
-                  padding: '2rem',
-                  textAlign: 'center',
-                  boxShadow: '0 8px 25px rgba(0, 0, 0, 0.1)',
-                  border: '1px solid #f1f3f4'
-                }}>
-                  <div style={{
-                    fontSize: '1.8rem',
-                    marginBottom: '1rem'
-                  }}>🌿</div>
-                  <div style={{
-                    fontWeight: '600',
-                    color: '#2d3748',
-                    marginBottom: '1.5rem'
-                  }}>Weed Pollen</div>
-                  
-                  <div style={{
-                    position: 'relative',
-                    width: '80px',
-                    height: '80px',
-                    margin: '0 auto 1rem'
-                  }}>
-                    <svg width="80" height="80" style={{ transform: 'rotate(-90deg)' }}>
-                      <circle cx="40" cy="40" r="32" fill="none" stroke="#e5e7eb" strokeWidth="6" />
-                      <circle
-                        id="weedRing"
-                        cx="40" cy="40" r="32" fill="none" stroke="#10b981" strokeWidth="6"
-                        strokeDasharray="50.27 201.06" strokeLinecap="round"
-                      />
-                    </svg>
-                    <div style={{
-                      position: 'absolute',
-                      top: '50%',
-                      left: '50%',
-                      transform: 'translate(-50%, -50%)',
-                      fontSize: '1.5rem',
-                      fontWeight: '800',
-                      color: '#10b981'
-                    }} id="weedLevelDisplay">
-                      <span id="weedLevel">1</span>
-                    </div>
-                  </div>
-                  
-                  <div style={{
-                    color: '#10b981',
-                    fontWeight: '600',
-                    marginBottom: '1rem',
-                    textTransform: 'uppercase',
-                    fontSize: '0.9rem',
-                    letterSpacing: '0.5px'
-                  }} id="weedStatusDisplay">
-                    <span id="weedStatus">Low</span>
-                  </div>
-                </div>
-
-                {/* Air Quality Card */}
-                <div className="pollen-card" style={{
-                  background: 'white',
-                  borderRadius: '16px',
-                  padding: '2rem',
-                  textAlign: 'center',
-                  boxShadow: '0 8px 25px rgba(0, 0, 0, 0.1)',
-                  border: '1px solid #f1f3f4'
-                }}>
-                  <div style={{
-                    fontSize: '1.8rem',
-                    marginBottom: '1rem'
-                  }}>🌬️</div>
-                  <div style={{
-                    fontWeight: '600',
-                    color: '#2d3748',
-                    marginBottom: '1.5rem'
-                  }}>Air Quality</div>
-                  
-                  <div style={{
-                    position: 'relative',
-                    width: '80px',
-                    height: '80px',
-                    margin: '0 auto 1rem'
-                  }}>
-                    <svg width="80" height="80" style={{ transform: 'rotate(-90deg)' }}>
-                      <circle cx="40" cy="40" r="32" fill="none" stroke="#e5e7eb" strokeWidth="6" />
-                      <circle
-                        id="airRing"
-                        cx="40" cy="40" r="32" fill="none" stroke="#10b981" strokeWidth="6"
-                        strokeDasharray="100.53 201.06" strokeLinecap="round"
-                      />
-                    </svg>
-                    <div style={{
-                      position: 'absolute',
-                      top: '50%',
-                      left: '50%',
-                      transform: 'translate(-50%, -50%)',
-                      fontSize: '1.2rem',
-                      fontWeight: '800',
-                      color: '#10b981'
-                    }} id="airLevelDisplay">
-                      <span id="airLevel">51</span>
-                    </div>
-                  </div>
-                  
-                  <div style={{
-                    color: '#10b981',
-                    fontWeight: '600',
-                    marginBottom: '1rem',
-                    textTransform: 'uppercase',
-                    fontSize: '0.9rem',
-                    letterSpacing: '0.5px'
-                  }} id="airStatusDisplay">
-                    <span id="airStatus">Good</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Overall advice section with inline email signup */}
-              <div style={{
-                background: '#f8fafc',
-                padding: '1.5rem',
-                borderRadius: '12px',
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(4, 1fr)',
+              gap: '2rem',
+              margin: '2rem 0'
+            }} className="pollen-cards-grid">
+              {/* Tree Pollen Card */}
+              <div className="pollen-card" style={{
+                background: 'white',
+                borderRadius: '16px',
+                padding: '2rem',
                 textAlign: 'center',
-                marginTop: '2rem',
-                border: '1px solid #e2e8f0'
+                boxShadow: '0 8px 25px rgba(0, 0, 0, 0.1)',
+                border: '1px solid #f1f3f4'
               }}>
                 <div style={{
-                  fontSize: '1rem',
+                  fontSize: '1.8rem',
+                  marginBottom: '1rem'
+                }}>🌳</div>
+                <div style={{
                   fontWeight: '600',
                   color: '#2d3748',
-                  marginBottom: '0.5rem'
-                }}>
-                  📍 Today's Recommendation
-                </div>
-                <div style={{
-                  fontSize: '0.9rem',
-                  color: '#4a5568',
-                  lineHeight: '1.5',
                   marginBottom: '1.5rem'
-                }} id="overallAdvice">
-                  Severe pollen levels! Stay indoors if possible and take allergy medication.
+                }}>Tree Pollen</div>
+                
+                <div style={{
+                  position: 'relative',
+                  width: '80px',
+                  height: '80px',
+                  margin: '0 auto 1rem'
+                }}>
+                  <svg width="80" height="80" style={{ transform: 'rotate(-90deg)' }}>
+                    <circle cx="40" cy="40" r="32" fill="none" stroke="#e5e7eb" strokeWidth="6" />
+                    <circle
+                      id="treeRing"
+                      cx="40" cy="40" r="32" fill="none" stroke="#7c2d12" strokeWidth="6"
+                      strokeDasharray="201.06 201.06" strokeLinecap="round"
+                    />
+                  </svg>
+                  <div style={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    fontSize: '1.5rem',
+                    fontWeight: '800',
+                    color: '#7c2d12'
+                  }} id="treeLevelDisplay">
+                    <span id="treeLevel">4</span>
+                  </div>
                 </div>
                 
-                {/* Inline Email Signup */}
                 <div style={{
-                  borderTop: '1px solid #e2e8f0',
-                  paddingTop: '1.5rem',
-                  marginTop: '1.5rem'
-                }}>
-                  <div style={{
-                    fontSize: '0.9rem',
-                    fontWeight: '600',
-                    color: '#2d3748',
-                    marginBottom: '1rem'
-                  }}>
-                    📧 Get alerts like this daily
-                  </div>
-                  <div style={{
-                    display: 'flex',
-                    gap: '0.5rem',
-                    maxWidth: '400px',
-                    margin: '0 auto',
-                    flexWrap: 'wrap'
-                  }} className="email-signup-inline">
-                    <input
-                      type="email"
-                      placeholder="your-email@example.com"
-                      style={{
-                        flex: '1',
-                        minWidth: '200px',
-                        padding: '0.75rem 1rem',
-                        border: '1px solid #d1d5db',
-                        borderRadius: '8px',
-                        fontSize: '0.9rem',
-                        outline: 'none'
-                      }}
-                    />
-                    <input
-                      type="text"
-                      placeholder="ZIP or City"
-                      style={{
-                        flex: '0 0 120px',
-                        padding: '0.75rem 1rem',
-                        border: '1px solid #d1d5db',
-                        borderRadius: '8px',
-                        fontSize: '0.9rem',
-                        outline: 'none'
-                      }}
-                    />
-                    <button
-                      style={{
-                        padding: '0.75rem 1.5rem',
-                        background: '#007AFF',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '8px',
-                        fontSize: '0.9rem',
-                        fontWeight: '600',
-                        cursor: 'pointer',
-                        whiteSpace: 'nowrap'
-                      }}
-                    >
-                      Subscribe
-                    </button>
-                  </div>
-                  <div style={{
-                    fontSize: '0.75rem',
-                    color: '#9ca3af',
-                    marginTop: '0.5rem'
-                  }}>
-                    Daily alerts for your specific location
-                  </div>
+                  color: '#7c2d12',
+                  fontWeight: '600',
+                  marginBottom: '1rem',
+                  textTransform: 'uppercase',
+                  fontSize: '0.9rem',
+                  letterSpacing: '0.5px'
+                }} id="treeStatusDisplay">
+                  <span id="treeStatus">Severe</span>
                 </div>
               </div>
 
-              {/* 5-Day Forecast - only show after search */}
-              {hasSearched && (
+              {/* Grass Pollen Card */}
+              <div className="pollen-card" style={{
+                background: 'white',
+                borderRadius: '16px',
+                padding: '2rem',
+                textAlign: 'center',
+                boxShadow: '0 8px 25px rgba(0, 0, 0, 0.1)',
+                border: '1px solid #f1f3f4'
+              }}>
                 <div style={{
-                  marginTop: '2rem'
-                }}>
-                  <h3 style={{
-                    fontSize: '1.5rem',
-                    fontWeight: '700',
-                    color: '#2d3748',
-                    marginBottom: '2rem',
-                    textAlign: 'center'
-                  }}>
-                    📅 5-Day Pollen Forecast
-                  </h3>
-                  <div style={{
-                    display: 'flex',
-                    gap: '1rem',
-                    overflowX: 'auto',
-                    padding: '0.5rem 0',
-                    justifyContent: 'center',
-                    scrollbarWidth: 'thin',
-                    scrollbarColor: '#cbd5e0 #f7fafc'
-                  }} className="forecast-container" id="forecastContainer">
-                    {forecastData.length > 0 ? forecastData.map((day, index) => {
-                      let date;
-                      let dateDisplay = 'Invalid Date';
-                      
-                      if (day.date && typeof day.date === 'object' && day.date.year) {
-                        date = new Date(day.date.year, day.date.month - 1, day.date.day)
-                      } else if (day.date && typeof day.date === 'string') {
-                        date = new Date(day.date)
-                      } else {
-                        date = new Date()
-                        date.setDate(date.getDate() + index)
-                      }
-
-                      if (!isNaN(date.getTime())) {
-                        dateDisplay = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
-                      }
-
-                      const dayName = index === 0 ? 'Today' : (isNaN(date.getTime()) ? 'Day ' + (index + 1) : date.toLocaleDateString('en-US', { weekday: 'short' }))
-                      const maxLevel = Math.max(
-                        parseInt(day.tree?.level) || 0,
-                        parseInt(day.grass?.level) || 0,
-                        parseInt(day.weed?.level) || 0
-                      )
-                      
-                      let color = '#9ca3af'
-                      if (maxLevel === 1) color = '#10b981'
-                      else if (maxLevel === 2) color = '#f59e0b'
-                      else if (maxLevel === 3) color = '#ef4444'
-                      else if (maxLevel >= 4) color = '#7c2d12'
-
-              return (
-                        <div key={index} style={{
-                          background: 'white',
-                          borderRadius: '12px',
-                          padding: '1.5rem 1rem',
-                          textAlign: 'center',
-                          boxShadow: '0 4px 15px rgba(0, 0, 0, 0.05)',
-                          border: '1px solid #f1f3f4',
-                          minWidth: '120px'
-                        }}>
-                  type="text"
-                  placeholder="ZIP or City"
-                  style={{
-                    width: '100%',
-                    padding: '1rem 1.25rem',
-                    fontSize: '1rem',
-                    border: 'none',
-                    borderRadius: '12px',
-                    outline: 'none',
-                    boxShadow: '0 4px 15px rgba(0, 0, 0, 0.1)',
-                    background: 'white',
-                    color: '#2d3748',
-                    boxSizing: 'border-box'
-                  }}
-                />
-              </div>
-              <button
-                style={{
-                  padding: '1rem 2rem',
-                  background: 'rgba(255, 255, 255, 0.2)',
-                  color: 'white',
-                  border: '2px solid rgba(255, 255, 255, 0.3)',
-                  borderRadius: '12px',
-                  fontSize: '1rem',
+                  fontSize: '1.8rem',
+                  marginBottom: '1rem'
+                }}>🌱</div>
+                <div style={{
                   fontWeight: '600',
-                  cursor: 'pointer',
-                  whiteSpace: 'nowrap',
-                  backdropFilter: 'blur(10px)'
-                }}
-              >
-                Get Daily Alerts
-              </button>
-            </div>
-            
-            <div style={{
-              marginTop: '1.5rem',
-              fontSize: '0.9rem',
-              opacity: 0.8
-            }}>
-              ✨ Personalized for your location • 📱 Mobile-friendly alerts • 🔒 Unsubscribe anytime
-            </div>
-          </div>
-        </div>
-      </section>
+                  color: '#2d3748',
+                  marginBottom: '1.5rem'
+                }}>Grass Pollen</div>
+                
+                <div style={{
+                  position: 'relative',
+                  width: '80px',
+                  height: '80px',
+                  margin: '0 auto 1rem'
+                }}>
+                  <svg width="80" height="80" style={{ transform: 'rotate(-90deg)' }}>
+                    <circle cx="40" cy="40" r="32" fill="none" stroke="#e5e7eb" strokeWidth="6" />
+                    <circle
+                      id="grassRing"
+                      cx="40" cy="40" r="32" fill="none" stroke="#f59e0b" strokeWidth="6"
+                      strokeDasharray="100.53 201.06" strokeLinecap="round"
+                    />
+                  </svg>
+                  <div style={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    fontSize: '1.5rem',
+                    fontWeight: '800',
+                    color: '#f59e0b'
+                  }} id="grassLevelDisplay">
+                    <span id="grassLevel">2</span>
+                  </div>
+                </div>
+                
+                <div style={{
+                  color: '#f59e0b',
+                  fontWeight: '600',
+                  marginBottom: '1rem',
+                  textTransform: 'uppercase',
+                  fontSize: '0.9rem',
+                  letterSpacing: '0.5px'
+                }} id="grassStatusDisplay">
+                  <span id="grassStatus">Medium</span>
+                </div>
+              </div>
+
+              {/* Weed Pollen Card */}
+              <div className="pollen-card" style={{
+                background: 'white',
+                borderRadius: '16px',
+                padding: '2rem',
+                textAlign: 'center',
+                boxShadow: '0 8px 25px rgba(0, 0, 0, 0.1)',
+                border: '1px solid #f1f3f4'
+              }}>
+                <div style={{
+                  fontSize: '1.8rem',
+                  marginBottom: '1rem'
+                }}>🌿</div>
+                <div style={{
+                  fontWeight: '600',
+                  color: '#2d3748',
+                  marginBottom: '1.5rem'
+                }}>Weed Pollen</div>
+                
+                <div style={{
+                  position: 'relative',
+                  width: '80px',
+                  height: '80px',
+                  margin: '0 auto 1rem'
+                }}>
+                  <svg width="80" height="80" style={{ transform: 'rotate(-90deg)' }}>
+                    <circle cx="40" cy="40" r="32" fill="none" stroke="#e5e7eb" strokeWidth="6" />
+                    <circle
+                      id="weedRing"
+                      cx="40" cy="40" r="32" fill="none" stroke="#10b981" strokeWidth="6"
+                      strokeDasharray="50.27 201.06" strokeLinecap="round"
+                    />
+                  </svg>
+                  <div style={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    fontSize: '1.5rem',
+                    fontWeight: '800',
+                    color: '#10b981'
+                  }} id="weedLevelDisplay">
+                    <span id="weedLevel">1</span>
+                  </div>
+                </div>
+                
+                <div style={{
+                  color: '#10b981',
+                  fontWeight: '600',
+                  marginBottom: '1rem',
+                  textTransform: 'uppercase',
+                  fontSize: '0.9rem',
+                  letterSpacing: '0.5px'
+                }} id="weedStatusDisplay">
+                  <span id="weedStatus">Low</span>
+                </div>
+              </div>
+
+  {/* Air Quality Card */}
+  <div className="pollen-card" style={{
+    background: 'white',
+    borderRadius: '16px',
+    padding: '2rem',
+    textAlign: 'center',
+    boxShadow: '0 8px 25px rgba(0, 0, 0, 0.1)',
+    border: '1px solid #f1f3f4'
+  }}>
+    <div style={{
+      fontSize: '1.8rem',
+      marginBottom: '1rem'
+    }}>🌬️</div>
+    <div style={{
+      fontWeight: '600',
+      color: '#2d3748',
+      marginBottom: '1.5rem'
+    }}>Air Quality</div>
+    
+    <div style={{
+      position: 'relative',
+      width: '80px',
+      height: '80px',
+      margin: '0 auto 1rem'
+    }}>
+      <svg width="80" height="80" style={{ transform: 'rotate(-90deg)' }}>
+        <circle cx="40" cy="40" r="32" fill="none" stroke="#e5e7eb" strokeWidth="6" />
+        <circle
+          id="airRing"
+          cx="40" cy="40" r="32" fill="none" stroke="#10b981" strokeWidth="6"
+          strokeDasharray="100.53 201.06" strokeLinecap="round"
+        />
+      </svg>
+      <div style={{
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        fontSize: '1.2rem',
+        fontWeight: '800',
+        color: '#10b981'
+      }} id="airLevelDisplay">
+        <span id="airLevel">51</span>
+      </div>
     </div>
-  )
-} 4px 15px rgba(0, 0, 0, 0.05)',
-                          border: '1px solid #f1f3f4',
-                          minWidth: '120px'
-                        }}>
-                          <div style={{ fontWeight: '600', color: '#2d3748', marginBottom: '0.5rem', fontSize: '0.9rem' }}>
-                            {dayName}
-                          </div>
-                          <div style={{ fontSize: '0.75rem', color: '#718096', marginBottom: '1rem' }}>
-                            {dateDisplay}
-                          </div>
-                          <div style={{
-                            width: '40px',
-                            height: '40px',
-                            borderRadius: '50%',
-                            background: color,
-                            color: 'white',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            fontWeight: 'bold',
-                            margin: '0 auto 0.5rem',
-                            fontSize: '1.1rem'
-                          }}>
-                            {maxLevel}
-                          </div>
-                          <div style={{ fontSize: '0.75rem', color: '#4a5568', lineHeight: '1.3' }}>
-                            Tree: {day.tree?.level || 0}<br/>
-                            Grass: {day.grass?.level || 0}<br/>
-                            Weed: {day.weed?.level || 0}
-                          </div>
-                        </div>
-                      )
-                    }) : (
-                      <div style={{
+    
+    <div style={{
+      color: '#10b981',
+      fontWeight: '600',
+      marginBottom: '1rem',
+      textTransform: 'uppercase',
+      fontSize: '0.9rem',
+      letterSpacing: '0.5px'
+    }} id="airStatusDisplay">
+      <span id="airStatus">Good</span>
+    </div>
+  </div>       
+</div>
+
+            {/* Overall advice section with inline email signup */}
+            <div style={{
+              background: '#f8fafc',
+              padding: '1.5rem',
+              borderRadius: '12px',
+              textAlign: 'center',
+              marginTop: '2rem',
+              border: '1px solid #e2e8f0'
+            }}>
+              <div style={{
+                fontSize: '1rem',
+                fontWeight: '600',
+                color: '#2d3748',
+                marginBottom: '0.5rem'
+              }}>
+                📍 Today's Recommendation
+              </div>
+              <div style={{
+                fontSize: '0.9rem',
+                color: '#4a5568',
+                lineHeight: '1.5',
+                marginBottom: '1.5rem'
+              }} id="overallAdvice">
+                Severe pollen levels! Stay indoors if possible and take allergy medication.
+              </div>
+              
+              {/* Inline Email Signup */}
+              <div style={{
+                borderTop: '1px solid #e2e8f0',
+                paddingTop: '1.5rem',
+                marginTop: '1.5rem'
+              }}>
+                <div style={{
+                  fontSize: '0.9rem',
+                  fontWeight: '600',
+                  color: '#2d3748',
+                  marginBottom: '1rem'
+                }}>
+                  📧 Get alerts like this daily
+                </div>
+                <div style={{
+                  display: 'flex',
+                  gap: '0.5rem',
+                  maxWidth: '400px',
+                  margin: '0 auto',
+                  flexWrap: 'wrap'
+                }} className="email-signup-inline">
+                  <input
+                    type="email"
+                    placeholder="your-email@example.com"
+                    style={{
+                      flex: '1',
+                      minWidth: '200px',
+                      padding: '0.75rem 1rem',
+                      border: '1px solid #d1d5db',
+                      borderRadius: '8px',
+                      fontSize: '0.9rem',
+                      outline: 'none'
+                    }}
+                  />
+                  <input
+                    type="text"
+                    placeholder="ZIP or City"
+                    style={{
+                      flex: '0 0 120px',
+                      padding: '0.75rem 1rem',
+                      border: '1px solid #d1d5db',
+                      borderRadius: '8px',
+                      fontSize: '0.9rem',
+                      outline: 'none'
+                    }}
+                  />
+                  <button
+                    style={{
+                      padding: '0.75rem 1.5rem',
+                      background: '#007AFF',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '8px',
+                      fontSize: '0.9rem',
+                      fontWeight: '600',
+                      cursor: 'pointer',
+                      whiteSpace: 'nowrap'
+                    }}
+                  >
+                    Subscribe
+                  </button>
+                </div>
+                <div style={{
+                  fontSize: '0.75rem',
+                  color: '#9ca3af',
+                  marginTop: '0.5rem'
+                }}>
+                  Daily alerts for your specific location
+                </div>
+              </div>
+            </div>
+
+            {/* 5-Day Forecast - only show after search */}
+            {hasSearched && (
+              <div style={{
+                marginTop: '2rem'
+              }}>
+                <h3 style={{
+                  fontSize: '1.5rem',
+                  fontWeight: '700',
+                  color: '#2d3748',
+                  marginBottom: '2rem',
+                  textAlign: 'center'
+                }}>
+                  📅 5-Day Pollen Forecast
+                </h3>
+                <div style={{
+                  display: 'flex',
+                  gap: '1rem',
+                  overflowX: 'auto',
+                  padding: '0.5rem 0',
+                  justifyContent: 'center',
+                  scrollbarWidth: 'thin',
+                  scrollbarColor: '#cbd5e0 #f7fafc'
+                }} className="forecast-container" id="forecastContainer">
+                  {forecastData.length > 0 ? forecastData.map((day, index) => {
+                    let date;
+                    let dateDisplay = 'Invalid Date';
+                    
+                    if (day.date && typeof day.date === 'object' && day.date.year) {
+                      date = new Date(day.date.year, day.date.month - 1, day.date.day)
+                    } else if (day.date && typeof day.date === 'string') {
+                      date = new Date(day.date)
+                    } else {
+                      date = new Date()
+                      date.setDate(date.getDate() + index)
+                    }
+
+                    if (!isNaN(date.getTime())) {
+                      dateDisplay = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+                    }
+
+                    const dayName = index === 0 ? 'Today' : (isNaN(date.getTime()) ? 'Day ' + (index + 1) : date.toLocaleDateString('en-US', { weekday: 'short' }))
+                    const maxLevel = Math.max(
+                      parseInt(day.tree?.level) || 0,
+                      parseInt(day.grass?.level) || 0,
+                      parseInt(day.weed?.level) || 0
+                    )
+                    
+                    let color = '#9ca3af'
+                    if (maxLevel === 1) color = '#10b981'
+                    else if (maxLevel === 2) color = '#f59e0b'
+                    else if (maxLevel === 3) color = '#ef4444'
+                    else if (maxLevel >= 4) color = '#7c2d12'
+
+                    return (
+                      <div key={index} style={{
                         background: 'white',
                         borderRadius: '12px',
                         padding: '1.5rem 1rem',
@@ -1177,16 +1094,16 @@ export default function Home() {
                         minWidth: '120px'
                       }}>
                         <div style={{ fontWeight: '600', color: '#2d3748', marginBottom: '0.5rem', fontSize: '0.9rem' }}>
-                          Today
+                          {dayName}
                         </div>
                         <div style={{ fontSize: '0.75rem', color: '#718096', marginBottom: '1rem' }}>
-                          Jul 5
+                          {dateDisplay}
                         </div>
                         <div style={{
                           width: '40px',
                           height: '40px',
                           borderRadius: '50%',
-                          background: '#9ca3af',
+                          background: color,
                           color: 'white',
                           display: 'flex',
                           alignItems: 'center',
@@ -1195,17 +1112,54 @@ export default function Home() {
                           margin: '0 auto 0.5rem',
                           fontSize: '1.1rem'
                         }}>
-                          0
+                          {maxLevel}
                         </div>
                         <div style={{ fontSize: '0.75rem', color: '#4a5568', lineHeight: '1.3' }}>
-                          Tree: 0<br/>Grass: 0<br/>Weed: 0
+                          Tree: {day.tree?.level || 0}<br/>
+                          Grass: {day.grass?.level || 0}<br/>
+                          Weed: {day.weed?.level || 0}
                         </div>
                       </div>
-                    )}
-                  </div>
+                    )
+                  }) : (
+                    <div style={{
+                      background: 'white',
+                      borderRadius: '12px',
+                      padding: '1.5rem 1rem',
+                      textAlign: 'center',
+                      boxShadow: '0 4px 15px rgba(0, 0, 0, 0.05)',
+                      border: '1px solid #f1f3f4',
+                      minWidth: '120px'
+                    }}>
+                      <div style={{ fontWeight: '600', color: '#2d3748', marginBottom: '0.5rem', fontSize: '0.9rem' }}>
+                        Today
+                      </div>
+                      <div style={{ fontSize: '0.75rem', color: '#718096', marginBottom: '1rem' }}>
+                        Jul 5
+                      </div>
+                      <div style={{
+                        width: '40px',
+                        height: '40px',
+                        borderRadius: '50%',
+                        background: '#9ca3af',
+                        color: 'white',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontWeight: 'bold',
+                        margin: '0 auto 0.5rem',
+                        fontSize: '1.1rem'
+                      }}>
+                        0
+                      </div>
+                      <div style={{ fontSize: '0.75rem', color: '#4a5568', lineHeight: '1.3' }}>
+                        Tree: 0<br/>Grass: 0<br/>Weed: 0
+                      </div>
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
+              </div>
+            )}
           )}
 
           {/* Data Sources */}
@@ -1459,3 +1413,52 @@ export default function Home() {
                   }}
                 />
               </div>
+              <div style={{ flex: '0 0 140px' }}>
+                <input
+                  type="text"
+                  placeholder="ZIP or City"
+                  style={{
+                    width: '100%',
+                    padding: '1rem 1.25rem',
+                    fontSize: '1rem',
+                    border: 'none',
+                    borderRadius: '12px',
+                    outline: 'none',
+                    boxShadow: '0 4px 15px rgba(0, 0, 0, 0.1)',
+                    background: 'white',
+                    color: '#2d3748',
+                    boxSizing: 'border-box'
+                  }}
+                />
+              </div>
+              <button
+                style={{
+                  padding: '1rem 2rem',
+                  background: 'rgba(255, 255, 255, 0.2)',
+                  color: 'white',
+                  border: '2px solid rgba(255, 255, 255, 0.3)',
+                  borderRadius: '12px',
+                  fontSize: '1rem',
+                  fontWeight: '600',
+                  cursor: 'pointer',
+                  whiteSpace: 'nowrap',
+                  backdropFilter: 'blur(10px)'
+                }}
+              >
+                Get Daily Alerts
+              </button>
+            </div>
+            
+            <div style={{
+              marginTop: '1.5rem',
+              fontSize: '0.9rem',
+              opacity: 0.8
+            }}>
+              ✨ Personalized for your location • 📱 Mobile-friendly alerts • 🔒 Unsubscribe anytime
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  )
+}
