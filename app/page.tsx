@@ -355,10 +355,10 @@ export default function Home() {
       lineHeight: '1.6',
       minHeight: '100vh'
     }}>
-      {/*<style jsx>{`
+      <style jsx>{`
         .pollen-cards-grid {
           display: grid;
-          grid-template-columns: repeat(4, 1fr);
+          grid-template-columns: repeat(3, 1fr);
           gap: 2rem;
           margin: 2rem 0;
         }
@@ -433,7 +433,7 @@ export default function Home() {
         }
         
         /* Hide Google Maps error dialogs - no longer needed */
-      `}</style>*/}
+      `}</style>
       {/* Header */}
       <header style={{
         background: 'white',
@@ -489,6 +489,13 @@ export default function Home() {
           }}>
             Your personal pollen companion that delivers hyperlocal forecasts and actionable advice. Never be caught off guard again.
           </p>
+          <div style={{
+            fontSize: '0.8rem',
+            opacity: 0.7,
+            marginBottom: '3rem'
+          }}>
+            Powered by <span style={{ fontWeight: '600' }}>Google</span> • <span style={{ fontWeight: '600' }}>NOAA</span> • <span style={{ fontWeight: '600' }}>EPA</span>
+          </div>
 
           <div style={{
             maxWidth: '500px',
@@ -590,14 +597,6 @@ export default function Home() {
                {loading ? '⏳ Loading...' : '🔍 Search'}
             </button>
           </div>
-          
-          <div style={{
-            fontSize: '0.8rem',
-            opacity: 0.7,
-            marginTop: '1rem'
-          }}>
-            Powered by <span style={{ fontWeight: '600' }}>Google</span> • <span style={{ fontWeight: '600' }}>NOAA</span> • <span style={{ fontWeight: '600' }}>EPA</span>
-          </div>
         </div>
       </section>
 
@@ -610,8 +609,7 @@ export default function Home() {
           margin: '0 auto',
           padding: '0 20px'
         }}>
-          {/* Current Pollen Data Card - only show after search */}
-          {hasSearched && (
+          {/* Current Pollen Data Card */}
           <div style={{
             background: 'white',
             borderRadius: '16px',
@@ -690,6 +688,64 @@ export default function Home() {
                 <span style={{ color: '#f59e0b' }}>2: Medium</span>
                 <span style={{ color: '#ef4444' }}>3: High</span>
                 <span style={{ color: '#7c2d12' }}>4: Severe</span>
+              </div>
+
+              {/* Air Quality Card */}
+              <div className="pollen-card" style={{
+                background: 'white',
+                borderRadius: '16px',
+                padding: '2rem',
+                textAlign: 'center',
+                boxShadow: '0 8px 25px rgba(0, 0, 0, 0.1)',
+                border: '1px solid #f1f3f4'
+              }}>
+                <div style={{
+                  fontSize: '1.8rem',
+                  marginBottom: '1rem'
+                }}>🌬️</div>
+                <div style={{
+                  fontWeight: '600',
+                  color: '#2d3748',
+                  marginBottom: '1.5rem'
+                }}>Air Quality</div>
+                
+                <div style={{
+                  position: 'relative',
+                  width: '80px',
+                  height: '80px',
+                  margin: '0 auto 1rem'
+                }}>
+                  <svg width="80" height="80" style={{ transform: 'rotate(-90deg)' }}>
+                    <circle cx="40" cy="40" r="32" fill="none" stroke="#e5e7eb" strokeWidth="6" />
+                    <circle
+                      id="airRing"
+                      cx="40" cy="40" r="32" fill="none" stroke="#10b981" strokeWidth="6"
+                      strokeDasharray="100.53 201.06" strokeLinecap="round"
+                    />
+                  </svg>
+                  <div style={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    fontSize: '1.2rem',
+                    fontWeight: '800',
+                    color: '#10b981'
+                  }} id="airLevelDisplay">
+                    <span id="airLevel">51</span>
+                  </div>
+                </div>
+                
+                <div style={{
+                  color: '#10b981',
+                  fontWeight: '600',
+                  marginBottom: '1rem',
+                  textTransform: 'uppercase',
+                  fontSize: '0.9rem',
+                  letterSpacing: '0.5px'
+                }} id="airStatusDisplay">
+                  <span id="airStatus">Good</span>
+                </div>
               </div>
             </div>
 
@@ -872,65 +928,7 @@ export default function Home() {
                   <span id="weedStatus">Low</span>
                 </div>
               </div>
-
-  {/* Air Quality Card */}
-  <div className="pollen-card" style={{
-    background: 'white',
-    borderRadius: '16px',
-    padding: '2rem',
-    textAlign: 'center',
-    boxShadow: '0 8px 25px rgba(0, 0, 0, 0.1)',
-    border: '1px solid #f1f3f4'
-  }}>
-    <div style={{
-      fontSize: '1.8rem',
-      marginBottom: '1rem'
-    }}>🌬️</div>
-    <div style={{
-      fontWeight: '600',
-      color: '#2d3748',
-      marginBottom: '1.5rem'
-    }}>Air Quality</div>
-    
-    <div style={{
-      position: 'relative',
-      width: '80px',
-      height: '80px',
-      margin: '0 auto 1rem'
-    }}>
-      <svg width="80" height="80" style={{ transform: 'rotate(-90deg)' }}>
-        <circle cx="40" cy="40" r="32" fill="none" stroke="#e5e7eb" strokeWidth="6" />
-        <circle
-          id="airRing"
-          cx="40" cy="40" r="32" fill="none" stroke="#10b981" strokeWidth="6"
-          strokeDasharray="100.53 201.06" strokeLinecap="round"
-        />
-      </svg>
-      <div style={{
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        fontSize: '1.2rem',
-        fontWeight: '800',
-        color: '#10b981'
-      }} id="airLevelDisplay">
-        <span id="airLevel">51</span>
-      </div>
-    </div>
-    
-    <div style={{
-      color: '#10b981',
-      fontWeight: '600',
-      marginBottom: '1rem',
-      textTransform: 'uppercase',
-      fontSize: '0.9rem',
-      letterSpacing: '0.5px'
-    }} id="airStatusDisplay">
-      <span id="airStatus">Good</span>
-    </div>
-  </div>       
-</div>
+            </div>
 
             {/* Overall advice section with inline email signup */}
             <div style={{
@@ -1160,7 +1158,7 @@ export default function Home() {
                 </div>
               </div>
             )}
-          )}
+          </div>
 
           {/* Data Sources */}
           <div style={{
