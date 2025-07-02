@@ -436,12 +436,13 @@ const updateForecast = (forecast: any[]) => {
       `}</style>
       {/* Header */}
       <header style={{
-        background: 'white',
-        borderBottom: '1px solid #e2e8f0',
-        position: 'sticky',
-        top: 0,
-        zIndex: 100
-      }}>
+      background: 'transparent',
+      borderBottom: 'none',
+      position: 'absolute',
+      width: '100%',
+      top: 0,
+      zIndex: 100
+    }}>
         <nav style={{
           maxWidth: '1000px',
           margin: '0 auto',
@@ -464,7 +465,7 @@ const updateForecast = (forecast: any[]) => {
       <section style={{
         background: 'linear-gradient(135deg, #007AFF 0%, #0051D5 100%)',
         color: 'white',
-        padding: '4rem 0',
+        padding: '6rem 0 4rem 0',
         textAlign: 'center'
       }}>
         <div style={{
