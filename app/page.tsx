@@ -494,7 +494,8 @@ const updateForecast = (forecast: any[]) => {
           <div style={{
             maxWidth: '500px',
             margin: '0 auto',
-            position: 'relative'
+            position: 'relative',
+            boxShadow: '0 0 60px rgba(255, 255, 255, 0.15)'
           }}>
             <input 
               id="locationInput"
