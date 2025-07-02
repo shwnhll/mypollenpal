@@ -25,112 +25,92 @@ export default function Home() {
   const [loading, setLoading] = useState(false)
   const [hasSearched, setHasSearched] = useState(false)
   const [forecastData, setForecastData] = useState<any[]>([])
-  const [autocomplete, setAutocomplete] = useState<any>(null)
+  const [searchValue, setSearchValue] = useState('')
+  const [showSuggestions, setShowSuggestions] = useState(false)
+  const [suggestions, setSuggestions] = useState<string[]>([])
 
-  // Load Google Places API
-  useEffect(() => {
-    const loadGooglePlaces = () => {
-      // Skip if no API key
-      if (!process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY) {
-        console.warn('Google Places API key not found. Autocomplete disabled.');
-        return;
-      }
+  // Simple list of popular US cities for autocomplete
+  const cities = [
+    'New York, NY', 'Los Angeles, CA', 'Chicago, IL', 'Houston, TX', 'Phoenix, AZ',
+    'Philadelphia, PA', 'San Antonio, TX', 'San Diego, CA', 'Dallas, TX', 'San Jose, CA',
+    'Austin, TX', 'Jacksonville, FL', 'Fort Worth, TX', 'Columbus, OH', 'Indianapolis, IN',
+    'Charlotte, NC', 'San Francisco, CA', 'Seattle, WA', 'Denver, CO', 'Boston, MA',
+    'El Paso, TX', 'Detroit, MI', 'Nashville, TN', 'Portland, OR', 'Memphis, TN',
+    'Oklahoma City, OK', 'Las Vegas, NV', 'Louisville, KY', 'Baltimore, MD', 'Milwaukee, WI',
+    'Albuquerque, NM', 'Tucson, AZ', 'Fresno, CA', 'Sacramento, CA', 'Kansas City, MO',
+    'Mesa, AZ', 'Virginia Beach, VA', 'Atlanta, GA', 'Colorado Springs, CO', 'Omaha, NE',
+    'Raleigh, NC', 'Miami, FL', 'Oakland, CA', 'Minneapolis, MN', 'Tulsa, OK',
+    'Cleveland, OH', 'Wichita, KS', 'Arlington, TX', 'New Orleans, LA', 'Bakersfield, CA',
+    'Tampa, FL', 'Honolulu, HI', 'Aurora, CO', 'Anaheim, CA', 'Santa Ana, CA',
+    'St. Louis, MO', 'Riverside, CA', 'Corpus Christi, TX', 'Lexington, KY', 'Pittsburgh, PA',
+    'Anchorage, AK', 'Stockton, CA', 'Cincinnati, OH', 'St. Paul, MN', 'Toledo, OH',
+    'Greensboro, NC', 'Newark, NJ', 'Plano, TX', 'Henderson, NV', 'Lincoln, NE',
+    'Buffalo, NY', 'Jersey City, NJ', 'Chula Vista, CA', 'Fort Wayne, IN', 'Orlando, FL',
+    'St. Petersburg, FL', 'Chandler, AZ', 'Laredo, TX', 'Norfolk, VA', 'Durham, NC',
+    'Madison, WI', 'Lubbock, TX', 'Irvine, CA', 'Winston-Salem, NC', 'Glendale, AZ',
+    'Garland, TX', 'Hialeah, FL', 'Reno, NV', 'Chesapeake, VA', 'Gilbert, AZ',
+    'Baton Rouge, LA', 'Irving, TX', 'Scottsdale, AZ', 'North Las Vegas, NV', 'Fremont, CA',
+    'Boise, ID', 'Richmond, VA', 'San Bernardino, CA', 'Birmingham, AL', 'Spokane, WA',
+    'Rochester, NY', 'Des Moines, IA', 'Modesto, CA', 'Fayetteville, NC', 'Tacoma, WA',
+    'Oxnard, CA', 'Fontana, CA', 'Columbus, GA', 'Montgomery, AL', 'Moreno Valley, CA',
+    'Shreveport, LA', 'Aurora, IL', 'Yonkers, NY', 'Akron, OH', 'Huntington Beach, CA',
+    'Little Rock, AR', 'Augusta, GA', 'Amarillo, TX', 'Glendale, CA', 'Mobile, AL',
+    'Grand Rapids, MI', 'Salt Lake City, UT', 'Tallahassee, FL', 'Huntsville, AL', 'Grand Prairie, TX',
+    'Knoxville, TN', 'Worcester, MA', 'Newport News, VA', 'Brownsville, TX', 'Overland Park, KS',
+    'Santa Clarita, CA', 'Providence, RI', 'Garden Grove, CA', 'Chattanooga, TN', 'Oceanside, CA',
+    'Jackson, MS', 'Fort Lauderdale, FL', 'Santa Rosa, CA', 'Rancho Cucamonga, CA', 'Port St. Lucie, FL',
+    'Tempe, AZ', 'Ontario, CA', 'Vancouver, WA', 'Cape Coral, FL', 'Sioux Falls, SD',
+    'Springfield, MO', 'Peoria, AZ', 'Pembroke Pines, FL', 'Elk Grove, CA', 'Salem, OR',
+    'Lancaster, CA', 'Corona, CA', 'Eugene, OR', 'Palmdale, CA', 'Salinas, CA',
+    'Springfield, MA', 'Pasadena, CA', 'Fort Collins, CO', 'Hayward, CA', 'Pomona, CA',
+    'Cary, NC', 'Rockford, IL', 'Alexandria, VA', 'Escondido, CA', 'McKinney, TX',
+    'Kansas City, KS', 'Joliet, IL', 'Sunnyvale, CA', 'Torrance, CA', 'Bridgeport, CT',
+    'Lakewood, CO', 'Hollywood, FL', 'Paterson, NJ', 'Naperville, IL', 'Syracuse, NY',
+    'Mesquite, TX', 'Dayton, OH', 'Savannah, GA', 'Clarksville, TN', 'Orange, CA',
+    'Pasadena, TX', 'Fullerton, CA', 'Killeen, TX', 'Frisco, TX', 'Hampton, VA',
+    'McAllen, TX', 'Warren, MI', 'Bellevue, WA', 'West Valley City, UT', 'Columbia, MO',
+    'Olathe, KS', 'Sterling Heights, MI', 'New Haven, CT', 'Miramar, FL', 'Waco, TX',
+    'Thousand Oaks, CA', 'Cedar Rapids, IA', 'Charleston, SC', 'Visalia, CA', 'Topeka, KS',
+    'Elizabeth, NJ', 'Gainesville, FL', 'Thornton, CO', 'Roseville, CA', 'Carrollton, TX',
+    'Coral Springs, FL', 'Stamford, CT', 'Simi Valley, CA', 'Concord, CA', 'Hartford, CT',
+    'Kent, WA', 'Lafayette, LA', 'Midland, TX', 'Surprise, AZ', 'Denton, TX',
+    'Victorville, CA', 'Evansville, IN', 'Santa Clara, CA', 'Abilene, TX', 'Athens, GA',
+    'Vallejo, CA', 'Allentown, PA', 'Norman, OK', 'Beaumont, TX', 'Independence, MO',
+    'Murfreesboro, TN', 'Ann Arbor, MI', 'Fargo, ND', 'Temecula, CA', 'Lansing, MI'
+  ]
 
-      // Check if Google Places API is already loaded
-      if (window.google && window.google.maps && window.google.maps.places) {
-        setTimeout(initializeAutocomplete, 100);
-        return;
-      }
-
-      // Check if script is already being loaded
-      if (document.querySelector('script[src*="maps.googleapis.com"]')) {
-        return; // Don't load multiple times
-      }
-
-      // Load the Google Places API script with only places library (no maps)
-      const script = document.createElement('script');
-      script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY}&libraries=places&loading=async&v=3.55`;
-      script.async = true;
-      script.defer = true;
+  // Handle input changes and filter suggestions
+  const handleInputChange = (value: string) => {
+    setSearchValue(value)
+    
+    if (value.length > 0) {
+      const filtered = cities.filter(city => 
+        city.toLowerCase().includes(value.toLowerCase())
+      ).slice(0, 8) // Show max 8 suggestions
       
-      script.onload = () => {
-        // Hide any Google Maps error dialogs immediately after loading
-        setTimeout(() => {
-          const errorContainers = document.querySelectorAll('.gm-err-container, .gm-err-autocomplete');
-          errorContainers.forEach(container => {
-            (container as HTMLElement).style.display = 'none';
-          });
-        }, 100);
-        
-        setTimeout(initializeAutocomplete, 200);
-      };
-      
-      script.onerror = () => {
-        console.warn('Google Places API failed to load. Autocomplete will not be available.');
-      };
-      
-      document.head.appendChild(script);
-    };
-
-    const initializeAutocomplete = () => {
-      try {
-        const input = document.getElementById('locationInput') as HTMLInputElement;
-        if (!input) {
-          return;
-        }
-        
-        if (!window.google?.maps?.places?.Autocomplete) {
-          console.warn('Google Places Autocomplete not available');
-          return;
-        }
-        
-        // Don't initialize if already initialized
-        if (autocomplete) {
-          return;
-        }
-        
-        // Use the current (non-deprecated) Autocomplete constructor
-        const autocompleteInstance = new window.google.maps.places.Autocomplete(input, {
-          types: ['(cities)'],
-          componentRestrictions: { country: 'us' },
-          fields: ['formatted_address', 'place_id', 'name']
-        });
-        
-        // Disable the default map info window that causes the error
-        autocompleteInstance.setOptions({
-          strictBounds: false,
-          types: ['(cities)']
-        });
-        
-        autocompleteInstance.addListener('place_changed', () => {
-          try {
-            const place = autocompleteInstance.getPlace();
-            if (place?.formatted_address) {
-              input.value = place.formatted_address;
-            }
-          } catch (error) {
-            console.warn('Error handling place selection:', error);
-          }
-        });
-        
-        setAutocomplete(autocompleteInstance);
-        
-      } catch (error) {
-        console.warn('Failed to initialize Google Places autocomplete:', error);
-        // Continue without autocomplete - input will still work normally
-      }
-    };
-
-    // Only load if we don't have autocomplete yet
-    if (!autocomplete) {
-      const timer = setTimeout(loadGooglePlaces, 300);
-      return () => clearTimeout(timer);
+      setSuggestions(filtered)
+      setShowSuggestions(filtered.length > 0)
+    } else {
+      setShowSuggestions(false)
+      setSuggestions([])
     }
-  }, [autocomplete]);
+  }
+
+  // Handle suggestion selection
+  const handleSuggestionClick = (city: string) => {
+    setSearchValue(city)
+    setShowSuggestions(false)
+    setSuggestions([])
+  }
+
+  // Load Google Places API - disabled for now
+  useEffect(() => {
+    // Google Places autocomplete disabled due to API issues
+    // Using simple city list instead
+  }, []);
 
   const searchLocation = async () => {
-    const input = document.getElementById('locationInput') as HTMLInputElement
-    const location = input?.value?.trim() || ''
+    const location = searchValue.trim()
     
     if (!location) {
       alert('Please enter a location')
@@ -138,6 +118,7 @@ export default function Home() {
     }
 
     setLoading(true)
+    setShowSuggestions(false) // Hide suggestions when searching
     
     try {
       const response = await fetch(`/api/pollen?location=${encodeURIComponent(location)}&days=5`)
@@ -378,16 +359,7 @@ export default function Home() {
           }
         }
         
-        /* Hide Google Maps error dialogs */
-        .gm-err-container,
-        .gm-err-autocomplete {
-          display: none !important;
-        }
-        
-        /* Hide any Google Maps error overlays */
-        div[style*="background-color: rgba(0, 0, 0, 0.5)"] {
-          display: none !important;
-        }
+        /* Hide Google Maps error dialogs - no longer needed */
       `}</style>
       {/* Header */}
       <header style={{
@@ -454,7 +426,22 @@ export default function Home() {
               id="locationInput"
               type="text" 
               placeholder="Enter your ZIP code or city..."
-              onKeyPress={handleKeyPress}
+              value={searchValue}
+              onChange={(e) => handleInputChange(e.target.value)}
+              onKeyPress={(e) => {
+                if (e.key === 'Enter') {
+                  searchLocation()
+                }
+              }}
+              onFocus={() => {
+                if (searchValue && suggestions.length > 0) {
+                  setShowSuggestions(true)
+                }
+              }}
+              onBlur={() => {
+                // Delay hiding to allow clicking on suggestions
+                setTimeout(() => setShowSuggestions(false), 200)
+              }}
               style={{
                 width: '100%',
                 padding: '1rem 1.5rem',
@@ -469,6 +456,48 @@ export default function Home() {
                 boxSizing: 'border-box'
               }}
             />
+            
+            {/* Suggestions dropdown */}
+            {showSuggestions && suggestions.length > 0 && (
+              <div style={{
+                position: 'absolute',
+                top: '100%',
+                left: 0,
+                right: '120px',
+                background: 'white',
+                borderRadius: '12px',
+                boxShadow: '0 8px 25px rgba(0, 0, 0, 0.15)',
+                zIndex: 1000,
+                maxHeight: '300px',
+                overflowY: 'auto',
+                marginTop: '4px',
+                border: '1px solid #e2e8f0'
+              }}>
+                {suggestions.map((city, index) => (
+                  <div
+                    key={index}
+                    onClick={() => handleSuggestionClick(city)}
+                    style={{
+                      padding: '0.75rem 1rem',
+                      cursor: 'pointer',
+                      borderBottom: index < suggestions.length - 1 ? '1px solid #f1f3f4' : 'none',
+                      fontSize: '0.9rem',
+                      color: '#4a5568',
+                      transition: 'background-color 0.2s'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = '#f8fafc'
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = 'white'
+                    }}
+                  >
+                    📍 {city}
+                  </div>
+                ))}
+              </div>
+            )}
+            
             <button 
               onClick={searchLocation}
               style={{
