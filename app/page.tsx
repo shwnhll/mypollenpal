@@ -689,6 +689,8 @@ const updateForecast = (forecast: any[]) => {
                 <span style={{ color: '#ef4444' }}>3: High</span>
                 <span style={{ color: '#7c2d12' }}>4: Severe</span>
               </div>
+            </div>
+          </div>
 
             <div style={{
               display: 'grid',
