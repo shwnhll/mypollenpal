@@ -244,22 +244,82 @@ export default function Home() {
       const dayName = index === 0 ? 'Today' : (isNaN(date.getTime()) ? 'Day ' + (index + 1) : date.toLocaleDateString('en-US', { weekday: 'short' }))
       const maxLevel = Math.max(
         parseInt(day.tree?.level) || 0,
-        parseInt(day.grass?.level) || 0,
-        parseInt(day.weed?.level) || 0
-      )
-      
-      let color = '#9ca3af'
-      if (maxLevel === 1) color = '#10b981'
-      else if (maxLevel === 2) color = '#f59e0b'
-      else if (maxLevel === 3) color = '#ef4444'
-      else if (maxLevel >= 4) color = '#7c2d12'
 
-      return `<div style="background: white; border-radius: 12px; padding: 1.5rem 1rem; text-align: center; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); border: 1px solid #f1f3f4; min-width: 120px;">
-    <div style="font-weight: 600; color: #2d3748; margin-bottom: 0.5rem; font-size: 0.9rem;">${dayName}</div>
-    <div style="font-size: 0.75rem; color: #718096; margin-bottom: 1rem;">${dateDisplay}</div>
-    <div style="width: 40px; height: 40px; border-radius: 50%; background: ${color}; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; margin: 0 auto 0.5rem; font-size: 1.1rem;">${maxLevel}</div>
-    <div style="font-size: 0.75rem; color: #4a5568; line-height: 1.3;">Tree: ${day.tree?.level || 0}<br>Grass: ${day.grass?.level || 0}<br>Weed: ${day.weed?.level || 0}</div>
-  </div>`
+{forecastData.map((day, i) => {
+  const dayName = new Date(day.date).toLocaleDateString('en-US', { weekday: 'short' });
+  const dateDisplay = new Date(day.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  const maxLevel = Math.max(day.tree?.level || 0, day.grass?.level || 0, day.weed?.level || 0);
+  let color = '#9ca3af';
+  if (maxLevel === 1) color = '#10b981';
+  else if (maxLevel === 2) color = '#f59e0b';
+  else if (maxLevel === 3) color = '#ef4444';
+  else if (maxLevel >= 4) color = '#7c2d12';
+
+  return (
+    <div key={i} style={{
+      background: 'white',
+      borderRadius: '12px',
+      padding: '1.5rem 1rem',
+      textAlign: 'center',
+      boxShadow: '0 4px 15px rgba(0, 0, 0, 0.05)',
+      border: '1px solid #f1f3f4',
+      minWidth: '120px'
+    }}>
+      <div style={{
+        fontWeight: 600,
+        color: '#2d3748',
+        marginBottom: '0.5rem',
+        fontSize: '0.9rem'
+      }}>{dayName}</div>
+      <div style={{
+        fontSize: '0.75rem',
+        color: '#718096',
+        marginBottom: '1rem'
+      }}>{dateDisplay}</div>
+      <div style={{
+        width: '40px',
+        height: '40px',
+        borderRadius: '50%',
+        background: color,
+        color: 'white',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontWeight: 'bold',
+        margin: '0 auto 0.5rem',
+        fontSize: '1.1rem'
+      }}>{maxLevel}</div>
+      <div style={{
+        fontSize: '0.75rem',
+        color: '#4a5568',
+        lineHeight: '1.3'
+      }}>
+        Tree: {day.tree?.level || 0}<br/>
+        Grass: {day.grass?.level || 0}<br/>
+        Weed: {day.weed?.level || 0}
+      </div>
+    </div>
+  );
+})}
+
+            background: ${color};
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin: 0 auto 0.5rem;
+            font-size: 1.1rem;
+          ">
+            ${maxLevel}
+          </div>
+          <div style="font-size: 0.75rem; color: #4a5568; line-height: 1.3;">
+            Tree: ${day.tree?.level || 0}<br>
+            Grass: ${day.grass?.level || 0}<br>
+            Weed: ${day.weed?.level || 0}
+          </div>
+        </div>
+      `
     }).join('')
   }
 
@@ -665,7 +725,14 @@ export default function Home() {
               margin: '2rem 0'
             }} className="pollen-cards-grid">
               {/* Tree Pollen Card */}
-              <div className="pollen-card">
+              <div className="pollen-card" style={{
+                background: 'white',
+                borderRadius: '16px',
+                padding: '2rem',
+                textAlign: 'center',
+                boxShadow: '0 8px 25px rgba(0, 0, 0, 0.1)',
+                border: '1px solid #f1f3f4'
+              }}>
                 <div style={{
                   fontSize: '1.8rem',
                   marginBottom: '1rem'
@@ -723,7 +790,7 @@ export default function Home() {
                 textAlign: 'center',
                 boxShadow: '0 8px 25px rgba(0, 0, 0, 0.1)',
                 border: '1px solid #f1f3f4'
-              <div className="pollen-card">
+              }}>
                 <div style={{
                   fontSize: '1.8rem',
                   marginBottom: '1rem'
@@ -756,6 +823,13 @@ export default function Home() {
                     fontSize: '1.5rem',
                     fontWeight: '800',
                     color: '#f59e0b'
+                  }} id="grassLevelDisplay">
+                    <span id="grassLevel">2</span>
+                  </div>
+                </div>
+                
+                <div style={{
+                  color: '#f59e0b',
                   fontWeight: '600',
                   marginBottom: '1rem',
                   textTransform: 'uppercase',
@@ -775,13 +849,6 @@ export default function Home() {
                 boxShadow: '0 8px 25px rgba(0, 0, 0, 0.1)',
                 border: '1px solid #f1f3f4'
               }}>
-                <div style={{
-                  fontSize: '1.8rem',
-                  marginBottom: '1rem'
-                }}>🌿</div>
-                <div style={{
-                  fontWeight: '600',
-              <div className="pollen-card">
                 <div style={{
                   fontSize: '1.8rem',
                   marginBottom: '1rem'
@@ -814,6 +881,20 @@ export default function Home() {
                     fontSize: '1.5rem',
                     fontWeight: '800',
                     color: '#10b981'
+                  }} id="weedLevelDisplay">
+                    <span id="weedLevel">1</span>
+                  </div>
+                </div>
+                
+                <div style={{
+                  color: '#10b981',
+                  fontWeight: '600',
+                  marginBottom: '1rem',
+                  textTransform: 'uppercase',
+                  fontSize: '0.9rem',
+                  letterSpacing: '0.5px'
+                }} id="weedStatusDisplay">
+                  <span id="weedStatus">Low</span>
                 </div>
               </div>
 
@@ -826,20 +907,6 @@ export default function Home() {
                 boxShadow: '0 8px 25px rgba(0, 0, 0, 0.1)',
                 border: '1px solid #f1f3f4'
               }}>
-                <div style={{
-                  fontSize: '1.8rem',
-                  marginBottom: '1rem'
-                }}>🌬️</div>
-                <div style={{
-                  fontWeight: '600',
-                  color: '#2d3748',
-                  marginBottom: '1.5rem'
-                }}>Air Quality</div>
-                
-                <div style={{
-                  position: 'relative',
-                  width: '80px',
-              <div className="pollen-card">
                 <div style={{
                   fontSize: '1.8rem',
                   marginBottom: '1rem'
@@ -872,6 +939,27 @@ export default function Home() {
                     fontSize: '1.2rem',
                     fontWeight: '800',
                     color: '#10b981'
+                  }} id="airLevelDisplay">
+                    <span id="airLevel">51</span>
+                  </div>
+                </div>
+                
+                <div style={{
+                  color: '#10b981',
+                  fontWeight: '600',
+                  marginBottom: '1rem',
+                  textTransform: 'uppercase',
+                  fontSize: '0.9rem',
+                  letterSpacing: '0.5px'
+                }} id="airStatusDisplay">
+                  <span id="airStatus">Good</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Overall advice section with inline email signup */}
+            <div style={{
+              background: '#f8fafc',
               padding: '1.5rem',
               borderRadius: '12px',
               textAlign: 'center',
