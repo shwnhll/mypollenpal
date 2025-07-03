@@ -1168,27 +1168,27 @@ const updateForecast = (forecast: any[]) => {
             
 {/* Overall advice section with updated styling */}
 {hasSearched && (
-  <div style={{
-    background: 'rgba(255, 255, 255, 0.08)',
-    backdropFilter: 'blur(30px)',
-    border: '1px solid rgba(255, 255, 255, 0.15)',
-    borderRadius: '24px',
-    padding: '2rem',
-    textAlign: 'center',
-    marginTop: '2rem',
-    boxShadow: '0 20px 40px rgba(0, 0, 0, 0.3)'
+<div style={{
+  background: 'linear-gradient(135deg, rgba(212, 175, 55, 0.2) 0%, rgba(212, 175, 55, 0.1) 100%)',
+  backdropFilter: 'blur(30px)',
+  border: '1px solid rgba(212, 175, 55, 0.3)',
+  color: '#f5f5f5',
+  padding: '3rem 2rem',
+  textAlign: 'center',
+  borderRadius: '24px',
+  boxShadow: '0 20px 40px rgba(212, 175, 55, 0.1)'
+}}>
+  <h2 style={{
+    fontFamily: "'Playfair Display', serif",
+    fontSize: '2rem',
+    fontWeight: '700',
+    marginBottom: '1rem',
+    background: 'linear-gradient(135deg, #d4af37 0%, #f4e4bc 100%)',
+    WebkitBackgroundClip: 'text',
+    WebkitTextFillColor: 'transparent',
+    backgroundClip: 'text'
   }}>
-    <div style={{
-      fontSize: '1.1rem',
-      fontWeight: '600',
-      color: '#f5f5f5',
-      marginBottom: '1rem',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      gap: '0.5rem'
-    }}>
-      📍 Today's Recommendation
+      Today's Recommendation
     </div>
     <div style={{
       fontSize: '1rem',
@@ -1206,6 +1206,7 @@ const updateForecast = (forecast: any[]) => {
       marginTop: '2rem'
     }}>
       <div style={{
+        fontFamily: "'Playfair Display', serif",
         fontSize: '1rem',
         fontWeight: '600',
         color: '#f5f5f5',
@@ -1215,7 +1216,7 @@ const updateForecast = (forecast: any[]) => {
         justifyContent: 'center',
         gap: '0.5rem'
       }}>
-        📧 Get alerts like this daily
+        Get alerts like this daily
       </div>
       <div style={{
         display: 'flex',
