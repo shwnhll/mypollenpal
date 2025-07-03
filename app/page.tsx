@@ -571,8 +571,8 @@ const updateForecast = (forecast: any[]) => {
   borderRadius: '50%',
   left: '50%',
   top: '62%',
-  animation: 'floatSwayRight 14s infinite linear',
-  animationDelay: '0s'
+  animation: 'floatSwayRight 12s infinite linear',
+  animationDelay: '1.5s'
 }}></div>
 <div style={{
   position: 'absolute',
@@ -581,9 +581,9 @@ const updateForecast = (forecast: any[]) => {
   background: 'rgba(212, 175, 55, 0.4)',
   borderRadius: '50%',
   left: '47%',
-  top: '30%',  // Start mid-journey
-  animation: 'floatSwayLeft 16s infinite linear',
-  animationDelay: '2s'
+  top: '58%',
+  animation: 'floatSwayLeft 12s infinite linear',
+  animationDelay: '3s'
 }}></div>
 <div style={{
   position: 'absolute',
@@ -593,8 +593,8 @@ const updateForecast = (forecast: any[]) => {
   borderRadius: '50%',
   left: '53%',
   top: '61%',
-  animation: 'floatSwayRight 13s infinite linear',
-  animationDelay: '1s'
+  animation: 'floatSwayRight 12s infinite linear',
+  animationDelay: '4.5s'
 }}></div>
 <div style={{
   position: 'absolute',
@@ -603,9 +603,9 @@ const updateForecast = (forecast: any[]) => {
   background: 'rgba(212, 175, 55, 0.6)',
   borderRadius: '50%',
   left: '46%',
-  top: '20%',  // Start mid-journey
-  animation: 'floatSwayLeft 15s infinite linear',
-  animationDelay: '4s'
+  top: '59%',
+  animation: 'floatSwayLeft 12s infinite linear',
+  animationDelay: '6s'
 }}></div>
 <div style={{
   position: 'absolute',
@@ -615,8 +615,8 @@ const updateForecast = (forecast: any[]) => {
   borderRadius: '50%',
   left: '51%',
   top: '63%',
-  animation: 'floatSwayRight 11s infinite linear',
-  animationDelay: '3s'
+  animation: 'floatSwayRight 12s infinite linear',
+  animationDelay: '7.5s'
 }}></div>
 <div style={{
   position: 'absolute',
@@ -625,9 +625,9 @@ const updateForecast = (forecast: any[]) => {
   background: 'rgba(212, 175, 55, 0.5)',
   borderRadius: '50%',
   left: '48%',
-  top: '40%',  // Start mid-journey
-  animation: 'floatSwayLeft 17s infinite linear',
-  animationDelay: '0.5s'
+  top: '60%',
+  animation: 'floatSwayLeft 12s infinite linear',
+  animationDelay: '9s'
 }}></div>
 <div style={{
   position: 'absolute',
@@ -638,7 +638,7 @@ const updateForecast = (forecast: any[]) => {
   left: '52%',
   top: '57%',
   animation: 'floatSwayRight 12s infinite linear',
-  animationDelay: '5s'
+  animationDelay: '10.5s'
 }}></div>
   
   {/* Subtle gradient overlay */}
@@ -906,14 +906,14 @@ const updateForecast = (forecast: any[]) => {
               transform: 'translate(-50%, -50%)',
               fontSize: '1.5rem',
               fontWeight: '800',
-              color: '##cd853f'
+              color: '#cd853f'
             }} id="treeLevelDisplay">
               <span id="treeLevel">4</span>
             </div>
           </div>
           
           <div style={{
-            color: '#8b4513',
+            color: '#cd853f',
             fontWeight: '600',
             marginBottom: '1rem',
             textTransform: 'uppercase',
@@ -987,7 +987,7 @@ const updateForecast = (forecast: any[]) => {
           </div>
           
           <div style={{
-            color: '#556b2f',
+            color: '#9acd32',
             fontWeight: '600',
             marginBottom: '1rem',
             textTransform: 'uppercase',
