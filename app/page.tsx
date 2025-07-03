@@ -350,7 +350,7 @@ const updateForecast = (forecast: any[]) => {
   return (
     <div style={{
       fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-      background: '#f8f9fa',
+      background: 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)',
       color: '#2d3748',
       lineHeight: '1.6',
       minHeight: '100vh'
@@ -430,181 +430,266 @@ const updateForecast = (forecast: any[]) => {
             position: relative;
             margin-bottom: 2rem;
           }
+
+          @keyframes float {
+  0% {
+    transform: translateY(100vh) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100vh) rotate(360deg);
+    opacity: 0;
+  }
+}
         }
         
         /* Hide Google Maps error dialogs - no longer needed */
       `}</style>
-      {/* Header */}
-      <header style={{
-      background: 'transparent',
-      borderBottom: 'none',
-      position: 'absolute',
-      width: '100%',
-      top: 0,
-      zIndex: 100
+{/* Header */}
+<header style={{
+  background: 'rgba(26, 26, 26, 0.8)',
+  backdropFilter: 'blur(20px)',
+  borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+  position: 'sticky',
+  top: 0,
+  zIndex: 100,
+  transition: 'all 0.3s ease'
+}}>
+  <nav style={{
+    maxWidth: '1200px',
+    margin: '0 auto',
+    padding: '1.5rem 2rem',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center'
+  }}>
+    <div style={{
+      fontFamily: "'Playfair Display', serif",
+      fontSize: '1.8rem',
+      fontWeight: '600',
+      background: 'linear-gradient(135deg, #d4af37 0%, #f4e4bc 100%)',
+      WebkitBackgroundClip: 'text',
+      WebkitTextFillColor: 'transparent',
+      backgroundClip: 'text'
     }}>
-        <nav style={{
-          maxWidth: '1000px',
-          margin: '0 auto',
-          padding: '1rem 20px',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center'
-        }}>
-          <div style={{
-            fontSize: '1.5rem',
-            fontWeight: '600',
-            color: '#ffffff'
-          }}>
-            🤧 mypollenpal
-          </div>
-        </nav>
-      </header>
+      Pollen Pal
+    </div>
+  </nav>
+</header>
 
       {/* Hero Section */}
-      <section style={{
-        background: `
-          radial-gradient(circle at 20px 20px, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-          linear-gradient(135deg, #1E90FF 0%, #0051D5 50%, #003AAF 100%)
-        `,
-        backgroundSize: '20px 20px, cover',
-        color: 'white',
-        padding: '6rem 0 4rem 0',
-        textAlign: 'center'
-      }}>
-        <div style={{
-          maxWidth: '1000px',
-          margin: '0 auto',
-          padding: '0 20px'
-        }}>
-          <h1 style={{
-            fontSize: '3rem',
-            fontWeight: '700',
-            marginBottom: '1rem'
-          }}>
-            Will pollen ruin your day?
-          </h1>
-          <p style={{
-            fontSize: '1.1rem',
-            marginBottom: '3rem',
-            opacity: 0.8,
-            maxWidth: '600px',
-            marginLeft: 'auto',
-            marginRight: 'auto'
-          }}>
-            Your personal pollen companion that delivers hyperlocal forecasts and actionable advice. Never be caught off guard again.
-          </p>
-
-          <div style={{
-            maxWidth: '500px',
-            margin: '0 auto',
-            position: 'relative'
-          }}>
-            <input 
-              id="locationInput"
-              type="text" 
-              placeholder="Enter your ZIP code or city..."
-              value={searchValue}
-              onChange={(e) => handleInputChange(e.target.value)}
-              onKeyPress={(e) => {
-                if (e.key === 'Enter') {
-                  searchLocation()
-                }
-              }}
-              onFocus={() => {
-                if (searchValue && suggestions.length > 0) {
-                  setShowSuggestions(true)
-                }
-              }}
-              onBlur={() => {
-                // Delay hiding to allow clicking on suggestions
-                setTimeout(() => setShowSuggestions(false), 200)
-              }}
-              style={{
-                width: '100%',
-                padding: '1rem 1.5rem',
-                paddingRight: '120px',
-                fontSize: '1rem',
-                border: 'none',
-                borderRadius: '50px',
-                outline: 'none',
-                boxShadow: '0 4px 15px rgba(0, 0, 0, 0.1), 0 0 40px rgba(255, 255, 255, 0.15)',  // Updated this line
-                background: 'white',
-                color: '#2d3748',
-                boxSizing: 'border-box'
-              }}
-            />
-            
-            {/* Suggestions dropdown */}
-            {showSuggestions && suggestions.length > 0 && (
-              <div style={{
-                position: 'absolute',
-                top: '100%',
-                left: 0,
-                right: '120px',
-                background: 'white',
-                borderRadius: '12px',
-                boxShadow: '0 8px 25px rgba(0, 0, 0, 0.15)',
-                zIndex: 1000,
-                maxHeight: '300px',
-                overflowY: 'auto',
-                marginTop: '4px',
-                border: '1px solid #e2e8f0'
-              }}>
-                {suggestions.map((city, index) => (
-                  <div
-                    key={index}
-                    onClick={() => handleSuggestionClick(city)}
-                    style={{
-                      padding: '0.75rem 1rem',
-                      cursor: 'pointer',
-                      borderBottom: index < suggestions.length - 1 ? '1px solid #f1f3f4' : 'none',
-                      fontSize: '0.9rem',
-                      color: '#4a5568',
-                      transition: 'background-color 0.2s'
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.backgroundColor = '#f8fafc'
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.backgroundColor = 'white'
-                    }}
-                  >
-                    📍 {city}
-                  </div>
-                ))}
-              </div>
-            )}
-            
-            <button 
-              onClick={searchLocation}
-              style={{
-                position: 'absolute',
-                right: '6px',
-                top: '50%',
-                transform: 'translateY(-50%)',
-                padding: '0.75rem 1.5rem',
-                background: '#007AFF',
-                color: 'white',
-                border: 'none',
-                borderRadius: '50px',
-                cursor: 'pointer',
-                fontWeight: '600'
-              }}
-            >
-               {loading ? '⏳ Loading...' : '🔍 Search'}
-            </button>
-          </div>
-          <div style={{
-            fontSize: '0.75rem',
-            opacity: 0.7,
-            marginTop: '1rem',
-            textAlign: 'center'
+<section style={{
+  background: 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)',
+  color: 'white',
+  padding: '6rem 0 4rem 0',
+  position: 'relative',
+  overflow: 'hidden'
 }}>
-  Powered by <span style={{ fontWeight: '600' }}>Google</span> • <span style={{ fontWeight: '600' }}>NOAA</span> • <span style={{ fontWeight: '600' }}>EPA</span>
-</div>
-        </div>
-      </section>
+  {/* Floating particles */}
+  <div style={{
+    position: 'absolute',
+    width: '4px',
+    height: '4px',
+    background: 'rgba(212, 175, 55, 0.3)',
+    borderRadius: '50%',
+    left: '10%',
+    animation: 'float 20s infinite linear'
+  }}></div>
+  <div style={{
+    position: 'absolute',
+    width: '4px',
+    height: '4px',
+    background: 'rgba(212, 175, 55, 0.3)',
+    borderRadius: '50%',
+    left: '30%',
+    animation: 'float 20s infinite linear',
+    animationDelay: '4s'
+  }}></div>
+  <div style={{
+    position: 'absolute',
+    width: '4px',
+    height: '4px',
+    background: 'rgba(212, 175, 55, 0.3)',
+    borderRadius: '50%',
+    left: '70%',
+    animation: 'float 20s infinite linear',
+    animationDelay: '8s'
+  }}></div>
+  
+  {/* Subtle gradient overlay */}
+  <div style={{
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    background: `
+      radial-gradient(circle at 30% 40%, rgba(139, 69, 19, 0.15) 0%, transparent 70%),
+      radial-gradient(circle at 70% 60%, rgba(85, 107, 47, 0.2) 0%, transparent 70%)
+    `,
+    pointerEvents: 'none'
+  }}></div>
+
+  <div style={{
+    maxWidth: '1000px',
+    margin: '0 auto',
+    padding: '0 20px',
+    position: 'relative',
+    zIndex: 2
+  }}>
+    <div style={{ textAlign: 'center' }}>
+      <h1 style={{
+        fontFamily: "'Playfair Display', serif",
+        fontSize: '3rem',
+        fontWeight: '700',
+        marginBottom: '1rem',
+        background: 'linear-gradient(135deg, #d4af37 0%, #f4e4bc 100%)',
+        WebkitBackgroundClip: 'text',
+        WebkitTextFillColor: 'transparent',
+        backgroundClip: 'text',
+        lineHeight: '1.2'
+      }}>
+        Will pollen ruin your day?
+      </h1>
+      <p style={{
+        fontSize: '1.1rem',
+        marginBottom: '3rem',
+        opacity: 0.8,
+        maxWidth: '600px',
+        marginLeft: 'auto',
+        marginRight: 'auto',
+        color: '#b8b8b8',
+        fontWeight: '300'
+      }}>
+        Your personal pollen companion that delivers hyperlocal forecasts and actionable advice. Never be caught off guard again.
+      </p>
+
+      {/* Updated search container with glassmorphism */}
+      <div style={{
+        background: 'rgba(255, 255, 255, 0.08)',
+        backdropFilter: 'blur(30px)',
+        border: '1px solid rgba(255, 255, 255, 0.15)',
+        borderRadius: '24px',
+        padding: '3rem',
+        maxWidth: '500px',
+        margin: '0 auto',
+        boxShadow: '0 20px 40px rgba(0, 0, 0, 0.3)',
+        position: 'relative'
+      }}>
+        {/* Keep your existing search input but update styling */}
+        <input 
+          id="locationInput"
+          type="text" 
+          placeholder="Enter your ZIP code or city..."
+          value={searchValue}
+          onChange={(e) => handleInputChange(e.target.value)}
+          onKeyPress={(e) => {
+            if (e.key === 'Enter') {
+              searchLocation()
+            }
+          }}
+          onFocus={() => {
+            if (searchValue && suggestions.length > 0) {
+              setShowSuggestions(true)
+            }
+          }}
+          onBlur={() => {
+            setTimeout(() => setShowSuggestions(false), 200)
+          }}
+          style={{
+            width: '100%',
+            padding: '1.2rem 1.5rem',
+            paddingRight: '120px',
+            fontSize: '1rem',
+            border: '2px solid rgba(255, 255, 255, 0.1)',
+            borderRadius: '16px',
+            background: 'rgba(255, 255, 255, 0.05)',
+            color: '#f5f5f5',
+            outline: 'none',
+            transition: 'all 0.3s ease',
+            boxSizing: 'border-box'
+          }}
+        />
+        
+        {/* Keep your existing suggestions dropdown but update colors */}
+        {showSuggestions && suggestions.length > 0 && (
+          <div style={{
+            position: 'absolute',
+            top: 'calc(100% + 4px)',
+            left: 0,
+            right: '120px',
+            background: 'rgba(26, 26, 26, 0.95)',
+            backdropFilter: 'blur(20px)',
+            borderRadius: '12px',
+            boxShadow: '0 8px 25px rgba(0, 0, 0, 0.4)',
+            zIndex: 1000,
+            maxHeight: '300px',
+            overflowY: 'auto',
+            border: '1px solid rgba(255, 255, 255, 0.1)'
+          }}>
+            {suggestions.map((city, index) => (
+              <div
+                key={index}
+                onClick={() => handleSuggestionClick(city)}
+                style={{
+                  padding: '0.75rem 1rem',
+                  cursor: 'pointer',
+                  borderBottom: index < suggestions.length - 1 ? '1px solid rgba(255, 255, 255, 0.1)' : 'none',
+                  fontSize: '0.9rem',
+                  color: '#f5f5f5',
+                  transition: 'background-color 0.2s'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)'
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'transparent'
+                }}
+              >
+                📍 {city}
+              </div>
+            ))}
+          </div>
+        )}
+        
+        <button 
+          onClick={searchLocation}
+          style={{
+            position: 'absolute',
+            right: '6px',
+            top: '50%',
+            transform: 'translateY(-50%)',
+            padding: '0.75rem 1.5rem',
+            background: 'linear-gradient(135deg, #d4af37 0%, #b8941f 100%)',
+            color: '#1a1a1a',
+            border: 'none',
+            borderRadius: '16px',
+            cursor: 'pointer',
+            fontWeight: '600'
+          }}
+        >
+          {loading ? '⏳ Loading...' : '🔍 Search'}
+        </button>
+      </div>
+      
+      <div style={{
+        fontSize: '0.75rem',
+        opacity: 0.7,
+        marginTop: '1rem',
+        textAlign: 'center',
+        color: '#999'
+      }}>
+        Powered by <span style={{ fontWeight: '600' }}>Google</span> • <span style={{ fontWeight: '600' }}>NOAA</span> • <span style={{ fontWeight: '600' }}>EPA</span>
+      </div>
+    </div>
+  </div>
+</section>
 
       {/* Main Content */}
       <section style={{
