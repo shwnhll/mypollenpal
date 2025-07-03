@@ -1189,7 +1189,8 @@ const updateForecast = (forecast: any[]) => {
     backgroundClip: 'text'
   }}>
       Today's Recommendation
-    </div>
+  </h2>  
+  </div>
     <div style={{
       fontSize: '1rem',
       color: '#b8b8b8',
