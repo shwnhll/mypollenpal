@@ -497,6 +497,7 @@ const updateForecast = (forecast: any[]) => {
   background: 'rgba(212, 175, 55, 0.3)',
   borderRadius: '50%',
   left: '10%',
+  bottom: '-20px',
   animation: 'float 20s infinite linear'
 }}></div>
 <div style={{
@@ -506,6 +507,7 @@ const updateForecast = (forecast: any[]) => {
   background: 'rgba(212, 175, 55, 0.3)',
   borderRadius: '50%',
   left: '20%',
+  bottom: '-20px',
   animation: 'float 20s infinite linear',
   animationDelay: '2s'
 }}></div>
@@ -516,6 +518,7 @@ const updateForecast = (forecast: any[]) => {
   background: 'rgba(212, 175, 55, 0.3)',
   borderRadius: '50%',
   left: '30%',
+  bottom: '-20px',
   animation: 'float 20s infinite linear',
   animationDelay: '4s'
 }}></div>
@@ -526,8 +529,8 @@ const updateForecast = (forecast: any[]) => {
   background: 'rgba(212, 175, 55, 0.3)',
   borderRadius: '50%',
   left: '40%',
-  animation: 'float 20s infinite linear',
-  animationDelay: '6s'
+  bottom: '-20px',
+  animation: 'float 20s infinite linear'
 }}></div>
 <div style={{
   position: 'absolute',
@@ -536,8 +539,9 @@ const updateForecast = (forecast: any[]) => {
   background: 'rgba(212, 175, 55, 0.3)',
   borderRadius: '50%',
   left: '50%',
+  bottom: '-20px',
   animation: 'float 20s infinite linear',
-  animationDelay: '8s'
+  animationDelay: '3s'
 }}></div>
 <div style={{
   position: 'absolute',
@@ -546,8 +550,9 @@ const updateForecast = (forecast: any[]) => {
   background: 'rgba(212, 175, 55, 0.3)',
   borderRadius: '50%',
   left: '60%',
+  bottom: '-20px',
   animation: 'float 20s infinite linear',
-  animationDelay: '10s'
+  animationDelay: '1s'
 }}></div>
 <div style={{
   position: 'absolute',
@@ -556,8 +561,9 @@ const updateForecast = (forecast: any[]) => {
   background: 'rgba(212, 175, 55, 0.3)',
   borderRadius: '50%',
   left: '70%',
+  bottom: '-20px',
   animation: 'float 20s infinite linear',
-  animationDelay: '12s'
+  animationDelay: '5s'
 }}></div>
 <div style={{
   position: 'absolute',
@@ -566,8 +572,9 @@ const updateForecast = (forecast: any[]) => {
   background: 'rgba(212, 175, 55, 0.3)',
   borderRadius: '50%',
   left: '80%',
+  bottom: '-20px',
   animation: 'float 20s infinite linear',
-  animationDelay: '14s'
+  animationDelay: '1s'
 }}></div>
 <div style={{
   position: 'absolute',
@@ -576,8 +583,9 @@ const updateForecast = (forecast: any[]) => {
   background: 'rgba(212, 175, 55, 0.3)',
   borderRadius: '50%',
   left: '90%',
+  bottom: '-20px',
   animation: 'float 20s infinite linear',
-  animationDelay: '16s'
+  animationDelay: '7s'
 }}></div>
   
   {/* Subtle gradient overlay */}
