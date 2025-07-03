@@ -553,16 +553,15 @@ const updateForecast = (forecast: any[]) => {
   position: 'relative',
   overflow: 'hidden'
 }}>
-{/* Magical pollen particles dispersing from search area */}
 <div style={{
   position: 'absolute',
   width: '4px',
   height: '4px',
-  background: 'rgba(212, 175, 55, 0.4)',
+  background: 'rgba(212, 175, 55, 0.6)',
   borderRadius: '50%',
   left: '45%',
   top: '60%',
-  animation: 'floatSwayLeft 15s infinite linear'
+  animation: 'floatSwayLeft 12s infinite linear'
 }}></div>
 <div style={{
   position: 'absolute',
@@ -572,30 +571,30 @@ const updateForecast = (forecast: any[]) => {
   borderRadius: '50%',
   left: '50%',
   top: '62%',
-  animation: 'floatSwayRight 18s infinite linear',
+  animation: 'floatSwayRight 14s infinite linear',
   animationDelay: '0s'
 }}></div>
 <div style={{
   position: 'absolute',
   width: '5px',
   height: '5px',
-  background: 'rgba(212, 175, 55, 0.3)',
+  background: 'rgba(212, 175, 55, 0.4)',
   borderRadius: '50%',
   left: '47%',
-  top: '58%',
-  animation: 'floatSwayLeft 20s infinite linear',
-  animationDelay: '1s'
+  top: '30%',  // Start mid-journey
+  animation: 'floatSwayLeft 16s infinite linear',
+  animationDelay: '2s'
 }}></div>
 <div style={{
   position: 'absolute',
   width: '4px',
   height: '4px',
-  background: 'rgba(212, 175, 55, 0.4)',
+  background: 'rgba(212, 175, 55, 0.5)',
   borderRadius: '50%',
   left: '53%',
   top: '61%',
-  animation: 'floatSwayRight 16s infinite linear',
-  animationDelay: '0.5s'
+  animation: 'floatSwayRight 13s infinite linear',
+  animationDelay: '1s'
 }}></div>
 <div style={{
   position: 'absolute',
@@ -604,42 +603,42 @@ const updateForecast = (forecast: any[]) => {
   background: 'rgba(212, 175, 55, 0.6)',
   borderRadius: '50%',
   left: '46%',
-  top: '59%',
-  animation: 'floatSwayLeft 22s infinite linear',
-  animationDelay: '2s'
+  top: '20%',  // Start mid-journey
+  animation: 'floatSwayLeft 15s infinite linear',
+  animationDelay: '4s'
 }}></div>
 <div style={{
   position: 'absolute',
   width: '4px',
   height: '4px',
-  background: 'rgba(212, 175, 55, 0.3)',
+  background: 'rgba(212, 175, 55, 0.4)',
   borderRadius: '50%',
   left: '51%',
   top: '63%',
-  animation: 'floatSwayRight 17s infinite linear',
-  animationDelay: '1.5s'
+  animation: 'floatSwayRight 11s infinite linear',
+  animationDelay: '3s'
 }}></div>
 <div style={{
   position: 'absolute',
   width: '5px',
   height: '5px',
-  background: 'rgba(212, 175, 55, 0.4)',
+  background: 'rgba(212, 175, 55, 0.5)',
   borderRadius: '50%',
   left: '48%',
-  top: '60%',
-  animation: 'floatSwayLeft 19s infinite linear',
-  animationDelay: '0.2s'
+  top: '40%',  // Start mid-journey
+  animation: 'floatSwayLeft 17s infinite linear',
+  animationDelay: '0.5s'
 }}></div>
 <div style={{
   position: 'absolute',
   width: '3px',
   height: '3px',
-  background: 'rgba(212, 175, 55, 0.5)',
+  background: 'rgba(212, 175, 55, 0.4)',
   borderRadius: '50%',
   left: '52%',
   top: '57%',
-  animation: 'floatSwayRight 21s infinite linear',
-  animationDelay: '3s'
+  animation: 'floatSwayRight 12s infinite linear',
+  animationDelay: '5s'
 }}></div>
   
   {/* Subtle gradient overlay */}
@@ -907,7 +906,7 @@ const updateForecast = (forecast: any[]) => {
               transform: 'translate(-50%, -50%)',
               fontSize: '1.5rem',
               fontWeight: '800',
-              color: '#8b4513'
+              color: '##cd853f'
             }} id="treeLevelDisplay">
               <span id="treeLevel">4</span>
             </div>
@@ -981,7 +980,7 @@ const updateForecast = (forecast: any[]) => {
               transform: 'translate(-50%, -50%)',
               fontSize: '1.5rem',
               fontWeight: '800',
-              color: '#556b2f'
+              color: '#9acd32'
             }} id="grassLevelDisplay">
               <span id="grassLevel">2</span>
             </div>
