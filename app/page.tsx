@@ -362,6 +362,11 @@ const updateForecast = (forecast: any[]) => {
           gap: 2rem;
           margin: 2rem 0;
         }
+
+       .pollen-card:hover {
+         transform: translateY(-5px);
+         box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2) !important;
+       }
         
         @media (max-width: 768px) {
           .pollen-cards-grid {
