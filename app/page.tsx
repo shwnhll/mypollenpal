@@ -1190,7 +1190,6 @@ const updateForecast = (forecast: any[]) => {
   }}>
       Today's Recommendation
   </h2>  
-  </div>
     <div style={{
       fontSize: '1rem',
       color: '#b8b8b8',
