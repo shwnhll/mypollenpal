@@ -1545,7 +1545,6 @@ const updateForecast = (forecast: any[]) => {
       </p>
     </div>
               
-              <div style={{ textAlign: 'center' }}>
     <div style={{ textAlign: 'center' }}>
       <div style={{
         width: '60px',
