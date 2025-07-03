@@ -1622,7 +1622,7 @@ const updateForecast = (forecast: any[]) => {
     WebkitTextFillColor: 'transparent',
     backgroundClip: 'text'
   }}>
-    📧 Never Miss a High Pollen Day
+    Never Miss a High Pollen Day
   </h2>
             <p style={{
               fontSize: '1.1rem',
