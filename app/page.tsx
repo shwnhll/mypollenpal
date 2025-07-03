@@ -445,31 +445,31 @@ const updateForecast = (forecast: any[]) => {
     opacity: 0.8; 
   }
   15% { 
-    transform: translate(-30px, -15vh) rotate(60deg); 
+    transform: translate(-30px, -25vh) rotate(60deg); 
     opacity: 1; 
   }
   30% { 
-    transform: translate(-60px, -30vh) rotate(140deg); 
+    transform: translate(-60px, -50vh) rotate(140deg); 
     opacity: 1; 
   }
   45% { 
-    transform: translate(-90px, -45vh) rotate(220deg); 
+    transform: translate(-90px, -75vh) rotate(220deg); 
     opacity: 1; 
   }
   60% { 
-    transform: translate(-120px, -60vh) rotate(300deg); 
+    transform: translate(-120px, -100vh) rotate(300deg); 
     opacity: 1; 
   }
   75% { 
-    transform: translate(-150px, -75vh) rotate(380deg); 
+    transform: translate(-150px, -125vh) rotate(380deg); 
     opacity: 0.8; 
   }
   90% { 
-    transform: translate(-180px, -90vh) rotate(440deg); 
+    transform: translate(-180px, -150vh) rotate(440deg); 
     opacity: 0.4; 
   }
   100% { 
-    transform: translate(-200px, -110vh) rotate(500deg); 
+    transform: translate(-200px, -170vh) rotate(500deg); 
     opacity: 0; 
   }
 }
@@ -483,31 +483,31 @@ const updateForecast = (forecast: any[]) => {
     opacity: 0.8; 
   }
   15% { 
-    transform: translate(30px, -15vh) rotate(60deg); 
+    transform: translate(30px, -25vh) rotate(60deg); 
     opacity: 1; 
   }
   30% { 
-    transform: translate(60px, -30vh) rotate(140deg); 
+    transform: translate(60px, -50vh) rotate(140deg); 
     opacity: 1; 
   }
   45% { 
-    transform: translate(90px, -45vh) rotate(220deg); 
+    transform: translate(90px, -75vh) rotate(220deg); 
     opacity: 1; 
   }
   60% { 
-    transform: translate(120px, -60vh) rotate(300deg); 
+    transform: translate(120px, -100vh) rotate(300deg); 
     opacity: 1; 
   }
   75% { 
-    transform: translate(150px, -75vh) rotate(380deg); 
+    transform: translate(150px, -125vh) rotate(380deg); 
     opacity: 0.8; 
   }
   90% { 
-    transform: translate(180px, -90vh) rotate(440deg); 
+    transform: translate(180px, -150vh) rotate(440deg); 
     opacity: 0.4; 
   }
   100% { 
-    transform: translate(200px, -110vh) rotate(500deg); 
+    transform: translate(200px, -170vh) rotate(500deg); 
     opacity: 0; 
   }
 }
@@ -560,7 +560,7 @@ const updateForecast = (forecast: any[]) => {
   background: 'rgba(212, 175, 55, 0.6)',
   borderRadius: '50%',
   left: '45%',
-  top: '60%',
+  top: '100%',  // Start below screen
   animation: 'floatSwayLeft 12s infinite linear'
 }}></div>
 <div style={{
@@ -570,7 +570,7 @@ const updateForecast = (forecast: any[]) => {
   background: 'rgba(212, 175, 55, 0.5)',
   borderRadius: '50%',
   left: '50%',
-  top: '62%',
+  top: '100%',  // Start below screen
   animation: 'floatSwayRight 12s infinite linear',
   animationDelay: '1.5s'
 }}></div>
@@ -581,7 +581,7 @@ const updateForecast = (forecast: any[]) => {
   background: 'rgba(212, 175, 55, 0.4)',
   borderRadius: '50%',
   left: '47%',
-  top: '58%',
+  top: '100%',  // Start below screen
   animation: 'floatSwayLeft 12s infinite linear',
   animationDelay: '3s'
 }}></div>
@@ -592,7 +592,7 @@ const updateForecast = (forecast: any[]) => {
   background: 'rgba(212, 175, 55, 0.5)',
   borderRadius: '50%',
   left: '53%',
-  top: '61%',
+  top: '100%',  // Start below screen
   animation: 'floatSwayRight 12s infinite linear',
   animationDelay: '4.5s'
 }}></div>
@@ -603,7 +603,7 @@ const updateForecast = (forecast: any[]) => {
   background: 'rgba(212, 175, 55, 0.6)',
   borderRadius: '50%',
   left: '46%',
-  top: '59%',
+  top: '100%',  // Start below screen
   animation: 'floatSwayLeft 12s infinite linear',
   animationDelay: '6s'
 }}></div>
@@ -614,7 +614,7 @@ const updateForecast = (forecast: any[]) => {
   background: 'rgba(212, 175, 55, 0.4)',
   borderRadius: '50%',
   left: '51%',
-  top: '63%',
+  top: '100%',  // Start below screen
   animation: 'floatSwayRight 12s infinite linear',
   animationDelay: '7.5s'
 }}></div>
@@ -625,7 +625,7 @@ const updateForecast = (forecast: any[]) => {
   background: 'rgba(212, 175, 55, 0.5)',
   borderRadius: '50%',
   left: '48%',
-  top: '60%',
+  top: '100%',  // Start below screen
   animation: 'floatSwayLeft 12s infinite linear',
   animationDelay: '9s'
 }}></div>
@@ -636,7 +636,7 @@ const updateForecast = (forecast: any[]) => {
   background: 'rgba(212, 175, 55, 0.4)',
   borderRadius: '50%',
   left: '52%',
-  top: '57%',
+  top: '100%',  // Start below screen
   animation: 'floatSwayRight 12s infinite linear',
   animationDelay: '10.5s'
 }}></div>
