@@ -791,7 +791,7 @@ const updateForecast = (forecast: any[]) => {
               </p>
             </div>
 
-div style={{
+<div style={{
   display: 'grid',
   gridTemplateColumns: 'repeat(4, 1fr)',
   gap: '2rem',
