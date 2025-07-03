@@ -254,20 +254,22 @@ const updateForecast = (forecast: any[]) => {
     else if (maxLevel === 3) color = '#ef4444'
     else if (maxLevel >= 4) color = '#7c2d12'
 
-    return `
+        return `
       <div style="
-        background: white;
-        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.08);
+        backdropFilter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 16px;
         padding: 1.5rem 1rem;
         text-align: center;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-        border: 1px solid #f1f3f4;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
         min-width: 120px;
+        max-width: 140px;
       ">
-        <div style="font-weight: 600; color: #2d3748; margin-bottom: 0.5rem; font-size: 0.9rem;">
+        <div style="font-weight: 600; color: #f5f5f5; margin-bottom: 0.5rem; font-size: 0.9rem;">
           ${dayName}
         </div>
-        <div style="font-size: 0.75rem; color: #718096; margin-bottom: 1rem;">
+        <div style="font-size: 0.75rem; color: #b8b8b8; margin-bottom: 1rem;">
           ${dateDisplay}
         </div>
         <div style="
@@ -285,7 +287,7 @@ const updateForecast = (forecast: any[]) => {
         ">
           ${maxLevel}
         </div>
-        <div style="font-size: 0.75rem; color: #4a5568; line-height: 1.3;">
+        <div style="font-size: 0.75rem; color: #b8b8b8; line-height: 1.3;">
           Tree: ${day.tree?.level || 0}<br>
           Grass: ${day.grass?.level || 0}<br>
           Weed: ${day.weed?.level || 0}
@@ -1164,129 +1166,142 @@ const updateForecast = (forecast: any[]) => {
         <div>🌬️ Air quality uses US EPA's AQI standard</div>
       </div>
             
-            {/* Overall advice section with inline email signup */}
-            {hasSearched && (
-            <div style={{
-              background: '#f8fafc',
-              padding: '1.5rem',
-              borderRadius: '12px',
-              textAlign: 'center',
-              marginTop: '2rem',
-              border: '1px solid #e2e8f0'
-            }}>
-              <div style={{
-                fontSize: '1rem',
-                fontWeight: '600',
-                color: '#2d3748',
-                marginBottom: '0.5rem'
-              }}>
-                📍 Today's Recommendation
-              </div>
-              <div style={{
-                fontSize: '0.9rem',
-                color: '#4a5568',
-                lineHeight: '1.5',
-                marginBottom: '1.5rem'
-              }} id="overallAdvice">
-                Severe pollen levels! Stay indoors if possible and take allergy medication.
-              </div>
-              
-              {/* Inline Email Signup */}
-              <div style={{
-                borderTop: '1px solid #e2e8f0',
-                paddingTop: '1.5rem',
-                marginTop: '1.5rem'
-              }}>
-                <div style={{
-                  fontSize: '0.9rem',
-                  fontWeight: '600',
-                  color: '#2d3748',
-                  marginBottom: '1rem'
-                }}>
-                  📧 Get alerts like this daily
-                </div>
-                <div style={{
-                  display: 'flex',
-                  gap: '0.5rem',
-                  maxWidth: '400px',
-                  margin: '0 auto',
-                  flexWrap: 'wrap'
-                }} className="email-signup-inline">
-                  <input
-                    type="email"
-                    placeholder="your-email@example.com"
-                    style={{
-                      flex: '1',
-                      minWidth: '200px',
-                      padding: '0.75rem 1rem',
-                      border: '1px solid #d1d5db',
-                      borderRadius: '8px',
-                      fontSize: '0.9rem',
-                      outline: 'none'
-                    }}
-                  />
-                  <input
-                    type="text"
-                    placeholder="ZIP or City"
-                    style={{
-                      flex: '0 0 120px',
-                      padding: '0.75rem 1rem',
-                      border: '1px solid #d1d5db',
-                      borderRadius: '8px',
-                      fontSize: '0.9rem',
-                      outline: 'none'
-                    }}
-                  />
-                  <button
-                    style={{
-                      padding: '0.75rem 1.5rem',
-                      background: '#007AFF',
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: '8px',
-                      fontSize: '0.9rem',
-                      fontWeight: '600',
-                      cursor: 'pointer',
-                      whiteSpace: 'nowrap'
-                    }}
-                  >
-                    Subscribe
-                  </button>
-                </div>
-                <div style={{
-                  fontSize: '0.75rem',
-                  color: '#9ca3af',
-                  marginTop: '0.5rem'
-                }}>
-                  Daily alerts for your specific location
-                </div>
-              </div>
-            </div>
-  )}
+{/* Overall advice section with updated styling */}
+{hasSearched && (
+  <div style={{
+    background: 'rgba(255, 255, 255, 0.08)',
+    backdropFilter: 'blur(30px)',
+    border: '1px solid rgba(255, 255, 255, 0.15)',
+    borderRadius: '24px',
+    padding: '2rem',
+    textAlign: 'center',
+    marginTop: '2rem',
+    boxShadow: '0 20px 40px rgba(0, 0, 0, 0.3)'
+  }}>
+    <div style={{
+      fontSize: '1.1rem',
+      fontWeight: '600',
+      color: '#f5f5f5',
+      marginBottom: '1rem',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: '0.5rem'
+    }}>
+      📍 Today's Recommendation
+    </div>
+    <div style={{
+      fontSize: '1rem',
+      color: '#b8b8b8',
+      lineHeight: '1.5',
+      marginBottom: '2rem'
+    }} id="overallAdvice">
+      Severe pollen levels! Stay indoors if possible and take allergy medication.
+    </div>
+    
+    {/* Updated inline email signup */}
+    <div style={{
+      borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+      paddingTop: '2rem',
+      marginTop: '2rem'
+    }}>
+      <div style={{
+        fontSize: '1rem',
+        fontWeight: '600',
+        color: '#f5f5f5',
+        marginBottom: '1.5rem',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: '0.5rem'
+      }}>
+        📧 Get alerts like this daily
+      </div>
+      <div style={{
+        display: 'flex',
+        gap: '0.75rem',
+        maxWidth: '400px',
+        margin: '0 auto',
+        flexWrap: 'wrap'
+      }} className="email-signup-inline">
+        <input
+          type="email"
+          placeholder="your-email@example.com"
+          style={{
+            flex: '1',
+            minWidth: '200px',
+            padding: '0.75rem 1rem',
+            border: '1px solid rgba(255, 255, 255, 0.2)',
+            borderRadius: '12px',
+            fontSize: '0.9rem',
+            outline: 'none',
+            background: 'rgba(255, 255, 255, 0.05)',
+            color: '#f5f5f5'
+          }}
+        />
+        <input
+          type="text"
+          placeholder="ZIP or City"
+          style={{
+            flex: '0 0 120px',
+            padding: '0.75rem 1rem',
+            border: '1px solid rgba(255, 255, 255, 0.2)',
+            borderRadius: '12px',
+            fontSize: '0.9rem',
+            outline: 'none',
+            background: 'rgba(255, 255, 255, 0.05)',
+            color: '#f5f5f5'
+          }}
+        />
+        <button
+          style={{
+            padding: '0.75rem 1.5rem',
+            background: 'linear-gradient(135deg, #d4af37 0%, #b8941f 100%)',
+            color: '#1a1a1a',
+            border: 'none',
+            borderRadius: '12px',
+            fontSize: '0.9rem',
+            fontWeight: '600',
+            cursor: 'pointer',
+            whiteSpace: 'nowrap'
+          }}
+        >
+          Subscribe
+        </button>
+      </div>
+      <div style={{
+        fontSize: '0.75rem',
+        color: '#999',
+        marginTop: '0.75rem'
+      }}>
+        Daily alerts for your specific location
+      </div>
+    </div>
+  </div>
+)}
 
             {/* 5-Day Forecast - only show after search */}
             {hasSearched && (
-              <div style={{
-                marginTop: '2rem'
-              }}>
-                <h3 style={{
-                  fontSize: '1.5rem',
-                  fontWeight: '700',
-                  color: '#2d3748',
-                  marginBottom: '2rem',
-                  textAlign: 'center'
-                }}>
-                  📅 5-Day Pollen Forecast
-                </h3>
-                <div style={{
-                  display: 'flex',
-                  gap: '1rem',
-                  overflowX: 'auto',
-                  padding: '0.5rem 0',
-                  justifyContent: 'center',
-                  scrollbarWidth: 'thin',
-                  scrollbarColor: '#cbd5e0 #f7fafc'
-                }} className="forecast-container" id="forecastContainer">
+  <div style={{
+    marginTop: '2rem'
+  }}>
+    <h3 style={{
+      fontFamily: "'Playfair Display', serif",
+      fontSize: '1.8rem',
+      fontWeight: '600',
+      color: '#d4af37',
+      marginBottom: '2rem',
+      textAlign: 'center'
+    }}>
+      📅 5-Day Pollen Forecast
+    </h3>
+    <div style={{
+      display: 'flex',
+      gap: '1rem',
+      justifyContent: 'center',
+      flexWrap: 'wrap',
+      padding: '0.5rem 0'
+    }} className="forecast-container" id="forecastContainer">
                   {forecastData.length > 0 ? forecastData.map((day, index) => {
                     let date;
                     let dateDisplay = 'Invalid Date';
