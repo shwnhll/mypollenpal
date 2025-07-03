@@ -828,6 +828,7 @@ const updateForecast = (forecast: any[]) => {
         marginBottom: '2rem'
       }}>
         <h2 style={{
+          fontFamily: "'Playfair Display', serif",
           fontSize: '2rem',
           fontWeight: '700',
           color: '#f5f5f5',
@@ -1507,7 +1508,7 @@ const updateForecast = (forecast: any[]) => {
     fontFamily: "'Playfair Display', serif",
     fontSize: '2rem',
     fontWeight: '700',
-    color: '#d4af37',
+    color: '#f5f5f5',
     marginBottom: '3rem',
     textAlign: 'center'
   }}>
