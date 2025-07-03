@@ -1104,8 +1104,7 @@ const updateForecast = (forecast: any[]) => {
             marginBottom: '1.5rem',
             fontSize: '1.1rem',
             textTransform: 'uppercase',
-            letterSpacing: '0.05em',
-            lineHeight: '1.2'
+            letterSpacing: '0.05em'
           }}>Air<br/>Quality</div>
           
           <div style={{
@@ -1398,16 +1397,18 @@ const updateForecast = (forecast: any[]) => {
 
           {/* Data Sources */}
           <div style={{
-            background: 'white',
-            borderRadius: '16px',
-            padding: '2.5rem',
-            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
-            textAlign: 'center',
-            marginBottom: '2rem'
-          }}>
+  background: 'rgba(255, 255, 255, 0.08)',
+  backdropFilter: 'blur(30px)',
+  border: '1px solid rgba(255, 255, 255, 0.15)',
+  borderRadius: '24px',
+  padding: '2.5rem',
+  boxShadow: '0 20px 40px rgba(0, 0, 0, 0.3)',
+  textAlign: 'center',
+  marginBottom: '2rem'
+}}>
             <h3 style={{
               fontSize: '1.3rem',
-              color: '#2d3748',
+              color: '#f5f5f5',
               marginBottom: '1.5rem',
               fontWeight: '600'
             }}>
@@ -1426,10 +1427,10 @@ const updateForecast = (forecast: any[]) => {
                 alignItems: 'center',
                 gap: '0.5rem',
                 padding: '0.75rem 1rem',
-                border: '2px solid #e2e8f0',
-                borderRadius: '8px',
-                background: '#f8fafc'
-              }}>
+      border: '2px solid rgba(255, 255, 255, 0.2)',
+      borderRadius: '8px',
+      background: 'rgba(255, 255, 255, 0.05)'
+    }}>
                 <svg width="20" height="20" viewBox="0 0 24 24">
                   <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                   <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
@@ -1437,7 +1438,7 @@ const updateForecast = (forecast: any[]) => {
                   <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
                 </svg>
                 <span style={{
-                  color: '#4a5568',
+                  color: '#f5f5f5',
                   fontWeight: '600',
                   fontSize: '0.9rem'
                 }}>Google Pollen API</span>
@@ -1449,10 +1450,10 @@ const updateForecast = (forecast: any[]) => {
                 alignItems: 'center',
                 gap: '0.5rem',
                 padding: '0.75rem 1rem',
-                border: '2px solid #e2e8f0',
-                borderRadius: '8px',
-                background: '#f8fafc'
-              }}>
+      border: '2px solid rgba(255, 255, 255, 0.2)',
+      borderRadius: '8px',
+      background: 'rgba(255, 255, 255, 0.05)'
+    }}>
                 <svg width="20" height="20" viewBox="0 0 100 100">
                   <circle cx="50" cy="50" r="45" fill="#003f7f" stroke="#ffffff" strokeWidth="3"/>
                   <circle cx="50" cy="50" r="35" fill="#ffffff"/>
@@ -1461,7 +1462,7 @@ const updateForecast = (forecast: any[]) => {
                   <text x="50" y="55" textAnchor="middle" fill="#003f7f" fontSize="8" fontWeight="bold">NOAA</text>
                 </svg>
                 <span style={{
-                  color: '#4a5568',
+                  color: '#f5f5f5',
                   fontWeight: '600',
                   fontSize: '0.9rem'
                 }}>NOAA Weather</span>
@@ -1473,10 +1474,10 @@ const updateForecast = (forecast: any[]) => {
                 alignItems: 'center',
                 gap: '0.5rem',
                 padding: '0.75rem 1rem',
-                border: '2px solid #e2e8f0',
-                borderRadius: '8px',
-                background: '#f8fafc'
-              }}>
+      border: '2px solid rgba(255, 255, 255, 0.2)',
+      borderRadius: '8px',
+      background: 'rgba(255, 255, 255, 0.05)'
+    }}>
                 <svg width="20" height="20" viewBox="0 0 100 100">
                   <circle cx="50" cy="50" r="45" fill="#005A9C"/>
                   <circle cx="50" cy="50" r="35" fill="#ffffff"/>
@@ -1485,7 +1486,7 @@ const updateForecast = (forecast: any[]) => {
                   <text x="50" y="80" textAnchor="middle" fill="#005A9C" fontSize="6" fontWeight="bold">CDC</text>
                 </svg>
                 <span style={{
-                  color: '#4a5568',
+                  color: '#f5f5f5',
                   fontWeight: '600',
                   fontSize: '0.9rem'
                 }}>CDC Health Data</span>
@@ -1493,75 +1494,79 @@ const updateForecast = (forecast: any[]) => {
             </div>
           </div>
 
-          {/* How It Works */}
-          <div style={{
-            background: '#f8fafc',
-            borderRadius: '16px',
-            padding: '3rem 2rem',
-            marginBottom: '2rem'
-          }}>
-            <h3 style={{
-              fontSize: '2rem',
-              fontWeight: '700',
-              color: '#2d3748',
-              marginBottom: '3rem',
-              textAlign: 'center'
-            }}>
-              How MyPollenPal Works
-            </h3>
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-              gap: '2rem'
-            }}>
-              <div style={{ textAlign: 'center' }}>
-                <div style={{
-                  width: '60px',
-                  height: '60px',
-                  background: '#007AFF',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '1.8rem',
-                  color: 'white',
-                  margin: '0 auto 1rem'
-                }}>📍</div>
-                <h4 style={{
-                  fontWeight: '700',
-                  color: '#2d3748',
-                  marginBottom: '0.5rem',
-                  fontSize: '1.2rem'
-                }}>1. Enter Your Location</h4>
-                <p style={{
-                  color: '#718096',
-                  lineHeight: '1.6'
-                }}>
-                  Simply enter your ZIP code or city to get hyperlocal pollen data for your exact area.
-                </p>
-              </div>
+{/* How It Works */}
+<div style={{
+  background: 'rgba(255, 255, 255, 0.04)',
+  backdropFilter: 'blur(20px)',
+  border: '1px solid rgba(255, 255, 255, 0.1)',
+  borderRadius: '24px',
+  padding: '3rem 2rem',
+  marginBottom: '2rem'
+}}>
+  <h3 style={{
+    fontFamily: "'Playfair Display', serif",
+    fontSize: '2rem',
+    fontWeight: '700',
+    color: '#d4af37',
+    marginBottom: '3rem',
+    textAlign: 'center'
+  }}>
+    How MyPollenPal Works
+  </h3>
+  <div style={{
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+    gap: '2rem'
+  }}>
+    <div style={{ textAlign: 'center' }}>
+      <div style={{
+        width: '60px',
+        height: '60px',
+        background: 'linear-gradient(135deg, #d4af37 0%, #b8941f 100%)',
+        borderRadius: '50%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontSize: '1.8rem',
+        color: '#1a1a1a',
+        margin: '0 auto 1rem'
+      }}>📍</div>
+      <h4 style={{
+        fontWeight: '700',
+        color: '#f5f5f5',
+        marginBottom: '0.5rem',
+        fontSize: '1.2rem'
+      }}>1. Enter Your Location</h4>
+      <p style={{
+        color: '#b8b8b8',
+        lineHeight: '1.6'
+      }}>
+        Simply enter your ZIP code or city to get hyperlocal pollen data for your exact area.
+      </p>
+    </div>
               
               <div style={{ textAlign: 'center' }}>
-                <div style={{
-                  width: '60px',
-                  height: '60px',
-                  background: '#007AFF',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '1.8rem',
-                  color: 'white',
-                  margin: '0 auto 1rem'
+    <div style={{ textAlign: 'center' }}>
+      <div style={{
+        width: '60px',
+        height: '60px',
+        background: 'linear-gradient(135deg, #d4af37 0%, #b8941f 100%)',
+        borderRadius: '50%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontSize: '1.8rem',
+        color: '#1a1a1a',
+        margin: '0 auto 1rem'
                 }}>📊</div>
-                <h4 style={{
-                  fontWeight: '700',
-                  color: '#2d3748',
-                  marginBottom: '0.5rem',
-                  fontSize: '1.2rem'
+      <h4 style={{
+        fontWeight: '700',
+        color: '#f5f5f5',
+        marginBottom: '0.5rem',
+        fontSize: '1.2rem'
                 }}>2. Check Pollen Levels</h4>
                 <p style={{
-                  color: '#718096',
+                  color: '#b8b8b8',
                   lineHeight: '1.6'
                 }}>
                   See current levels for tree, grass, and weed pollen with easy-to-understand visual indicators.
@@ -1569,26 +1574,26 @@ const updateForecast = (forecast: any[]) => {
               </div>
               
               <div style={{ textAlign: 'center' }}>
-                <div style={{
-                  width: '60px',
-                  height: '60px',
-                  background: '#007AFF',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '1.8rem',
-                  color: 'white',
-                  margin: '0 auto 1rem'
+      <div style={{
+        width: '60px',
+        height: '60px',
+        background: 'linear-gradient(135deg, #d4af37 0%, #b8941f 100%)',
+        borderRadius: '50%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontSize: '1.8rem',
+        color: '#1a1a1a',
+        margin: '0 auto 1rem'
                 }}>🎯</div>
-                <h4 style={{
-                  fontWeight: '700',
-                  color: '#2d3748',
-                  marginBottom: '0.5rem',
-                  fontSize: '1.2rem'
+      <h4 style={{
+        fontWeight: '700',
+        color: '#f5f5f5',
+        marginBottom: '0.5rem',
+        fontSize: '1.2rem'
                 }}>3. Get Personalized Advice</h4>
                 <p style={{
-                  color: '#718096',
+                  color: '#b8b8b8',
                   lineHeight: '1.6'
                 }}>
                   Receive actionable recommendations for outdoor activities, medication timing, and allergy management.
@@ -1597,21 +1602,29 @@ const updateForecast = (forecast: any[]) => {
             </div>
           </div>
           
-          {/* Email Signup Section - Replace Coming Soon */}
-          <div style={{
-            background: 'linear-gradient(135deg, #007AFF 0%, #0051D5 100%)',
-            color: 'white',
-            padding: '3rem 2rem',
-            textAlign: 'center',
-            borderRadius: '16px'
-          }}>
-            <h2 style={{
-              fontSize: '2rem',
-              fontWeight: '700',
-              marginBottom: '1rem'
-            }}>
-              📧 Never Miss a High Pollen Day
-            </h2>
+{/* Email Signup Section */}
+<div style={{
+  background: 'linear-gradient(135deg, rgba(212, 175, 55, 0.2) 0%, rgba(212, 175, 55, 0.1) 100%)',
+  backdropFilter: 'blur(30px)',
+  border: '1px solid rgba(212, 175, 55, 0.3)',
+  color: '#f5f5f5',
+  padding: '3rem 2rem',
+  textAlign: 'center',
+  borderRadius: '24px',
+  boxShadow: '0 20px 40px rgba(212, 175, 55, 0.1)'
+}}>
+  <h2 style={{
+    fontFamily: "'Playfair Display', serif",
+    fontSize: '2rem',
+    fontWeight: '700',
+    marginBottom: '1rem',
+    background: 'linear-gradient(135deg, #d4af37 0%, #f4e4bc 100%)',
+    WebkitBackgroundClip: 'text',
+    WebkitTextFillColor: 'transparent',
+    backgroundClip: 'text'
+  }}>
+    📧 Never Miss a High Pollen Day
+  </h2>
             <p style={{
               fontSize: '1.1rem',
               opacity: 0.9,
@@ -1668,9 +1681,9 @@ const updateForecast = (forecast: any[]) => {
               <button
                 style={{
                   padding: '1rem 2rem',
-                  background: 'rgba(255, 255, 255, 0.2)',
-                  color: 'white',
-                  border: '2px solid rgba(255, 255, 255, 0.3)',
+                  background: 'linear-gradient(135deg, #d4af37 0%, #b8941f 100%)',
+                  color: '#1a1a1a',
+                  border: '1px solid rgba(212, 175, 55, 0.3)',
                   borderRadius: '12px',
                   fontSize: '1rem',
                   fontWeight: '600',
