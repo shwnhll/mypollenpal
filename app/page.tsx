@@ -452,7 +452,6 @@ const updateForecast = (forecast: any[]) => {
     opacity: 0;
   }
 }
-        }
         
         /* Hide Google Maps error dialogs - no longer needed */
       `}</style>
