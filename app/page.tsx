@@ -453,32 +453,31 @@ const updateForecast = (forecast: any[]) => {
       `}</style>
 {/* Header */}
 <header style={{
-  background: 'rgba(26, 26, 26, 0.8)',
-  backdropFilter: 'blur(20px)',
-  borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
-  position: 'sticky',
+  background: 'transparent',
+  borderBottom: 'none',
+  position: 'absolute',
+  width: '100%',
   top: 0,
-  zIndex: 100,
-  transition: 'all 0.3s ease'
+  zIndex: 100
 }}>
   <nav style={{
-    maxWidth: '1200px',
+    maxWidth: '1000px',
     margin: '0 auto',
-    padding: '1.5rem 2rem',
+    padding: '1rem 20px',
     display: 'flex',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'center'
   }}>
     <div style={{
       fontFamily: "'Playfair Display', serif",
-      fontSize: '1.8rem',
+      fontSize: '1.5rem',
       fontWeight: '600',
       background: 'linear-gradient(135deg, #d4af37 0%, #f4e4bc 100%)',
       WebkitBackgroundClip: 'text',
       WebkitTextFillColor: 'transparent',
       backgroundClip: 'text'
     }}>
-      Pollen Pal
+      mypollenpal
     </div>
   </nav>
 </header>
@@ -491,36 +490,95 @@ const updateForecast = (forecast: any[]) => {
   position: 'relative',
   overflow: 'hidden'
 }}>
-  {/* Floating particles */}
-  <div style={{
-    position: 'absolute',
-    width: '4px',
-    height: '4px',
-    background: 'rgba(212, 175, 55, 0.3)',
-    borderRadius: '50%',
-    left: '10%',
-    animation: 'float 20s infinite linear'
-  }}></div>
-  <div style={{
-    position: 'absolute',
-    width: '4px',
-    height: '4px',
-    background: 'rgba(212, 175, 55, 0.3)',
-    borderRadius: '50%',
-    left: '30%',
-    animation: 'float 20s infinite linear',
-    animationDelay: '4s'
-  }}></div>
-  <div style={{
-    position: 'absolute',
-    width: '4px',
-    height: '4px',
-    background: 'rgba(212, 175, 55, 0.3)',
-    borderRadius: '50%',
-    left: '70%',
-    animation: 'float 20s infinite linear',
-    animationDelay: '8s'
-  }}></div>
+<div style={{
+  position: 'absolute',
+  width: '4px',
+  height: '4px',
+  background: 'rgba(212, 175, 55, 0.3)',
+  borderRadius: '50%',
+  left: '10%',
+  animation: 'float 20s infinite linear'
+}}></div>
+<div style={{
+  position: 'absolute',
+  width: '4px',
+  height: '4px',
+  background: 'rgba(212, 175, 55, 0.3)',
+  borderRadius: '50%',
+  left: '20%',
+  animation: 'float 20s infinite linear',
+  animationDelay: '2s'
+}}></div>
+<div style={{
+  position: 'absolute',
+  width: '4px',
+  height: '4px',
+  background: 'rgba(212, 175, 55, 0.3)',
+  borderRadius: '50%',
+  left: '30%',
+  animation: 'float 20s infinite linear',
+  animationDelay: '4s'
+}}></div>
+<div style={{
+  position: 'absolute',
+  width: '4px',
+  height: '4px',
+  background: 'rgba(212, 175, 55, 0.3)',
+  borderRadius: '50%',
+  left: '40%',
+  animation: 'float 20s infinite linear',
+  animationDelay: '6s'
+}}></div>
+<div style={{
+  position: 'absolute',
+  width: '4px',
+  height: '4px',
+  background: 'rgba(212, 175, 55, 0.3)',
+  borderRadius: '50%',
+  left: '50%',
+  animation: 'float 20s infinite linear',
+  animationDelay: '8s'
+}}></div>
+<div style={{
+  position: 'absolute',
+  width: '4px',
+  height: '4px',
+  background: 'rgba(212, 175, 55, 0.3)',
+  borderRadius: '50%',
+  left: '60%',
+  animation: 'float 20s infinite linear',
+  animationDelay: '10s'
+}}></div>
+<div style={{
+  position: 'absolute',
+  width: '4px',
+  height: '4px',
+  background: 'rgba(212, 175, 55, 0.3)',
+  borderRadius: '50%',
+  left: '70%',
+  animation: 'float 20s infinite linear',
+  animationDelay: '12s'
+}}></div>
+<div style={{
+  position: 'absolute',
+  width: '4px',
+  height: '4px',
+  background: 'rgba(212, 175, 55, 0.3)',
+  borderRadius: '50%',
+  left: '80%',
+  animation: 'float 20s infinite linear',
+  animationDelay: '14s'
+}}></div>
+<div style={{
+  position: 'absolute',
+  width: '4px',
+  height: '4px',
+  background: 'rgba(212, 175, 55, 0.3)',
+  borderRadius: '50%',
+  left: '90%',
+  animation: 'float 20s infinite linear',
+  animationDelay: '16s'
+}}></div>
   
   {/* Subtle gradient overlay */}
   <div style={{
@@ -570,123 +628,117 @@ const updateForecast = (forecast: any[]) => {
         Your personal pollen companion that delivers hyperlocal forecasts and actionable advice. Never be caught off guard again.
       </p>
 
-      {/* Updated search container with glassmorphism */}
-      <div style={{
-        background: 'rgba(255, 255, 255, 0.08)',
-        backdropFilter: 'blur(30px)',
-        border: '1px solid rgba(255, 255, 255, 0.15)',
-        borderRadius: '24px',
-        padding: '3rem',
-        maxWidth: '500px',
-        margin: '0 auto',
-        boxShadow: '0 20px 40px rgba(0, 0, 0, 0.3)',
-        position: 'relative'
-      }}>
-        {/* Keep your existing search input but update styling */}
-        <input 
-          id="locationInput"
-          type="text" 
-          placeholder="Enter your ZIP code or city..."
-          value={searchValue}
-          onChange={(e) => handleInputChange(e.target.value)}
-          onKeyPress={(e) => {
-            if (e.key === 'Enter') {
-              searchLocation()
-            }
-          }}
-          onFocus={() => {
-            if (searchValue && suggestions.length > 0) {
-              setShowSuggestions(true)
-            }
-          }}
-          onBlur={() => {
-            setTimeout(() => setShowSuggestions(false), 200)
-          }}
+<div style={{
+  maxWidth: '500px',
+  margin: '0 auto',
+  position: 'relative'
+}}>
+  <input 
+    id="locationInput"
+    type="text" 
+    placeholder="Enter your ZIP code or city..."
+    value={searchValue}
+    onChange={(e) => handleInputChange(e.target.value)}
+    onKeyPress={(e) => {
+      if (e.key === 'Enter') {
+        searchLocation()
+      }
+    }}
+    onFocus={() => {
+      if (searchValue && suggestions.length > 0) {
+        setShowSuggestions(true)
+      }
+    }}
+    onBlur={() => {
+      setTimeout(() => setShowSuggestions(false), 200)
+    }}
+    style={{
+      width: '100%',
+      padding: '1rem 1.5rem',
+      paddingRight: '120px',
+      fontSize: '1rem',
+      border: 'none',
+      borderRadius: '50px',
+      outline: 'none',
+      boxShadow: '0 4px 15px rgba(0, 0, 0, 0.1), 0 0 40px rgba(255, 255, 255, 0.15)',
+      background: 'white',
+      color: '#2d3748',
+      boxSizing: 'border-box'
+    }}
+  />
+  
+  {/* Keep your existing suggestions dropdown but update positioning */}
+  {showSuggestions && suggestions.length > 0 && (
+    <div style={{
+      position: 'absolute',
+      top: '100%',
+      left: 0,
+      right: '120px',
+      background: 'rgba(26, 26, 26, 0.95)',
+      backdropFilter: 'blur(20px)',
+      borderRadius: '12px',
+      boxShadow: '0 8px 25px rgba(0, 0, 0, 0.4)',
+      zIndex: 1000,
+      maxHeight: '300px',
+      overflowY: 'auto',
+      marginTop: '4px',
+      border: '1px solid rgba(255, 255, 255, 0.1)'
+    }}>
+      {suggestions.map((city, index) => (
+        <div
+          key={index}
+          onClick={() => handleSuggestionClick(city)}
           style={{
-            width: '100%',
-            padding: '1.2rem 1.5rem',
-            paddingRight: '120px',
-            fontSize: '1rem',
-            border: '2px solid rgba(255, 255, 255, 0.1)',
-            borderRadius: '16px',
-            background: 'rgba(255, 255, 255, 0.05)',
-            color: '#f5f5f5',
-            outline: 'none',
-            transition: 'all 0.3s ease',
-            boxSizing: 'border-box'
-          }}
-        />
-        
-        {/* Keep your existing suggestions dropdown but update colors */}
-        {showSuggestions && suggestions.length > 0 && (
-          <div style={{
-            position: 'absolute',
-            top: 'calc(100% + 4px)',
-            left: 0,
-            right: '120px',
-            background: 'rgba(26, 26, 26, 0.95)',
-            backdropFilter: 'blur(20px)',
-            borderRadius: '12px',
-            boxShadow: '0 8px 25px rgba(0, 0, 0, 0.4)',
-            zIndex: 1000,
-            maxHeight: '300px',
-            overflowY: 'auto',
-            border: '1px solid rgba(255, 255, 255, 0.1)'
-          }}>
-            {suggestions.map((city, index) => (
-              <div
-                key={index}
-                onClick={() => handleSuggestionClick(city)}
-                style={{
-                  padding: '0.75rem 1rem',
-                  cursor: 'pointer',
-                  borderBottom: index < suggestions.length - 1 ? '1px solid rgba(255, 255, 255, 0.1)' : 'none',
-                  fontSize: '0.9rem',
-                  color: '#f5f5f5',
-                  transition: 'background-color 0.2s'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)'
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = 'transparent'
-                }}
-              >
-                📍 {city}
-              </div>
-            ))}
-          </div>
-        )}
-        
-        <button 
-          onClick={searchLocation}
-          style={{
-            position: 'absolute',
-            right: '6px',
-            top: '50%',
-            transform: 'translateY(-50%)',
-            padding: '0.75rem 1.5rem',
-            background: 'linear-gradient(135deg, #d4af37 0%, #b8941f 100%)',
-            color: '#1a1a1a',
-            border: 'none',
-            borderRadius: '16px',
+            padding: '0.75rem 1rem',
             cursor: 'pointer',
-            fontWeight: '600'
+            borderBottom: index < suggestions.length - 1 ? '1px solid rgba(255, 255, 255, 0.1)' : 'none',
+            fontSize: '0.9rem',
+            color: '#f5f5f5',
+            transition: 'background-color 0.2s'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)'
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = 'transparent'
           }}
         >
-          {loading ? '⏳ Loading...' : '🔍 Search'}
-        </button>
-      </div>
-      
-      <div style={{
-        fontSize: '0.75rem',
-        opacity: 0.7,
-        marginTop: '1rem',
-        textAlign: 'center',
-        color: '#999'
-      }}>
-        Powered by <span style={{ fontWeight: '600' }}>Google</span> • <span style={{ fontWeight: '600' }}>NOAA</span> • <span style={{ fontWeight: '600' }}>EPA</span>
-      </div>
+          📍 {city}
+        </div>
+      ))}
+    </div>
+  )}
+  
+  <button 
+    onClick={searchLocation}
+    style={{
+      position: 'absolute',
+      right: '6px',
+      top: '6px',
+      bottom: '6px',
+      padding: '0 1.5rem',
+      background: 'linear-gradient(135deg, #d4af37 0%, #b8941f 100%)',
+      color: '#1a1a1a',
+      border: 'none',
+      borderRadius: '50px',
+      cursor: 'pointer',
+      fontWeight: '600',
+      fontSize: '1rem'
+    }}
+  >
+    {loading ? 'Loading...' : 'Search'}
+  </button>
+</div>
+
+<div style={{
+  fontSize: '0.75rem',
+  opacity: 0.7,
+  marginTop: '1rem',
+  textAlign: 'center',
+  color: '#999'
+}}>
+  Powered by <span style={{ fontWeight: '600' }}>Google</span> • <span style={{ fontWeight: '600' }}>NOAA</span> • <span style={{ fontWeight: '600' }}>EPA</span>
+</div>
     </div>
   </div>
 </section>
