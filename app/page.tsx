@@ -1,7 +1,6 @@
 'use client'
 import { useState, useEffect } from 'react'
 
-// Declare Google types to avoid TypeScript errors
 declare global {
   interface Window {
     google: any;
@@ -29,7 +28,6 @@ export default function Home() {
   const [showSuggestions, setShowSuggestions] = useState(false)
   const [suggestions, setSuggestions] = useState<string[]>([])
 
-  // Simple list of popular US cities for autocomplete
   const cities = [
     'New York, NY', 'Los Angeles, CA', 'Chicago, IL', 'Houston, TX', 'Phoenix, AZ',
     'Philadelphia, PA', 'San Antonio, TX', 'San Diego, CA', 'Dallas, TX', 'San Jose, CA',
