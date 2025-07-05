@@ -1728,7 +1728,7 @@ const updateForecast = (forecast: any[]) => {
             }}>
               Get personalized daily alerts when pollen or air quality spike in your area.
             </p>
-            
+            <form onSubmit={handleEmailSignup}>
             <div style={{
               maxWidth: '500px',
               margin: '0 auto',
@@ -1738,7 +1738,7 @@ const updateForecast = (forecast: any[]) => {
               justifyContent: 'center',
               alignItems: 'end'
             }} className="email-signup-hero">
-              <form onSubmit={handleEmailSignup}>
+              
               <div style={{ flex: '1', minWidth: '250px' }}>
   <input
     type="email"
