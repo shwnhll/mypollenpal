@@ -1359,7 +1359,8 @@ const updateForecast = (forecast: any[]) => {
     Daily alerts for your specific location
   </div>
 </div>
-
+</div>
+)}
             {/* 5-Day Forecast - only show after search */}
             {hasSearched && (
   <div style={{
