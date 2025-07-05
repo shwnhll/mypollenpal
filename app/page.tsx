@@ -1,5 +1,6 @@
 'use client'
 import { useState, useEffect } from 'react'
+import { supabase } from '../lib/supabase'
 
 declare global {
   interface Window {
@@ -27,6 +28,12 @@ export default function Home() {
   const [searchValue, setSearchValue] = useState('')
   const [showSuggestions, setShowSuggestions] = useState(false)
   const [suggestions, setSuggestions] = useState<string[]>([])
+  const [emailSignup, setEmailSignup] = useState({
+  email: '',
+  location: '',
+  isSubmitting: false,
+  message: ''
+})
 
   const cities = [
     'New York, NY', 'Los Angeles, CA', 'Chicago, IL', 'Houston, TX', 'Phoenix, AZ',
@@ -138,6 +145,59 @@ export default function Home() {
     setLoading(false)
   }
 
+  const handleEmailSignup = async (e: React.FormEvent) => {
+  e.preventDefault()
+  
+  if (!emailSignup.email || !emailSignup.location) {
+    setEmailSignup(prev => ({
+      ...prev,
+      message: 'Please fill in both email and location'
+    }))
+    return
+  }
+
+  setEmailSignup(prev => ({ ...prev, isSubmitting: true, message: '' }))
+
+  try {
+    const { data, error } = await supabase
+      .from('email_subscribers')
+      .insert([
+        {
+          email: emailSignup.email,
+          location: emailSignup.location,
+          verified: false
+        }
+      ])
+
+    if (error) {
+      if (error.code === '23505') { // Unique constraint violation
+        setEmailSignup(prev => ({
+          ...prev,
+          message: 'Email already subscribed!',
+          isSubmitting: false
+        }))
+      } else {
+        throw error
+      }
+    } else {
+      setEmailSignup(prev => ({
+        ...prev,
+        message: '✅ Successfully subscribed!',
+        email: '',
+        location: '',
+        isSubmitting: false
+      }))
+    }
+  } catch (error) {
+    console.error('Error:', error)
+    setEmailSignup(prev => ({
+      ...prev,
+      message: 'Something went wrong. Please try again.',
+      isSubmitting: false
+    }))
+  }
+}
+  
   // Handle Enter key
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
@@ -1197,87 +1257,108 @@ const updateForecast = (forecast: any[]) => {
       Severe pollen levels! Stay indoors if possible and take allergy medication.
     </div>
     
-    {/* Updated inline email signup */}
-    <div style={{
-      borderTop: '1px solid rgba(255, 255, 255, 0.1)',
-      paddingTop: '2rem',
-      marginTop: '2rem'
-    }}>
-      <div style={{
-        fontFamily: "'Playfair Display', serif",
-        fontSize: '1rem',
-        fontWeight: '600',
-        color: '#f5f5f5',
-        marginBottom: '1.5rem',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: '0.5rem'
-      }}>
-        Get alerts like this daily
-      </div>
-      <div style={{
-        display: 'flex',
-        gap: '0.75rem',
-        maxWidth: '400px',
-        margin: '0 auto',
-        flexWrap: 'wrap'
-      }} className="email-signup-inline">
-        <input
-          type="email"
-          placeholder="your-email@example.com"
-          style={{
-            flex: '1',
-            minWidth: '200px',
-            padding: '0.75rem 1rem',
-            border: '1px solid rgba(255, 255, 255, 0.2)',
-            borderRadius: '12px',
-            fontSize: '0.9rem',
-            outline: 'none',
-            background: 'rgba(255, 255, 255, 0.05)',
-            color: '#f5f5f5'
-          }}
-        />
-        <input
-          type="text"
-          placeholder="ZIP or City"
-          style={{
-            flex: '0 0 120px',
-            padding: '0.75rem 1rem',
-            border: '1px solid rgba(255, 255, 255, 0.2)',
-            borderRadius: '12px',
-            fontSize: '0.9rem',
-            outline: 'none',
-            background: 'rgba(255, 255, 255, 0.05)',
-            color: '#f5f5f5'
-          }}
-        />
-        <button
-          style={{
-            padding: '0.75rem 1.5rem',
-            background: 'linear-gradient(135deg, #d4af37 0%, #b8941f 100%)',
-            color: '#1a1a1a',
-            border: 'none',
-            borderRadius: '12px',
-            fontSize: '0.9rem',
-            fontWeight: '600',
-            cursor: 'pointer',
-            whiteSpace: 'nowrap'
-          }}
-        >
-          Subscribe
-        </button>
-      </div>
-      <div style={{
-        fontSize: '0.75rem',
-        color: '#999',
-        marginTop: '0.75rem'
-      }}>
-        Daily alerts for your specific location
-      </div>
-    </div>
+    {/* Updated inline email signup with Supabase */}
+<div style={{
+  borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+  paddingTop: '2rem',
+  marginTop: '2rem'
+}}>
+  <div style={{
+    fontSize: '1rem',
+    fontWeight: '600',
+    color: '#f5f5f5',
+    marginBottom: '1.5rem',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '0.5rem'
+  }}>
+    📧 Get alerts like this daily
   </div>
-)}
+  
+  <form onSubmit={handleEmailSignup}>
+    <div style={{
+      display: 'flex',
+      gap: '0.75rem',
+      maxWidth: '400px',
+      margin: '0 auto',
+      flexWrap: 'wrap'
+    }} className="email-signup-inline">
+      <input
+        type="email"
+        placeholder="your-email@example.com"
+        value={emailSignup.email}
+        onChange={(e) => setEmailSignup(prev => ({ ...prev, email: e.target.value }))}
+        style={{
+          flex: '1',
+          minWidth: '200px',
+          padding: '0.75rem 1rem',
+          border: '1px solid rgba(255, 255, 255, 0.2)',
+          borderRadius: '12px',
+          fontSize: '0.9rem',
+          outline: 'none',
+          background: 'rgba(255, 255, 255, 0.05)',
+          color: '#f5f5f5'
+        }}
+      />
+      <input
+        type="text"
+        placeholder="ZIP or City"
+        value={emailSignup.location}
+        onChange={(e) => setEmailSignup(prev => ({ ...prev, location: e.target.value }))}
+        style={{
+          flex: '0 0 120px',
+          padding: '0.75rem 1rem',
+          border: '1px solid rgba(255, 255, 255, 0.2)',
+          borderRadius: '12px',
+          fontSize: '0.9rem',
+          outline: 'none',
+          background: 'rgba(255, 255, 255, 0.05)',
+          color: '#f5f5f5'
+        }}
+      />
+      <button
+        type="submit"
+        disabled={emailSignup.isSubmitting}
+        style={{
+          padding: '0.75rem 1.5rem',
+          background: emailSignup.isSubmitting 
+            ? 'rgba(212, 175, 55, 0.5)' 
+            : 'linear-gradient(135deg, #d4af37 0%, #b8941f 100%)',
+          color: '#1a1a1a',
+          border: 'none',
+          borderRadius: '12px',
+          fontSize: '0.9rem',
+          fontWeight: '600',
+          cursor: emailSignup.isSubmitting ? 'not-allowed' : 'pointer',
+          whiteSpace: 'nowrap'
+        }}
+      >
+        {emailSignup.isSubmitting ? 'Subscribing...' : 'Subscribe'}
+      </button>
+    </div>
+  </form>
+  
+  {/* Success/Error Message */}
+  {emailSignup.message && (
+    <div style={{
+      fontSize: '0.8rem',
+      color: emailSignup.message.includes('✅') ? '#10b981' : '#ef4444',
+      marginTop: '0.75rem',
+      textAlign: 'center'
+    }}>
+      {emailSignup.message}
+    </div>
+  )}
+  
+  <div style={{
+    fontSize: '0.75rem',
+    color: '#999',
+    marginTop: '0.75rem'
+  }}>
+    Daily alerts for your specific location
+  </div>
+</div>
 
             {/* 5-Day Forecast - only show after search */}
             {hasSearched && (
