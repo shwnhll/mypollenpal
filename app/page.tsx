@@ -1738,59 +1738,80 @@ const updateForecast = (forecast: any[]) => {
               justifyContent: 'center',
               alignItems: 'end'
             }} className="email-signup-hero">
+              <form onSubmit={handleEmailSignup}>
               <div style={{ flex: '1', minWidth: '250px' }}>
-                <input
-                  type="email"
-                  placeholder="Enter your email address"
-                  style={{
-                    width: '100%',
-                    padding: '1rem 1.25rem',
-                    fontSize: '1rem',
-                    border: 'none',
-                    borderRadius: '12px',
-                    outline: 'none',
-                    boxShadow: '0 4px 15px rgba(0, 0, 0, 0.1)',
-                    background: 'white',
-                    color: '#2d3748',
-                    boxSizing: 'border-box'
-                  }}
-                />
-              </div>
-              <div style={{ flex: '0 0 140px' }}>
-                <input
-                  type="text"
-                  placeholder="ZIP or City"
-                  style={{
-                    width: '100%',
-                    padding: '1rem 1.25rem',
-                    fontSize: '1rem',
-                    border: 'none',
-                    borderRadius: '12px',
-                    outline: 'none',
-                    boxShadow: '0 4px 15px rgba(0, 0, 0, 0.1)',
-                    background: 'white',
-                    color: '#2d3748',
-                    boxSizing: 'border-box'
-                  }}
-                />
-              </div>
+  <input
+    type="email"
+    placeholder="Enter your email address"
+    value={emailSignup.email}
+    onChange={(e) => setEmailSignup(prev => ({ ...prev, email: e.target.value }))}
+    style={{
+      width: '100%',
+      padding: '1rem 1.25rem',
+      fontSize: '1rem',
+      border: 'none',
+      borderRadius: '12px',
+      outline: 'none',
+      boxShadow: '0 4px 15px rgba(0, 0, 0, 0.1)',
+      background: 'white',
+      color: '#2d3748',
+      boxSizing: 'border-box'
+    }}
+  />
+</div>
+<div style={{ flex: '0 0 140px' }}>
+  <input
+    type="text"
+    placeholder="ZIP or City"
+    value={emailSignup.location}
+    onChange={(e) => setEmailSignup(prev => ({ ...prev, location: e.target.value }))}
+    style={{
+      width: '100%',
+      padding: '1rem 1.25rem',
+      fontSize: '1rem',
+      border: 'none',
+      borderRadius: '12px',
+      outline: 'none',
+      boxShadow: '0 4px 15px rgba(0, 0, 0, 0.1)',
+      background: 'white',
+      color: '#2d3748',
+      boxSizing: 'border-box'
+    }}
+  />
+</div>
               <button
-                style={{
-                  padding: '1rem 2rem',
-                  background: 'linear-gradient(135deg, #d4af37 0%, #b8941f 100%)',
-                  color: '#1a1a1a',
-                  border: '1px solid rgba(212, 175, 55, 0.3)',
-                  borderRadius: '12px',
-                  fontSize: '1rem',
-                  fontWeight: '600',
-                  cursor: 'pointer',
-                  whiteSpace: 'nowrap',
-                  backdropFilter: 'blur(10px)'
-                }}
-              >
-                Get Daily Alerts
-              </button>
-            </div>
+      type="submit"
+      disabled={emailSignup.isSubmitting}
+      style={{
+        padding: '1rem 2rem',
+        background: emailSignup.isSubmitting 
+          ? 'rgba(212, 175, 55, 0.5)' 
+          : 'linear-gradient(135deg, #d4af37 0%, #b8941f 100%)',
+        color: '#1a1a1a',
+        border: '1px solid rgba(212, 175, 55, 0.3)',
+        borderRadius: '12px',
+        fontSize: '1rem',
+        fontWeight: '600',
+        cursor: emailSignup.isSubmitting ? 'not-allowed' : 'pointer',
+        whiteSpace: 'nowrap'
+      }}
+    >
+      {emailSignup.isSubmitting ? 'Subscribing...' : 'Get Daily Alerts'}
+    </button>
+  </div>
+</form>
+
+{/* Add success/error message */}
+{emailSignup.message && (
+  <div style={{
+    fontSize: '0.9rem',
+    color: emailSignup.message.includes('✅') ? '#10b981' : '#ef4444',
+    marginTop: '1rem',
+    textAlign: 'center'
+  }}>
+    {emailSignup.message}
+  </div>
+)}
             
             <div style={{
               marginTop: '1.5rem',
