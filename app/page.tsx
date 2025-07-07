@@ -260,34 +260,40 @@ updateOverallAdvice(
   }
 
   const updatePollenCard = (type: string, level: string, status: string) => {
-    const levelNum = parseInt(level) || 0
-    let color = '#9ca3af'
-    
-    if (levelNum === 0) {
-      color = '#9ca3af'
-    } else if (levelNum === 1) {
-      color = '#10b981'
-    } else if (levelNum === 2) {
-      color = '#f59e0b'
-    } else if (levelNum === 3) {
-      color = '#ef4444'
-    } else if (levelNum >= 4) {
-      color = '#7c2d12'
-    }
-
-    const ring = document.getElementById(`${type}Ring`)
-    const level_el = document.getElementById(`${type}LevelDisplay`)
-    const status_el = document.getElementById(`${type}StatusDisplay`)
-    const status_span = document.getElementById(`${type}Status`)
-    const level_span = document.getElementById(`${type}Level`)
-    
-    if (ring) ring.setAttribute('stroke', color)
-    if (ring) ring.setAttribute('stroke-dasharray', `${(levelNum/4) * 201.06} 201.06`)
-    if (level_el) level_el.style.color = color
-    if (status_el) status_el.style.color = color
-    if (status_span) status_span.textContent = status
-    if (level_span) level_span.textContent = level
+  const levelNum = parseInt(level) || 0
+  let color = '#9ca3af'
+  let displayStatus = 'None'
+  
+  if (levelNum === 0) {
+    color = '#9ca3af'
+    displayStatus = 'None'
+  } else if (levelNum === 1) {
+    color = '#10b981'
+    displayStatus = 'Low'
+  } else if (levelNum === 2) {
+    color = '#f59e0b'
+    displayStatus = 'Medium'
+  } else if (levelNum === 3) {
+    color = '#ef4444'
+    displayStatus = 'High'
+  } else if (levelNum >= 4) {
+    color = '#7c2d12'
+    displayStatus = 'Very High'
   }
+
+  const ring = document.getElementById(`${type}Ring`)
+  const level_el = document.getElementById(`${type}LevelDisplay`)
+  const status_el = document.getElementById(`${type}StatusDisplay`)
+  const status_span = document.getElementById(`${type}Status`)
+  const level_span = document.getElementById(`${type}Level`)
+  
+  if (ring) ring.setAttribute('stroke', color)
+  if (ring) ring.setAttribute('stroke-dasharray', `${(levelNum/4) * 201.06} 201.06`)
+  if (level_el) level_el.style.color = color
+  if (status_el) status_el.style.color = color
+  if (status_span) status_span.textContent = displayStatus  // Use our standardized status
+  if (level_span) level_span.textContent = level
+}
 
 const updateForecast = (forecast: any[]) => {
   const forecastContainer = document.getElementById('forecastContainer')
@@ -1265,7 +1271,8 @@ const updateForecast = (forecast: any[]) => {
       lineHeight: '1.5',
       marginBottom: '1.5rem'
     }} id="overallAdvice">
-    </div>
+  Great day for outdoor activities! Low pollen and good air quality.
+</div>
     
     {/* Soft prompt to sign up */}
     <div style={{
