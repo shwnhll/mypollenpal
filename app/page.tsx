@@ -234,11 +234,22 @@ export default function Home() {
         updateAirQualityCard(data.current.airQuality.aqi, data.current.airQuality.status)
       }
       
-      updateOverallAdvice(
+let airQualityLevel = 1;
+if (data.current.airQuality && data.current.airQuality.aqi) {
+  const aqi = data.current.airQuality.aqi;
+  if (aqi <= 50) airQualityLevel = 1;
+  else if (aqi <= 100) airQualityLevel = 2;
+  else if (aqi <= 150) airQualityLevel = 3;
+  else if (aqi <= 200) airQualityLevel = 4;
+  else if (aqi <= 300) airQualityLevel = 5;
+  else airQualityLevel = 6;
+}
+
+updateOverallAdvice(
   parseInt(data.current.tree.level) || 0,
   parseInt(data.current.grass.level) || 0, 
   parseInt(data.current.weed.level) || 0,
-  data.current.airQuality ? Math.ceil(data.current.airQuality.aqi / 50) : 1
+  airQualityLevel
 )
     }
 
@@ -1254,7 +1265,6 @@ const updateForecast = (forecast: any[]) => {
       lineHeight: '1.5',
       marginBottom: '1.5rem'
     }} id="overallAdvice">
-      Severe pollen levels! Stay indoors if possible and take allergy medication.
     </div>
     
     {/* Soft prompt to sign up */}
