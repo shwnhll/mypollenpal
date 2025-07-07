@@ -235,11 +235,11 @@ export default function Home() {
       }
       
       updateOverallAdvice(
-        parseInt(data.current.tree.level) || 0,
-        parseInt(data.current.grass.level) || 0, 
-        parseInt(data.current.weed.level) || 0,
-        data.current.airQuality ? data.current.airQuality.level : 1
-      )
+  parseInt(data.current.tree.level) || 0,
+  parseInt(data.current.grass.level) || 0, 
+  parseInt(data.current.weed.level) || 0,
+  data.current.airQuality ? Math.ceil(data.current.airQuality.aqi / 50) : 1
+)
     }
 
     // Update 5-day forecast
@@ -1252,113 +1252,39 @@ const updateForecast = (forecast: any[]) => {
       fontSize: '1rem',
       color: '#b8b8b8',
       lineHeight: '1.5',
-      marginBottom: '2rem'
+      marginBottom: '1.5rem'
     }} id="overallAdvice">
       Severe pollen levels! Stay indoors if possible and take allergy medication.
     </div>
     
-    {/* Updated inline email signup with Supabase */}
-<div style={{
-  borderTop: '1px solid rgba(255, 255, 255, 0.1)',
-  paddingTop: '2rem',
-  marginTop: '2rem'
-}}>
-  <div style={{
-    fontSize: '1rem',
-    fontWeight: '600',
-    color: '#f5f5f5',
-    marginBottom: '1.5rem',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: '0.5rem'
-  }}>
-    📧 Get alerts like this daily
-  </div>
-  
-  <form onSubmit={handleEmailSignup}>
+    {/* Soft prompt to sign up */}
     <div style={{
-      display: 'flex',
-      gap: '0.75rem',
-      maxWidth: '400px',
-      margin: '0 auto',
-      flexWrap: 'wrap'
-    }} className="email-signup-inline">
-      <input
-        type="email"
-        placeholder="your-email@example.com"
-        value={emailSignup.email}
-        onChange={(e) => setEmailSignup(prev => ({ ...prev, email: e.target.value }))}
-        style={{
-          flex: '1',
-          minWidth: '200px',
-          padding: '0.75rem 1rem',
-          border: '1px solid rgba(255, 255, 255, 0.2)',
-          borderRadius: '12px',
-          fontSize: '0.9rem',
-          outline: 'none',
-          background: 'rgba(255, 255, 255, 0.05)',
-          color: '#f5f5f5'
-        }}
-      />
-      <input
-        type="text"
-        placeholder="ZIP or City"
-        value={emailSignup.location}
-        onChange={(e) => setEmailSignup(prev => ({ ...prev, location: e.target.value }))}
-        style={{
-          flex: '0 0 120px',
-          padding: '0.75rem 1rem',
-          border: '1px solid rgba(255, 255, 255, 0.2)',
-          borderRadius: '12px',
-          fontSize: '0.9rem',
-          outline: 'none',
-          background: 'rgba(255, 255, 255, 0.05)',
-          color: '#f5f5f5'
-        }}
-      />
-      <button
-        type="submit"
-        disabled={emailSignup.isSubmitting}
-        style={{
-          padding: '0.75rem 1.5rem',
-          background: emailSignup.isSubmitting 
-            ? 'rgba(212, 175, 55, 0.5)' 
-            : 'linear-gradient(135deg, #d4af37 0%, #b8941f 100%)',
-          color: '#1a1a1a',
-          border: 'none',
-          borderRadius: '12px',
-          fontSize: '0.9rem',
-          fontWeight: '600',
-          cursor: emailSignup.isSubmitting ? 'not-allowed' : 'pointer',
-          whiteSpace: 'nowrap'
-        }}
-      >
-        {emailSignup.isSubmitting ? 'Subscribing...' : 'Subscribe'}
-      </button>
-    </div>
-  </form>
-  
-  {/* Success/Error Message */}
-  {emailSignup.message && (
-    <div style={{
-      fontSize: '0.8rem',
-      color: emailSignup.message.includes('✅') ? '#10b981' : '#ef4444',
-      marginTop: '0.75rem',
-      textAlign: 'center'
+      borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+      paddingTop: '1.5rem',
+      marginTop: '1.5rem'
     }}>
-      {emailSignup.message}
+      <a 
+        href="#email-signup"
+        onClick={(e) => {
+          e.preventDefault();
+          document.getElementById('email-signup')?.scrollIntoView({ behavior: 'smooth' });
+        }}
+        style={{
+          color: '#d4af37',
+          textDecoration: 'none',
+          fontSize: '0.95rem',
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: '0.5rem',
+          transition: 'opacity 0.2s',
+          cursor: 'pointer'
+        }}
+        onMouseEnter={(e) => e.currentTarget.style.opacity = '0.8'}
+        onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+      >
+        Want alerts when pollen spikes? Sign up below ↓
+      </a>
     </div>
-  )}
-  
-  <div style={{
-    fontSize: '0.75rem',
-    color: '#999',
-    marginTop: '0.75rem'
-  }}>
-    Daily alerts for your specific location
-  </div>
-</div>
 </div>
 )}
             {/* 5-Day Forecast - only show after search */}
@@ -1699,7 +1625,7 @@ const updateForecast = (forecast: any[]) => {
           </div>
           
 {/* Email Signup Section */}
-<div style={{
+<div id="email-signup" style={{
   background: 'linear-gradient(135deg, rgba(212, 175, 55, 0.2) 0%, rgba(212, 175, 55, 0.1) 100%)',
   backdropFilter: 'blur(30px)',
   border: '1px solid rgba(212, 175, 55, 0.3)',
