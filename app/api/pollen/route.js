@@ -132,6 +132,42 @@ const getDetailedPollenInfo = (pollenTypes) => {
       level: pollen.indexInfo.value || 0,
       status: pollen.indexInfo.category || 'Low'
     }
+
+    // Add this new function after your existing getDetailedPollenInfo function
+const getPlantSpeciesInfo = (plantInfo) => {
+  const trees = {}
+  const grasses = {}  
+  const weeds = {}
+  
+  if (!plantInfo || plantInfo.length === 0) {
+    return { trees, grasses, weeds }
+  }
+  
+  plantInfo.forEach(plant => {
+    if (!plant.indexInfo) return
+    
+    const plantData = {
+      level: plant.indexInfo.value || 0,
+      status: plant.indexInfo.category || 'Low',
+      displayName: plant.displayName || plant.code
+    }
+    
+    // Categorize by plant type
+    const treeTypes = ['ALDER', 'ASH', 'BIRCH', 'COTTONWOOD', 'ELM', 'MAPLE', 'OLIVE', 'JUNIPER', 'OAK', 'PINE', 'CYPRESS_PINE', 'HAZEL', 'JAPANESE_CEDAR', 'JAPANESE_CYPRESS']
+    const grassTypes = ['GRAMINALES']
+    const weedTypes = ['RAGWEED', 'MUGWORT']
+    
+    if (treeTypes.includes(plant.code)) {
+      trees[plant.code.toLowerCase()] = plantData
+    } else if (grassTypes.includes(plant.code)) {
+      grasses[plant.code.toLowerCase()] = plantData  
+    } else if (weedTypes.includes(plant.code)) {
+      weeds[plant.code.toLowerCase()] = plantData
+    }
+  })
+  
+  return { trees, grasses, weeds }
+}
     
     // Categorize by plant type based on the documentation
     const treeTypes = ['ALDER', 'ASH', 'BIRCH', 'COTTONWOOD', 'ELM', 'MAPLE', 'OLIVE', 'JUNIPER', 'OAK', 'PINE', 'CYPRESS_PINE', 'HAZEL', 'JAPANESE_CEDAR', 'JAPANESE_CYPRESS']
@@ -162,14 +198,15 @@ const getDetailedPollenInfo = (pollenTypes) => {
     // Process each day
     dailyInfo.forEach((dayData, index) => {
   const pollenTypes = dayData.pollenTypeInfo || []
-  const detailedPollen = getDetailedPollenInfo(pollenTypes)
+  const plantInfo = dayData.plantInfo || [] 
+  const detailedPollen = getPlantSpeciesInfo(plantInfo) 
   
   const dayResult = {
     date: dayData.date,
     tree: getPollenInfo(pollenTypes, 'TREE'),
     grass: getPollenInfo(pollenTypes, 'GRASS'), 
     weed: getPollenInfo(pollenTypes, 'WEED'),
-    detailed: detailedPollen  // Add this line
+    detailed: detailedPollen
   }
       
       if (index === 0) {
