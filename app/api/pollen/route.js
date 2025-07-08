@@ -116,6 +116,37 @@ export async function GET(request) {
         status: pollen.indexInfo.category || 'Low'
       }
     }
+
+    // Helper function to extract detailed plant data
+const getDetailedPollenInfo = (pollenTypes) => {
+  const trees = {}
+  const grasses = {}
+  const weeds = {}
+  
+  pollenTypes.forEach(pollen => {
+    if (!pollen.indexInfo) return
+    
+    const plantData = {
+      level: pollen.indexInfo.value || 0,
+      status: pollen.indexInfo.category || 'Low'
+    }
+    
+    // Categorize by plant type based on the documentation
+    const treeTypes = ['ALDER', 'ASH', 'BIRCH', 'COTTONWOOD', 'ELM', 'MAPLE', 'OLIVE', 'JUNIPER', 'OAK', 'PINE', 'CYPRESS_PINE', 'HAZEL', 'JAPANESE_CEDAR', 'JAPANESE_CYPRESS']
+    const grassTypes = ['GRAMINALES']
+    const weedTypes = ['RAGWEED', 'MUGWORT']
+    
+    if (treeTypes.includes(pollen.code)) {
+      trees[pollen.code.toLowerCase()] = plantData
+    } else if (grassTypes.includes(pollen.code)) {
+      grasses[pollen.code.toLowerCase()] = plantData
+    } else if (weedTypes.includes(pollen.code)) {
+      weeds[pollen.code.toLowerCase()] = plantData
+    }
+  })
+  
+  return { trees, grasses, weeds }
+}
     
     // Structure response with current + forecast + air quality
     const result = {
@@ -128,13 +159,16 @@ export async function GET(request) {
     
     // Process each day
     dailyInfo.forEach((dayData, index) => {
-      const pollenTypes = dayData.pollenTypeInfo || []
-      const dayResult = {
-        date: dayData.date,
-        tree: getPollenInfo(pollenTypes, 'TREE'),
-        grass: getPollenInfo(pollenTypes, 'GRASS'),
-        weed: getPollenInfo(pollenTypes, 'WEED')
-      }
+  const pollenTypes = dayData.pollenTypeInfo || []
+  const detailedPollen = getDetailedPollenInfo(pollenTypes)
+  
+  const dayResult = {
+    date: dayData.date,
+    tree: getPollenInfo(pollenTypes, 'TREE'),
+    grass: getPollenInfo(pollenTypes, 'GRASS'), 
+    weed: getPollenInfo(pollenTypes, 'WEED'),
+    detailed: detailedPollen  // Add this line
+  }
       
       if (index === 0) {
         // First day is "current" - add air quality here too
