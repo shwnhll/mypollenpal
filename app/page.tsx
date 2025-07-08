@@ -1669,7 +1669,7 @@ const updateForecast = (forecast: any[]) => {
               opacity: 0.9,
               marginBottom: '2rem'
             }}>
-              Get personalized daily alerts when pollen or air quality spike in your area.
+              Get email alerts every morning when pollen or air quality will be dangerous in your specific area.
             </p>
             <form onSubmit={handleEmailSignup}>
             <div style={{
@@ -1761,7 +1761,7 @@ const updateForecast = (forecast: any[]) => {
               fontSize: '0.9rem',
               opacity: 0.8
             }}>
-              ✨ Personalized for your location • 📱 Mobile-friendly alerts • 🔒 Unsubscribe anytime
+              📧 Morning email alerts • 📍 Your exact location • 🚫 Only on bad days
             </div>
           </div>
         </div>
