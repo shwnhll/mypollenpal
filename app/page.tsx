@@ -1673,75 +1673,85 @@ const updateForecast = (forecast: any[]) => {
             </p>
             <form onSubmit={handleEmailSignup}>
             <div style={{
-              maxWidth: '500px',
-              margin: '0 auto',
-              display: 'flex',
-              gap: '0.75rem',
-              flexWrap: 'wrap',
-              justifyContent: 'center',
-              alignItems: 'end'
-            }} className="email-signup-hero">
-              
-              <div style={{ flex: '1', minWidth: '250px' }}>
-  <input
-    type="email"
-    placeholder="Enter your email address"
-    value={emailSignup.email}
-    onChange={(e) => setEmailSignup(prev => ({ ...prev, email: e.target.value }))}
-    style={{
-      width: '100%',
-      padding: '1rem 1.25rem',
-      fontSize: '1rem',
-      border: 'none',
-      borderRadius: '12px',
-      outline: 'none',
-      boxShadow: '0 4px 15px rgba(0, 0, 0, 0.1)',
-      background: 'white',
-      color: '#2d3748',
-      boxSizing: 'border-box'
-    }}
-  />
-</div>
-<div style={{ flex: '0 0 140px' }}>
-  <input
-    type="text"
-    placeholder="ZIP or City"
-    value={emailSignup.location}
-    onChange={(e) => setEmailSignup(prev => ({ ...prev, location: e.target.value }))}
-    style={{
-      width: '100%',
-      padding: '1rem 1.25rem',
-      fontSize: '1rem',
-      border: 'none',
-      borderRadius: '12px',
-      outline: 'none',
-      boxShadow: '0 4px 15px rgba(0, 0, 0, 0.1)',
-      background: 'white',
-      color: '#2d3748',
-      boxSizing: 'border-box'
-    }}
-  />
-</div>
-              <button
-      type="submit"
-      disabled={emailSignup.isSubmitting}
-      style={{
-        padding: '1rem 2rem',
-        background: emailSignup.isSubmitting 
-          ? 'rgba(212, 175, 55, 0.5)' 
-          : 'linear-gradient(135deg, #d4af37 0%, #b8941f 100%)',
-        color: '#1a1a1a',
-        border: '1px solid rgba(212, 175, 55, 0.3)',
-        borderRadius: '12px',
-        fontSize: '1rem',
-        fontWeight: '600',
-        cursor: emailSignup.isSubmitting ? 'not-allowed' : 'pointer',
-        whiteSpace: 'nowrap'
-      }}
-    >
-      {emailSignup.isSubmitting ? 'Subscribing...' : 'Get Daily Alerts'}
-    </button>
+  maxWidth: '500px',
+  margin: '0 auto',
+  display: 'flex',
+  flexDirection: 'column',  // Stack vertically on mobile
+  gap: '0.75rem',
+  alignItems: 'center'      // Center all items
+}} className="email-signup-hero">
+  
+  {/* Inputs container for desktop layout */}
+  <div style={{
+    display: 'flex',
+    gap: '0.75rem',
+    width: '100%',
+    flexWrap: 'wrap',
+    justifyContent: 'center'
+  }}>
+    <div style={{ flex: '1', minWidth: '250px' }}>
+      <input
+        type="email"
+        placeholder="Enter your email address"
+        value={emailSignup.email}
+        onChange={(e) => setEmailSignup(prev => ({ ...prev, email: e.target.value }))}
+        style={{
+          width: '100%',
+          padding: '1rem 1.25rem',
+          fontSize: '1rem',
+          border: 'none',
+          borderRadius: '12px',
+          outline: 'none',
+          boxShadow: '0 4px 15px rgba(0, 0, 0, 0.1)',
+          background: 'white',
+          color: '#2d3748',
+          boxSizing: 'border-box'
+        }}
+      />
+    </div>
+    <div style={{ flex: '0 0 140px' }}>
+      <input
+        type="text"
+        placeholder="ZIP or City"
+        value={emailSignup.location}
+        onChange={(e) => setEmailSignup(prev => ({ ...prev, location: e.target.value }))}
+        style={{
+          width: '100%',
+          padding: '1rem 1.25rem',
+          fontSize: '1rem',
+          border: 'none',
+          borderRadius: '12px',
+          outline: 'none',
+          boxShadow: '0 4px 15px rgba(0, 0, 0, 0.1)',
+          background: 'white',
+          color: '#2d3748',
+          boxSizing: 'border-box'
+        }}
+      />
+    </div>
   </div>
+  
+  {/* Button now separate and will center */}
+  <button
+    type="submit"
+    disabled={emailSignup.isSubmitting}
+    style={{
+      padding: '1rem 2rem',
+      background: emailSignup.isSubmitting 
+        ? 'rgba(212, 175, 55, 0.5)' 
+        : 'linear-gradient(135deg, #d4af37 0%, #b8941f 100%)',
+      color: '#1a1a1a',
+      border: '1px solid rgba(212, 175, 55, 0.3)',
+      borderRadius: '12px',
+      fontSize: '1rem',
+      fontWeight: '600',
+      cursor: emailSignup.isSubmitting ? 'not-allowed' : 'pointer',
+      whiteSpace: 'nowrap'
+    }}
+  >
+    {emailSignup.isSubmitting ? 'Subscribing...' : 'Get Pollen Alerts'}
+  </button>
+</div>
 </form>
 
 {/* Add success/error message */}
@@ -1761,7 +1771,7 @@ const updateForecast = (forecast: any[]) => {
               fontSize: '0.9rem',
               opacity: 0.8
             }}>
-              📧 Morning email alerts • 📍 Your exact location • 🚫 Only on bad days
+              Morning alerts • Your location • Only when you need to know
             </div>
           </div>
         </div>
