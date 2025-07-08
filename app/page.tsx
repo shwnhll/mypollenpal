@@ -1771,7 +1771,7 @@ const updateForecast = (forecast: any[]) => {
               fontSize: '0.9rem',
               opacity: 0.8
             }}>
-              Morning alerts • Your location • Only when you need to know
+              Morning alerts • Your location • Only when needed
             </div>
           </div>
         </div>
