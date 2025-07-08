@@ -1635,7 +1635,7 @@ const updateForecast = (forecast: any[]) => {
                   color: '#b8b8b8',
                   lineHeight: '1.6'
                 }}>
-                  Receive actionable recommendations for outdoor activities, medication timing, and allergy management.
+                  Get personalized advice on when to stay indoors, take medication, or plan outdoor activities.
                 </p>
               </div>
             </div>
