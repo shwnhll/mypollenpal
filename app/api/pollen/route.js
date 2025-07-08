@@ -33,7 +33,7 @@ export async function GET(request) {
     }
     
     // Parallel API calls for better performance
-    const pollenUrl = `https://pollen.googleapis.com/v1/forecast:lookup?location.latitude=${lat}&location.longitude=${lng}&days=${days}&key=${process.env.GOOGLE_POLLEN_API_KEY}`
+    const pollenUrl = `https://pollen.googleapis.com/v1/forecast:lookup?location.latitude=${lat}&location.longitude=${lng}&days=${days}&plantsDescription=true&key=${process.env.GOOGLE_POLLEN_API_KEY}`
     
     // Build air quality URL
     const airQualityUrl = zipCode 
@@ -106,34 +106,18 @@ export async function GET(request) {
     }
     
     // Helper function to extract pollen info
-    const getPollenInfo = (pollenTypes, code) => {
-      const pollen = pollenTypes.find(p => p.code === code)
-      if (!pollen || !pollen.indexInfo) {
-        return { level: 0, status: 'Low' }
-      }
-      return {
-        level: pollen.indexInfo.value || 0,
-        status: pollen.indexInfo.category || 'Low'
-      }
-    }
+const getPollenInfo = (pollenTypes, code) => {
+  const pollen = pollenTypes.find(p => p.code === code)
+  if (!pollen || !pollen.indexInfo) {
+    return { level: 0, status: 'Low' }
+  }
+  return {
+    level: pollen.indexInfo.value || 0,
+    status: pollen.indexInfo.category || 'Low'
+  }
+}
 
-    // Helper function to extract detailed plant data
-const getDetailedPollenInfo = (pollenTypes) => {
-  console.log('All pollen types received:', pollenTypes.map(p => p.code))
-  
-  const trees = {}
-  const grasses = {}
-  const weeds = {}
-  
-  pollenTypes.forEach(pollen => {
-    if (!pollen.indexInfo) return
-    
-    const plantData = {
-      level: pollen.indexInfo.value || 0,
-      status: pollen.indexInfo.category || 'Low'
-    }
-
-    // Add this new function after your existing getDetailedPollenInfo function
+// Helper function to extract detailed plant species data
 const getPlantSpeciesInfo = (plantInfo) => {
   const trees = {}
   const grasses = {}  
@@ -168,35 +152,18 @@ const getPlantSpeciesInfo = (plantInfo) => {
   
   return { trees, grasses, weeds }
 }
-    
-    // Categorize by plant type based on the documentation
-    const treeTypes = ['ALDER', 'ASH', 'BIRCH', 'COTTONWOOD', 'ELM', 'MAPLE', 'OLIVE', 'JUNIPER', 'OAK', 'PINE', 'CYPRESS_PINE', 'HAZEL', 'JAPANESE_CEDAR', 'JAPANESE_CYPRESS']
-    const grassTypes = ['GRAMINALES']
-    const weedTypes = ['RAGWEED', 'MUGWORT']
-    
-    if (treeTypes.includes(pollen.code)) {
-      trees[pollen.code.toLowerCase()] = plantData
-    } else if (grassTypes.includes(pollen.code)) {
-      grasses[pollen.code.toLowerCase()] = plantData
-    } else if (weedTypes.includes(pollen.code)) {
-      weeds[pollen.code.toLowerCase()] = plantData
-    }
-  })
-  
-  return { trees, grasses, weeds }
+
+// Structure response with current + forecast + air quality
+const result = {
+  location: locationName,
+  lastUpdated: new Date().toLocaleString(),
+  current: null,
+  forecast: [],
+  airQuality: airQualityData
 }
-    
-    // Structure response with current + forecast + air quality
-    const result = {
-      location: locationName,
-      lastUpdated: new Date().toLocaleString(),
-      current: null,
-      forecast: [],
-      airQuality: airQualityData
-    }
-    
-    // Process each day
-    dailyInfo.forEach((dayData, index) => {
+
+// Process each day
+dailyInfo.forEach((dayData, index) => {
   const pollenTypes = dayData.pollenTypeInfo || []
   const plantInfo = dayData.plantInfo || [] 
   const detailedPollen = getPlantSpeciesInfo(plantInfo) 
@@ -208,18 +175,18 @@ const getPlantSpeciesInfo = (plantInfo) => {
     weed: getPollenInfo(pollenTypes, 'WEED'),
     detailed: detailedPollen
   }
-      
-      if (index === 0) {
-        // First day is "current" - add air quality here too
-        result.current = {
-          ...dayResult,
-          airQuality: airQualityData
-        }
-      }
-      
-      // All days go in forecast array
-      result.forecast.push(dayResult)
-    })
+  
+  if (index === 0) {
+    // First day is "current" - add air quality here too
+    result.current = {
+      ...dayResult,
+      airQuality: airQualityData
+    }
+  }
+  
+  // All days go in forecast array
+  result.forecast.push(dayResult)
+})
     
     return NextResponse.json(result)
     
