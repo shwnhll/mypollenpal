@@ -34,7 +34,6 @@ export default function Home() {
   isSubmitting: false,
   message: ''
 })
-  const [activeTab, setActiveTab] = useState('overview')
 
   const cities = [
     'New York, NY', 'Los Angeles, CA', 'Chicago, IL', 'Houston, TX', 'Phoenix, AZ',
@@ -901,7 +900,6 @@ const updateForecast = (forecast: any[]) => {
       marginBottom: '2rem',
       boxShadow: '0 20px 40px rgba(0, 0, 0, 0.3)'
     }}>
-      {/* Location Header - Always visible */}
       <div style={{
         textAlign: 'center',
         marginBottom: '2rem'
@@ -913,423 +911,510 @@ const updateForecast = (forecast: any[]) => {
           color: '#f5f5f5',
           marginBottom: '0.5rem'
         }} id="currentLocation">
-          {hasSearched ? 'Your Location' : 'Carmel, Indiana'}
+          Carmel, Indiana
         </h2>
         <p style={{
           color: '#b8b8b8',
           fontSize: '0.9rem'
         }} id="lastUpdated">
-          {hasSearched ? 'Loading...' : 'Sample data - Enter a location to see real pollen levels'}
+          Sample data - Enter a location to see real pollen levels
         </p>
       </div>
 
-      {/* Tabs - Only show after search */}
-      {hasSearched && (
-        <>
-          {/* Tab Navigation */}
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(4, 1fr)',
+        gap: '2rem',
+        margin: '2rem 0'
+      }} className="pollen-cards-grid">
+        
+        {/* Tree Pollen Card */}
+        <div className="pollen-card" style={{
+          background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%)',
+          backdropFilter: 'blur(20px)',
+          border: '1px solid rgba(255, 255, 255, 0.2)',
+          borderRadius: '20px',
+          padding: '2.5rem',
+          textAlign: 'center',
+          transition: 'all 0.3s ease',
+          position: 'relative',
+          overflow: 'hidden',
+          boxShadow: '0 20px 40px rgba(0, 0, 0, 0.2)'
+        }}>
           <div style={{
-            display: 'flex',
-            justifyContent: 'center',
-            marginBottom: '2rem',
-            borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            height: '4px',
+            background: 'linear-gradient(90deg, #8b4513, transparent)'
+          }}></div>
+          
+          <div style={{
+            fontSize: '1.8rem',
+            marginBottom: '1rem'
+          }}>🌳</div>
+          <div style={{
+            fontWeight: '600',
+            color: '#f5f5f5',
+            marginBottom: '1.5rem',
+            fontSize: '1.1rem',
+            textTransform: 'uppercase',
+            letterSpacing: '0.05em'
+          }}>Tree Pollen</div>
+          
+          <div style={{
+            position: 'relative',
+            width: '80px',
+            height: '80px',
+            margin: '0 auto 1rem'
           }}>
-            {[
-              { id: 'overview', label: 'Overview' },
-              { id: 'analysis', label: 'Analysis' },
-              { id: 'forecast', label: 'Forecast' },
-              { id: 'air-quality', label: 'Air Quality' }
-            ].map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                style={{
-                  padding: '1rem 2rem',
-                  background: 'transparent',
-                  border: 'none',
-                  color: activeTab === tab.id ? '#d4af37' : '#b8b8b8',
-                  fontSize: '1rem',
-                  fontWeight: activeTab === tab.id ? '600' : '400',
-                  cursor: 'pointer',
-                  borderBottom: activeTab === tab.id ? '2px solid #d4af37' : '2px solid transparent',
-                  transition: 'all 0.3s ease'
-                }}
-              >
-                {tab.label}
-              </button>
-            ))}
-          </div>
-
-          {/* Tab Content */}
-          {activeTab === 'overview' && (
+            <svg width="80" height="80" style={{ transform: 'rotate(-90deg)' }}>
+              <circle cx="40" cy="40" r="32" fill="none" stroke="rgba(255, 255, 255, 0.2)" strokeWidth="6" />
+              <circle
+                id="treeRing"
+                cx="40" cy="40" r="32" fill="none" stroke="#8b4513" strokeWidth="6"
+                strokeDasharray="201.06 201.06" strokeLinecap="round"
+              />
+            </svg>
             <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-              gap: '2rem',
-              margin: '2rem 0'
-            }} className="pollen-cards-grid">
-              
-              {/* Tree Pollen Card */}
-              <div className="pollen-card" style={{
-                background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%)',
-                backdropFilter: 'blur(20px)',
-                border: '1px solid rgba(255, 255, 255, 0.2)',
-                borderRadius: '20px',
-                padding: '2.5rem',
-                textAlign: 'center',
-                transition: 'all 0.3s ease',
-                position: 'relative',
-                overflow: 'hidden',
-                boxShadow: '0 20px 40px rgba(0, 0, 0, 0.2)'
-              }}>
-                <div style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  height: '4px',
-                  background: 'linear-gradient(90deg, #8b4513, transparent)'
-                }}></div>
-                
-                <div style={{ fontSize: '1.8rem', marginBottom: '1rem' }}>🌳</div>
-                <div style={{
-                  fontWeight: '600',
-                  color: '#f5f5f5',
-                  marginBottom: '1.5rem',
-                  fontSize: '1.1rem',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.05em'
-                }}>Tree Pollen</div>
-                
-                <div style={{
-                  position: 'relative',
-                  width: '80px',
-                  height: '80px',
-                  margin: '0 auto 1rem'
-                }}>
-                  <svg width="80" height="80" style={{ transform: 'rotate(-90deg)' }}>
-                    <circle cx="40" cy="40" r="32" fill="none" stroke="rgba(255, 255, 255, 0.2)" strokeWidth="6" />
-                    <circle
-                      id="treeRing"
-                      cx="40" cy="40" r="32" fill="none" stroke="#8b4513" strokeWidth="6"
-                      strokeDasharray="201.06 201.06" strokeLinecap="round"
-                    />
-                  </svg>
-                  <div style={{
-                    position: 'absolute',
-                    top: '50%',
-                    left: '50%',
-                    transform: 'translate(-50%, -50%)',
-                    fontSize: '1.5rem',
-                    fontWeight: '800',
-                    color: '#cd853f'
-                  }} id="treeLevelDisplay">
-                    <span id="treeLevel">4</span>
-                  </div>
-                </div>
-                
-                <div style={{
-                  color: '#cd853f',
-                  fontWeight: '600',
-                  marginBottom: '1rem',
-                  textTransform: 'uppercase',
-                  fontSize: '0.9rem',
-                  letterSpacing: '0.5px'
-                }} id="treeStatusDisplay">
-                  <span id="treeStatus">Severe</span>
-                </div>
-              </div>
-
-              {/* Grass Pollen Card */}
-              <div className="pollen-card" style={{
-                background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%)',
-                backdropFilter: 'blur(20px)',
-                border: '1px solid rgba(255, 255, 255, 0.2)',
-                borderRadius: '20px',
-                padding: '2.5rem',
-                textAlign: 'center',
-                transition: 'all 0.3s ease',
-                position: 'relative',
-                overflow: 'hidden',
-                boxShadow: '0 20px 40px rgba(0, 0, 0, 0.2)'
-              }}>
-                <div style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  height: '4px',
-                  background: 'linear-gradient(90deg, #556b2f, transparent)'
-                }}></div>
-                
-                <div style={{ fontSize: '1.8rem', marginBottom: '1rem' }}>🌱</div>
-                <div style={{
-                  fontWeight: '600',
-                  color: '#f5f5f5',
-                  marginBottom: '1.5rem',
-                  fontSize: '1.1rem',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.05em'
-                }}>Grass Pollen</div>
-                
-                <div style={{
-                  position: 'relative',
-                  width: '80px',
-                  height: '80px',
-                  margin: '0 auto 1rem'
-                }}>
-                  <svg width="80" height="80" style={{ transform: 'rotate(-90deg)' }}>
-                    <circle cx="40" cy="40" r="32" fill="none" stroke="rgba(255, 255, 255, 0.2)" strokeWidth="6" />
-                    <circle
-                      id="grassRing"
-                      cx="40" cy="40" r="32" fill="none" stroke="#556b2f" strokeWidth="6"
-                      strokeDasharray="100.53 201.06" strokeLinecap="round"
-                    />
-                  </svg>
-                  <div style={{
-                    position: 'absolute',
-                    top: '50%',
-                    left: '50%',
-                    transform: 'translate(-50%, -50%)',
-                    fontSize: '1.5rem',
-                    fontWeight: '800',
-                    color: '#9acd32'
-                  }} id="grassLevelDisplay">
-                    <span id="grassLevel">2</span>
-                  </div>
-                </div>
-                
-                <div style={{
-                  color: '#9acd32',
-                  fontWeight: '600',
-                  marginBottom: '1rem',
-                  textTransform: 'uppercase',
-                  fontSize: '0.9rem',
-                  letterSpacing: '0.5px'
-                }} id="grassStatusDisplay">
-                  <span id="grassStatus">Medium</span>
-                </div>
-              </div>
-
-              {/* Weed Pollen Card */}
-              <div className="pollen-card" style={{
-                background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%)',
-                backdropFilter: 'blur(20px)',
-                border: '1px solid rgba(255, 255, 255, 0.2)',
-                borderRadius: '20px',
-                padding: '2.5rem',
-                textAlign: 'center',
-                transition: 'all 0.3s ease',
-                position: 'relative',
-                overflow: 'hidden',
-                boxShadow: '0 20px 40px rgba(0, 0, 0, 0.2)'
-              }}>
-                <div style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  height: '4px',
-                  background: 'linear-gradient(90deg, #d4af37, transparent)'
-                }}></div>
-                
-                <div style={{ fontSize: '1.8rem', marginBottom: '1rem' }}>🌿</div>
-                <div style={{
-                  fontWeight: '600',
-                  color: '#f5f5f5',
-                  marginBottom: '1.5rem',
-                  fontSize: '1.1rem',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.05em'
-                }}>Weed Pollen</div>
-                
-                <div style={{
-                  position: 'relative',
-                  width: '80px',
-                  height: '80px',
-                  margin: '0 auto 1rem'
-                }}>
-                  <svg width="80" height="80" style={{ transform: 'rotate(-90deg)' }}>
-                    <circle cx="40" cy="40" r="32" fill="none" stroke="rgba(255, 255, 255, 0.2)" strokeWidth="6" />
-                    <circle
-                      id="weedRing"
-                      cx="40" cy="40" r="32" fill="none" stroke="#d4af37" strokeWidth="6"
-                      strokeDasharray="50.27 201.06" strokeLinecap="round"
-                    />
-                  </svg>
-                  <div style={{
-                    position: 'absolute',
-                    top: '50%',
-                    left: '50%',
-                    transform: 'translate(-50%, -50%)',
-                    fontSize: '1.5rem',
-                    fontWeight: '800',
-                    color: '#d4af37'
-                  }} id="weedLevelDisplay">
-                    <span id="weedLevel">1</span>
-                  </div>
-                </div>
-                
-                <div style={{
-                  color: '#d4af37',
-                  fontWeight: '600',
-                  marginBottom: '1rem',
-                  textTransform: 'uppercase',
-                  fontSize: '0.9rem',
-                  letterSpacing: '0.5px'
-                }} id="weedStatusDisplay">
-                  <span id="weedStatus">Low</span>
-                </div>
-              </div>
-
-              {/* Air Quality Card */}
-              <div className="pollen-card" style={{
-                background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%)',
-                backdropFilter: 'blur(20px)',
-                border: '1px solid rgba(255, 255, 255, 0.2)',
-                borderRadius: '20px',
-                padding: '2.5rem',
-                textAlign: 'center',
-                transition: 'all 0.3s ease',
-                position: 'relative',
-                overflow: 'hidden',
-                boxShadow: '0 20px 40px rgba(0, 0, 0, 0.2)'
-              }}>
-                <div style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  height: '4px',
-                  background: 'linear-gradient(90deg, #10b981, transparent)'
-                }}></div>
-                
-                <div style={{ fontSize: '1.8rem', marginBottom: '1rem' }}>🌬️</div>
-                <div style={{
-                  fontWeight: '600',
-                  color: '#f5f5f5',
-                  marginBottom: '1.5rem',
-                  fontSize: '1.1rem',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.05em'
-                }}>Air Quality</div>
-                
-                <div style={{
-                  position: 'relative',
-                  width: '80px',
-                  height: '80px',
-                  margin: '0 auto 1rem'
-                }}>
-                  <svg width="80" height="80" style={{ transform: 'rotate(-90deg)' }}>
-                    <circle cx="40" cy="40" r="32" fill="none" stroke="rgba(255, 255, 255, 0.2)" strokeWidth="6" />
-                    <circle
-                      id="airRing"
-                      cx="40" cy="40" r="32" fill="none" stroke="#10b981" strokeWidth="6"
-                      strokeDasharray="100.53 201.06" strokeLinecap="round"
-                    />
-                  </svg>
-                  <div style={{
-                    position: 'absolute',
-                    top: '50%',
-                    left: '50%',
-                    transform: 'translate(-50%, -50%)',
-                    fontSize: '1.2rem',
-                    fontWeight: '800',
-                    color: '#10b981'
-                  }} id="airLevelDisplay">
-                    <span id="airLevel">51</span>
-                  </div>
-                </div>
-                
-                <div style={{
-                  color: '#10b981',
-                  fontWeight: '600',
-                  marginBottom: '1rem',
-                  textTransform: 'uppercase',
-                  fontSize: '0.9rem',
-                  letterSpacing: '0.5px'
-                }} id="airStatusDisplay">
-                  <span id="airStatus">Good</span>
-                </div>
-              </div>
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              fontSize: '1.5rem',
+              fontWeight: '800',
+              color: '#cd853f'
+            }} id="treeLevelDisplay">
+              <span id="treeLevel">4</span>
             </div>
-          )}
+          </div>
+          
+          <div style={{
+            color: '#cd853f',
+            fontWeight: '600',
+            marginBottom: '1rem',
+            textTransform: 'uppercase',
+            fontSize: '0.9rem',
+            letterSpacing: '0.5px'
+          }} id="treeStatusDisplay">
+            <span id="treeStatus">Severe</span>
+          </div>
+        </div>
 
-          {/* Analysis Tab */}
-          {activeTab === 'analysis' && (
-            <div style={{ padding: '2rem 0' }}>
-              <div style={{
-                textAlign: 'center',
-                color: '#b8b8b8'
-              }}>
-                Species-level analysis will appear here after search
-              </div>
+        {/* Grass Pollen Card */}
+        <div className="pollen-card" style={{
+          background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%)',
+          backdropFilter: 'blur(20px)',
+          border: '1px solid rgba(255, 255, 255, 0.2)',
+          borderRadius: '20px',
+          padding: '2.5rem',
+          textAlign: 'center',
+          transition: 'all 0.3s ease',
+          position: 'relative',
+          overflow: 'hidden',
+          boxShadow: '0 20px 40px rgba(0, 0, 0, 0.2)'
+        }}>
+          <div style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            height: '4px',
+            background: 'linear-gradient(90deg, #556b2f, transparent)'
+          }}></div>
+          
+          <div style={{
+            fontSize: '1.8rem',
+            marginBottom: '1rem'
+          }}>🌱</div>
+          <div style={{
+            fontWeight: '600',
+            color: '#f5f5f5',
+            marginBottom: '1.5rem',
+            fontSize: '1.1rem',
+            textTransform: 'uppercase',
+            letterSpacing: '0.05em'
+          }}>Grass Pollen</div>
+          
+          <div style={{
+            position: 'relative',
+            width: '80px',
+            height: '80px',
+            margin: '0 auto 1rem'
+          }}>
+            <svg width="80" height="80" style={{ transform: 'rotate(-90deg)' }}>
+              <circle cx="40" cy="40" r="32" fill="none" stroke="rgba(255, 255, 255, 0.2)" strokeWidth="6" />
+              <circle
+                id="grassRing"
+                cx="40" cy="40" r="32" fill="none" stroke="#556b2f" strokeWidth="6"
+                strokeDasharray="100.53 201.06" strokeLinecap="round"
+              />
+            </svg>
+            <div style={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              fontSize: '1.5rem',
+              fontWeight: '800',
+              color: '#9acd32'
+            }} id="grassLevelDisplay">
+              <span id="grassLevel">2</span>
             </div>
-          )}
+          </div>
+          
+          <div style={{
+            color: '#9acd32',
+            fontWeight: '600',
+            marginBottom: '1rem',
+            textTransform: 'uppercase',
+            fontSize: '0.9rem',
+            letterSpacing: '0.5px'
+          }} id="grassStatusDisplay">
+            <span id="grassStatus">Medium</span>
+          </div>
+        </div>
 
-          {/* Forecast Tab */}
-          {activeTab === 'forecast' && (
-            <div style={{ padding: '2rem 0' }}>
-              <div style={{
-                display: 'flex',
-                gap: '1rem',
-                justifyContent: 'center',
-                flexWrap: 'wrap',
-                padding: '0.5rem 0'
-              }} className="forecast-container" id="forecastContainer">
-                {forecastData.length > 0 ? forecastData.map((day, index) => {
-                  let date;
-                  let dateDisplay = 'Invalid Date';
-                  
-                  if (day.date && typeof day.date === 'object' && day.date.year) {
-                    date = new Date(day.date.year, day.date.month - 1, day.date.day)
-                  } else if (day.date && typeof day.date === 'string') {
-                    date = new Date(day.date)
-                  } else {
-                    date = new Date()
-                    date.setDate(date.getDate() + index)
-                  }
+        {/* Weed Pollen Card */}
+        <div className="pollen-card" style={{
+          background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%)',
+          backdropFilter: 'blur(20px)',
+          border: '1px solid rgba(255, 255, 255, 0.2)',
+          borderRadius: '20px',
+          padding: '2.5rem',
+          textAlign: 'center',
+          transition: 'all 0.3s ease',
+          position: 'relative',
+          overflow: 'hidden',
+          boxShadow: '0 20px 40px rgba(0, 0, 0, 0.2)'
+        }}>
+          <div style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            height: '4px',
+            background: 'linear-gradient(90deg, #d4af37, transparent)'
+          }}></div>
+          
+          <div style={{
+            fontSize: '1.8rem',
+            marginBottom: '1rem'
+          }}>🌿</div>
+          <div style={{
+            fontWeight: '600',
+            color: '#f5f5f5',
+            marginBottom: '1.5rem',
+            fontSize: '1.1rem',
+            textTransform: 'uppercase',
+            letterSpacing: '0.05em'
+          }}>Weed Pollen</div>
+          
+          <div style={{
+            position: 'relative',
+            width: '80px',
+            height: '80px',
+            margin: '0 auto 1rem'
+          }}>
+            <svg width="80" height="80" style={{ transform: 'rotate(-90deg)' }}>
+              <circle cx="40" cy="40" r="32" fill="none" stroke="rgba(255, 255, 255, 0.2)" strokeWidth="6" />
+              <circle
+                id="weedRing"
+                cx="40" cy="40" r="32" fill="none" stroke="#d4af37" strokeWidth="6"
+                strokeDasharray="50.27 201.06" strokeLinecap="round"
+              />
+            </svg>
+            <div style={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              fontSize: '1.5rem',
+              fontWeight: '800',
+              color: '#d4af37'
+            }} id="weedLevelDisplay">
+              <span id="weedLevel">1</span>
+            </div>
+          </div>
+          
+          <div style={{
+            color: '#d4af37',
+            fontWeight: '600',
+            marginBottom: '1rem',
+            textTransform: 'uppercase',
+            fontSize: '0.9rem',
+            letterSpacing: '0.5px'
+          }} id="weedStatusDisplay">
+            <span id="weedStatus">Low</span>
+          </div>
+        </div>
 
-                  if (!isNaN(date.getTime())) {
-                    dateDisplay = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
-                  }
+        {/* Air Quality Card */}
+        <div className="pollen-card" style={{
+          background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%)',
+          backdropFilter: 'blur(20px)',
+          border: '1px solid rgba(255, 255, 255, 0.2)',
+          borderRadius: '20px',
+          padding: '2.5rem',
+          textAlign: 'center',
+          transition: 'all 0.3s ease',
+          position: 'relative',
+          overflow: 'hidden',
+          boxShadow: '0 20px 40px rgba(0, 0, 0, 0.2)'
+        }}>
+          <div style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            height: '4px',
+            background: 'linear-gradient(90deg, #10b981, transparent)'
+          }}></div>
+          
+          <div style={{
+            fontSize: '1.8rem',
+            marginBottom: '1rem'
+          }}>🌬️</div>
+          <div style={{
+            fontWeight: '600',
+            color: '#f5f5f5',
+            marginBottom: '1.5rem',
+            fontSize: '1.1rem',
+            textTransform: 'uppercase',
+            letterSpacing: '0.05em'
+          }}>Air<br/>Quality</div>
+          
+          <div style={{
+            position: 'relative',
+            width: '80px',
+            height: '80px',
+            margin: '0 auto 1rem'
+          }}>
+            <svg width="80" height="80" style={{ transform: 'rotate(-90deg)' }}>
+              <circle cx="40" cy="40" r="32" fill="none" stroke="rgba(255, 255, 255, 0.2)" strokeWidth="6" />
+              <circle
+                id="airRing"
+                cx="40" cy="40" r="32" fill="none" stroke="#10b981" strokeWidth="6"
+                strokeDasharray="100.53 201.06" strokeLinecap="round"
+              />
+            </svg>
+            <div style={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              fontSize: '1.2rem',
+              fontWeight: '800',
+              color: '#10b981'
+            }} id="airLevelDisplay">
+              <span id="airLevel">51</span>
+            </div>
+          </div>
+          
+          <div style={{
+            color: '#10b981',
+            fontWeight: '600',
+            marginBottom: '1rem',
+            textTransform: 'uppercase',
+            fontSize: '0.9rem',
+            letterSpacing: '0.5px'
+          }} id="airStatusDisplay">
+            <span id="airStatus">Good</span>
+          </div>
+        </div>
+      </div>
 
-                  const dayName = index === 0 ? 'Today' : (isNaN(date.getTime()) ? 'Day ' + (index + 1) : date.toLocaleDateString('en-US', { weekday: 'short' }))
-                  const maxLevel = Math.max(
-                    parseInt(day.tree?.level) || 0,
-                    parseInt(day.grass?.level) || 0,
-                    parseInt(day.weed?.level) || 0
-                  )
-                  
-                  let color = '#9ca3af'
-                  if (maxLevel === 1) color = '#10b981'
-                  else if (maxLevel === 2) color = '#f59e0b'
-                  else if (maxLevel === 3) color = '#ef4444'
-                  else if (maxLevel >= 4) color = '#7c2d12'
+      {/* Scale explanation */}
+      <div style={{
+        textAlign: 'center',
+        fontSize: '0.8rem',
+        color: '#b8b8b8',
+        marginTop: '1.5rem',
+        marginBottom: '1rem',
+        display: 'flex',
+        justifyContent: 'center',
+        gap: '2rem',
+        flexWrap: 'wrap'
+      }}>
+        <div>📊 Pollen levels use international 0-4 scale</div>
+        <div>🌬️ Air quality uses US EPA's AQI standard</div>
+      </div>
+            
+{/* Overall advice section with updated styling */}
+{hasSearched && (
+<div style={{
+  background: 'linear-gradient(135deg, rgba(212, 175, 55, 0.2) 0%, rgba(212, 175, 55, 0.1) 100%)',
+  backdropFilter: 'blur(30px)',
+  border: '1px solid rgba(212, 175, 55, 0.3)',
+  color: '#f5f5f5',
+  padding: '3rem 2rem',
+  textAlign: 'center',
+  borderRadius: '24px',
+  boxShadow: '0 20px 40px rgba(212, 175, 55, 0.1)'
+}}>
+  <h2 style={{
+    fontFamily: "'Playfair Display', serif",
+    fontSize: '2rem',
+    fontWeight: '700',
+    marginBottom: '1rem',
+    background: 'linear-gradient(135deg, #d4af37 0%, #f4e4bc 100%)',
+    WebkitBackgroundClip: 'text',
+    WebkitTextFillColor: 'transparent',
+    backgroundClip: 'text'
+  }}>
+      Today's Recommendation
+  </h2>  
+    <div style={{
+      fontSize: '1rem',
+      color: '#b8b8b8',
+      lineHeight: '1.5',
+      marginBottom: '1.5rem'
+    }} id="overallAdvice">
+  Great day for outdoor activities! Low pollen and good air quality.
+</div>
+    
+    {/* Soft prompt to sign up */}
+    <div style={{
+      borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+      paddingTop: '1.5rem',
+      marginTop: '1.5rem'
+    }}>
+      <a 
+        href="#email-signup"
+        onClick={(e) => {
+          e.preventDefault();
+          document.getElementById('email-signup')?.scrollIntoView({ behavior: 'smooth' });
+        }}
+        style={{
+          color: '#d4af37',
+          textDecoration: 'none',
+          fontSize: '0.95rem',
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: '0.5rem',
+          transition: 'opacity 0.2s',
+          cursor: 'pointer'
+        }}
+        onMouseEnter={(e) => e.currentTarget.style.opacity = '0.8'}
+        onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+      >
+        Want alerts when pollen spikes? Sign up below ↓
+      </a>
+    </div>
+</div>
+)}
+            {/* 5-Day Forecast - only show after search */}
+            {hasSearched && (
+  <div style={{
+    marginTop: '2rem'
+  }}>
+    <h3 style={{
+      fontFamily: "'Playfair Display', serif",
+      fontSize: '1.8rem',
+      fontWeight: '600',
+      color: '#d4af37',
+      marginBottom: '2rem',
+      textAlign: 'center'
+    }}>
+      📅 5-Day Pollen Forecast
+    </h3>
+    <div style={{
+      display: 'flex',
+      gap: '1rem',
+      justifyContent: 'center',
+      flexWrap: 'wrap',
+      padding: '0.5rem 0'
+    }} className="forecast-container" id="forecastContainer">
+                  {forecastData.length > 0 ? forecastData.map((day, index) => {
+                    let date;
+                    let dateDisplay = 'Invalid Date';
+                    
+                    if (day.date && typeof day.date === 'object' && day.date.year) {
+                      date = new Date(day.date.year, day.date.month - 1, day.date.day)
+                    } else if (day.date && typeof day.date === 'string') {
+                      date = new Date(day.date)
+                    } else {
+                      date = new Date()
+                      date.setDate(date.getDate() + index)
+                    }
 
-                  return (
-                    <div key={index} style={{
-                      background: 'rgba(255, 255, 255, 0.08)',
-                      backdropFilter: 'blur(20px)',
-                      border: '1px solid rgba(255, 255, 255, 0.15)',
-                      borderRadius: '16px',
+                    if (!isNaN(date.getTime())) {
+                      dateDisplay = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+                    }
+
+                    const dayName = index === 0 ? 'Today' : (isNaN(date.getTime()) ? 'Day ' + (index + 1) : date.toLocaleDateString('en-US', { weekday: 'short' }))
+                    const maxLevel = Math.max(
+                      parseInt(day.tree?.level) || 0,
+                      parseInt(day.grass?.level) || 0,
+                      parseInt(day.weed?.level) || 0
+                    )
+                    
+                    let color = '#9ca3af'
+                    if (maxLevel === 1) color = '#10b981'
+                    else if (maxLevel === 2) color = '#f59e0b'
+                    else if (maxLevel === 3) color = '#ef4444'
+                    else if (maxLevel >= 4) color = '#7c2d12'
+
+                    return (
+                      <div key={index} style={{
+                        background: 'white',
+                        borderRadius: '12px',
+                        padding: '1.5rem 1rem',
+                        textAlign: 'center',
+                        boxShadow: '0 4px 15px rgba(0, 0, 0, 0.05)',
+                        border: '1px solid #f1f3f4',
+                        minWidth: '120px'
+                      }}>
+                        <div style={{ fontWeight: '600', color: '#2d3748', marginBottom: '0.5rem', fontSize: '0.9rem' }}>
+                          {dayName}
+                        </div>
+                        <div style={{ fontSize: '0.75rem', color: '#718096', marginBottom: '1rem' }}>
+                          {dateDisplay}
+                        </div>
+                        <div style={{
+                          width: '40px',
+                          height: '40px',
+                          borderRadius: '50%',
+                          background: color,
+                          color: 'white',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontWeight: 'bold',
+                          margin: '0 auto 0.5rem',
+                          fontSize: '1.1rem'
+                        }}>
+                          {maxLevel}
+                        </div>
+                        <div style={{ fontSize: '0.75rem', color: '#4a5568', lineHeight: '1.3' }}>
+                          Tree: {day.tree?.level || 0}<br/>
+                          Grass: {day.grass?.level || 0}<br/>
+                          Weed: {day.weed?.level || 0}
+                        </div>
+                      </div>
+                    )
+                  }) : (
+                    <div style={{
+                      background: 'white',
+                      borderRadius: '12px',
                       padding: '1.5rem 1rem',
                       textAlign: 'center',
-                      boxShadow: '0 10px 30px rgba(0, 0, 0, 0.2)',
-                      minWidth: '120px',
-                      maxWidth: '140px',
-                      color: '#f5f5f5'
+                      boxShadow: '0 4px 15px rgba(0, 0, 0, 0.05)',
+                      border: '1px solid #f1f3f4',
+                      minWidth: '120px'
                     }}>
-                      <div style={{ fontWeight: '600', marginBottom: '0.5rem', fontSize: '0.9rem' }}>
-                        {dayName}
+                      <div style={{ fontWeight: '600', color: '#2d3748', marginBottom: '0.5rem', fontSize: '0.9rem' }}>
+                        Today
                       </div>
-                      <div style={{ fontSize: '0.75rem', color: '#b8b8b8', marginBottom: '1rem' }}>
-                        {dateDisplay}
+                      <div style={{ fontSize: '0.75rem', color: '#718096', marginBottom: '1rem' }}>
+                        Jul 5
                       </div>
                       <div style={{
                         width: '40px',
                         height: '40px',
                         borderRadius: '50%',
-                        background: color,
+                        background: '#9ca3af',
                         color: 'white',
                         display: 'flex',
                         alignItems: 'center',
@@ -1338,200 +1423,17 @@ const updateForecast = (forecast: any[]) => {
                         margin: '0 auto 0.5rem',
                         fontSize: '1.1rem'
                       }}>
-                        {maxLevel}
+                        0
                       </div>
-                      <div style={{ fontSize: '0.75rem', color: '#b8b8b8', lineHeight: '1.3' }}>
-                        Tree: {day.tree?.level || 0}<br/>
-                        Grass: {day.grass?.level || 0}<br/>
-                        Weed: {day.weed?.level || 0}
+                      <div style={{ fontSize: '0.75rem', color: '#4a5568', lineHeight: '1.3' }}>
+                        Tree: 0<br/>Grass: 0<br/>Weed: 0
                       </div>
                     </div>
-                  )
-                }) : (
-                  <div style={{
-                    textAlign: 'center',
-                    color: '#b8b8b8',
-                    padding: '2rem'
-                  }}>
-                    5-day forecast data will appear here
-                  </div>
-                )}
+                  )}
+                </div>
               </div>
-            </div>
-          )}
-
-          {/* Air Quality Tab */}
-          {activeTab === 'air-quality' && (
-            <div style={{ padding: '2rem 0' }}>
-              <div style={{
-                textAlign: 'center',
-                color: '#b8b8b8'
-              }}>
-                Detailed air quality info will appear here
-              </div>
-            </div>
-          )}
-
-          {/* Scale explanation - only show after search */}
-          <div style={{
-            textAlign: 'center',
-            fontSize: '0.8rem',
-            color: '#b8b8b8',
-            marginTop: '1.5rem',
-            display: 'flex',
-            justifyContent: 'center',
-            gap: '2rem',
-            flexWrap: 'wrap'
-          }}>
-            <div>📊 Pollen levels use international 0-4 scale</div>
-            <div>🌬️ Air quality uses US EPA's AQI standard</div>
+            )}
           </div>
-        </>
-      )}
-
-      {/* Sample data display - only show BEFORE search */}
-      {!hasSearched && (
-        <>
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-            gap: '2rem',
-            margin: '2rem 0'
-          }}>
-            {/* Sample cards with muted styling */}
-            <div style={{
-              background: 'rgba(255, 255, 255, 0.05)',
-              border: '1px solid rgba(255, 255, 255, 0.1)',
-              borderRadius: '20px',
-              padding: '2rem',
-              textAlign: 'center',
-              opacity: 0.7
-            }}>
-              <div style={{ fontSize: '1.5rem', marginBottom: '1rem' }}>🌳</div>
-              <div style={{ color: '#f5f5f5', marginBottom: '1rem' }}>Tree Pollen</div>
-              <div style={{ fontSize: '2rem', color: '#cd853f', fontWeight: 'bold', marginBottom: '0.5rem' }}>4</div>
-              <div style={{ color: '#cd853f', fontSize: '0.8rem' }}>SAMPLE</div>
-            </div>
-            <div style={{
-              background: 'rgba(255, 255, 255, 0.05)',
-              border: '1px solid rgba(255, 255, 255, 0.1)',
-              borderRadius: '20px',
-              padding: '2rem',
-              textAlign: 'center',
-              opacity: 0.7
-            }}>
-              <div style={{ fontSize: '1.5rem', marginBottom: '1rem' }}>🌱</div>
-              <div style={{ color: '#f5f5f5', marginBottom: '1rem' }}>Grass Pollen</div>
-              <div style={{ fontSize: '2rem', color: '#9acd32', fontWeight: 'bold', marginBottom: '0.5rem' }}>2</div>
-              <div style={{ color: '#9acd32', fontSize: '0.8rem' }}>SAMPLE</div>
-            </div>
-            <div style={{
-              background: 'rgba(255, 255, 255, 0.05)',
-              border: '1px solid rgba(255, 255, 255, 0.1)',
-              borderRadius: '20px',
-              padding: '2rem',
-              textAlign: 'center',
-              opacity: 0.7
-            }}>
-              <div style={{ fontSize: '1.5rem', marginBottom: '1rem' }}>🌿</div>
-              <div style={{ color: '#f5f5f5', marginBottom: '1rem' }}>Weed Pollen</div>
-              <div style={{ fontSize: '2rem', color: '#d4af37', fontWeight: 'bold', marginBottom: '0.5rem' }}>1</div>
-              <div style={{ color: '#d4af37', fontSize: '0.8rem' }}>SAMPLE</div>
-            </div>
-            <div style={{
-              background: 'rgba(255, 255, 255, 0.05)',
-              border: '1px solid rgba(255, 255, 255, 0.1)',
-              borderRadius: '20px',
-              padding: '2rem',
-              textAlign: 'center',
-              opacity: 0.7
-            }}>
-              <div style={{ fontSize: '1.5rem', marginBottom: '1rem' }}>🌬️</div>
-              <div style={{ color: '#f5f5f5', marginBottom: '1rem' }}>Air Quality</div>
-              <div style={{ fontSize: '2rem', color: '#10b981', fontWeight: 'bold', marginBottom: '0.5rem' }}>51</div>
-              <div style={{ color: '#10b981', fontSize: '0.8rem' }}>SAMPLE</div>
-            </div>
-          </div>
-          
-          <div style={{
-            textAlign: 'center',
-            fontSize: '0.9rem',
-            color: '#b8b8b8',
-            marginTop: '2rem',
-            padding: '1.5rem',
-            background: 'rgba(212, 175, 55, 0.1)',
-            borderRadius: '12px',
-            border: '1px solid rgba(212, 175, 55, 0.2)'
-          }}>
-            👆 Enter your location above to see real pollen data with detailed analysis tabs
-          </div>
-        </>
-      )}
-    </div>
-
-    {/* Today's Recommendation - only show after search */}
-    {hasSearched && (
-      <div style={{
-        background: 'linear-gradient(135deg, rgba(212, 175, 55, 0.2) 0%, rgba(212, 175, 55, 0.1) 100%)',
-        backdropFilter: 'blur(30px)',
-        border: '1px solid rgba(212, 175, 55, 0.3)',
-        color: '#f5f5f5',
-        padding: '3rem 2rem',
-        textAlign: 'center',
-        borderRadius: '24px',
-        boxShadow: '0 20px 40px rgba(212, 175, 55, 0.1)',
-        marginBottom: '2rem'
-      }}>
-        <h2 style={{
-          fontFamily: "'Playfair Display', serif",
-          fontSize: '2rem',
-          fontWeight: '700',
-          marginBottom: '1rem',
-          background: 'linear-gradient(135deg, #d4af37 0%, #f4e4bc 100%)',
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent',
-          backgroundClip: 'text'
-        }}>
-          Today's Recommendation
-        </h2>  
-        <div style={{
-          fontSize: '1rem',
-          color: '#b8b8b8',
-          lineHeight: '1.5',
-          marginBottom: '1.5rem'
-        }} id="overallAdvice">
-          Great day for outdoor activities! Low pollen and good air quality.
-        </div>
-        
-        <div style={{
-          borderTop: '1px solid rgba(255, 255, 255, 0.1)',
-          paddingTop: '1.5rem',
-          marginTop: '1.5rem'
-        }}>
-          <a 
-            href="#email-signup"
-            onClick={(e) => {
-              e.preventDefault();
-              document.getElementById('email-signup')?.scrollIntoView({ behavior: 'smooth' });
-            }}
-            style={{
-              color: '#d4af37',
-              textDecoration: 'none',
-              fontSize: '0.95rem',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '0.5rem',
-              transition: 'opacity 0.2s',
-              cursor: 'pointer'
-            }}
-            onMouseEnter={(e) => e.currentTarget.style.opacity = '0.8'}
-            onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
-          >
-            Want alerts when pollen spikes? Sign up below ↓
-          </a>
-        </div>
-      </div>
-    )}
 
           {/* Data Sources */}
           <div style={{
