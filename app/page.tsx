@@ -1532,11 +1532,6 @@ const updateForecast = (forecast: any[]) => {
         </div>
       </div>
     )}
-  </div>
-</section>
-</div>
-)
-}
 
           {/* Data Sources */}
           <div style={{
