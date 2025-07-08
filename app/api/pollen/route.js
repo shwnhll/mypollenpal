@@ -119,6 +119,8 @@ export async function GET(request) {
 
     // Helper function to extract detailed plant data
 const getDetailedPollenInfo = (pollenTypes) => {
+  console.log('All pollen types received:', pollenTypes.map(p => p.code))
+  
   const trees = {}
   const grasses = {}
   const weeds = {}
