@@ -119,6 +119,7 @@ const getPollenInfo = (pollenTypes, code) => {
 
 // Helper function to extract detailed plant species data
 const getPlantSpeciesInfo = (plantInfo) => {
+  console.log('Plant species available:', plantInfo?.map(p => `${p.code} (${p.displayName})`))
   const trees = {}
   const grasses = {}  
   const weeds = {}
