@@ -67,13 +67,36 @@ export default function CityPageClient({ cityData }) {
   )
 
   return (
-    <div style={{
-      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-      background: 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)',
-      color: '#f5f5f5',
-      minHeight: '100vh',
-      padding: '2rem 0'
-    }}>
+    <>
+      <style jsx>{`
+        .pollen-cards-grid {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 2rem;
+          margin-bottom: 2rem;
+        }
+        
+        @media (max-width: 768px) {
+          .pollen-cards-grid {
+            grid-template-columns: 1fr !important;
+            gap: 1.5rem !important;
+          }
+        }
+        
+        @media (max-width: 480px) {
+          .pollen-cards-grid {
+            gap: 1rem !important;
+          }
+        }
+      `}</style>
+      
+      <div style={{
+        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+        background: 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)',
+        color: '#f5f5f5',
+        minHeight: '100vh',
+        padding: '2rem 0'
+      }}>
       {/* Hero Section */}
       <section style={{
         maxWidth: '1000px',
@@ -126,7 +149,7 @@ export default function CityPageClient({ cityData }) {
             gridTemplateColumns: 'repeat(4, 1fr)',
             gap: '2rem',
             marginBottom: '2rem'
-          }}>
+        }} className="pollen-cards-grid">
             {/* Tree Pollen Card */}
             <PollenCard 
               type="Tree"
@@ -312,6 +335,7 @@ function PollenCard({ type, emoji, level, status, color, isAQI = false }) {
         {status}
       </div>
     </div>
+    </>
   )
 }
 
