@@ -49,7 +49,7 @@ export default function Header() {
           }}
           onMouseEnter={(e) => e.currentTarget.style.color = '#d4af37'}
           onMouseLeave={(e) => e.currentTarget.style.color = '#b8b8b8'}>
-            Cities
+            Popular Cities
           </Link>
           <Link href="/#email-signup" style={{
             background: 'linear-gradient(135deg, #d4af37 0%, #b8941f 100%)',
