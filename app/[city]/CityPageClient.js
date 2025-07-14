@@ -258,6 +258,7 @@ export default function CityPageClient({ cityData }) {
         </div>
       </section>
     </div>
+    </>
   )
 }
 
@@ -335,7 +336,6 @@ function PollenCard({ type, emoji, level, status, color, isAQI = false }) {
         {status}
       </div>
     </div>
-    </>
   )
 }
 
