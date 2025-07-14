@@ -1,27 +1,39 @@
+import { Metadata } from 'next'
+import Header from '../components/Header'
+import Footer from '../components/Footer'
+
+export const metadata = {
+  title: 'Privacy Policy | MyPollenPal - Pollen & Air Quality Alerts',
+  description: 'Privacy Policy for MyPollenPal. Learn how we collect, use, and protect your personal information for pollen and air quality alerts.',
+  robots: 'index, follow'
+}
+
 export default function Privacy() {
   return (
-    <div style={{
-      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-      background: 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)',
-      color: '#f5f5f5',
-      minHeight: '100vh',
-      padding: '2rem 0'
-    }}>
+    <>
+      <Header />
       <div style={{
-        maxWidth: '800px',
-        margin: '0 auto',
-        padding: '0 20px'
+        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+        background: 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)',
+        color: '#f5f5f5',
+        minHeight: '100vh',
+        padding: '2rem 0'
       }}>
-        <h1 style={{
-          fontFamily: "'Playfair Display', serif",
-          fontSize: '2.5rem',
-          fontWeight: '700',
-          marginBottom: '2rem',
-          background: 'linear-gradient(135deg, #d4af37 0%, #f4e4bc 100%)',
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent',
-          backgroundClip: 'text'
+        <div style={{
+          maxWidth: '800px',
+          margin: '0 auto',
+          padding: '0 20px'
         }}>
+          <h1 style={{
+            fontFamily: "'Playfair Display', serif",
+            fontSize: '2.5rem',
+            fontWeight: '700',
+            marginBottom: '2rem',
+            background: 'linear-gradient(135deg, #d4af37 0%, #f4e4bc 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            backgroundClip: 'text'
+          }}>
           Privacy Policy
         </h1>
         
@@ -122,5 +134,7 @@ export default function Privacy() {
         </div>
       </div>
     </div>
+            <footer />
+            </>
   )
 }
