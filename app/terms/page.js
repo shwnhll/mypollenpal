@@ -1,5 +1,17 @@
+import { Metadata } from 'next'
+import Header from '../components/Header'
+import Footer from '../components/Footer'
+
+export const metadata = {
+  title: 'Terms of Service | MyPollenPal - Pollen & Air Quality Alerts',
+  description: 'Terms of Service for MyPollenPal. Review our terms and conditions for using our pollen and air quality tracking service.',
+  robots: 'index, follow'
+}
+
 export default function Terms() {
   return (
+    <>
+    <Header />
     <div style={{
       fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
       background: 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)',
@@ -71,6 +83,7 @@ export default function Terms() {
 
         </div>
       </div>
-    </div>
+<Footer />
+            </>
   )
 }
