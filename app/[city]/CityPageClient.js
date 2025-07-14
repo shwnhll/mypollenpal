@@ -66,6 +66,17 @@ export default function CityPageClient({ cityData }) {
     parseInt(currentPollen.weed?.level) || 0
   )
 
+  // Convert AQI to comparable scale (0-6)
+  const aqi = parseInt(currentPollen.airQuality?.aqi) || 50
+  let aqiLevel = 1
+  if (aqi <= 50) aqiLevel = 1      // Good
+  else if (aqi <= 100) aqiLevel = 2 // Moderate  
+  else if (aqi <= 150) aqiLevel = 4 // Unhealthy for Sensitive (bumped to 4)
+  else if (aqi <= 200) aqiLevel = 5 // Unhealthy
+  else aqiLevel = 6                 // Very Unhealthy+
+
+  const overallLevel = Math.max(maxLevel, aqiLevel)
+
   return (
     <>
       <style jsx>{`
@@ -209,7 +220,7 @@ export default function CityPageClient({ cityData }) {
               lineHeight: '1.6',
               color: '#f5f5f5'
             }}>
-              {getAdviceText(maxLevel, cityData.name)}
+              {getAdviceText(overallLevel, cityData.name)}
             </p>
           </div>
         </div>
