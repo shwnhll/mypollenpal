@@ -1662,14 +1662,14 @@ const updateForecast = (forecast: any[]) => {
     WebkitTextFillColor: 'transparent',
     backgroundClip: 'text'
   }}>
-    Never Miss a High Pollen Day
+    Never Get Caught Off Guard
   </h2>
             <p style={{
               fontSize: '1.1rem',
               opacity: 0.9,
               marginBottom: '2rem'
             }}>
-              Get email alerts every morning when pollen or air quality will be dangerous in your specific area.
+              Get email alerts when pollen or air quality will be dangerous in your area.
             </p>
             <form onSubmit={handleEmailSignup}>
             <div style={{
