@@ -1,13 +1,11 @@
-export async function GET(request) {
-  console.log('Pollen API called!')
-  // ... rest of your code
-  
 import { NextResponse } from 'next/server'
 
 export async function GET(request) {
+  console.log('Pollen API called!')
+  
   const { searchParams } = new URL(request.url)
   const location = searchParams.get('location')
-  const days = searchParams.get('days') || '1' // Default to 1 day if not specified
+  const days = searchParams.get('days') || '1'
   
   if (!location) {
     return NextResponse.json({ error: 'Location is required' }, { status: 400 })
