@@ -220,4 +220,3 @@ function getAQIStatus(aqi) {
   if (aqi <= 300) return 'Very Unhealthy'
   return 'Hazardous'
 }
-}
