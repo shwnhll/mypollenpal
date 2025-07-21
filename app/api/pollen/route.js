@@ -1,3 +1,7 @@
+export async function GET(request) {
+  console.log('Pollen API called!')
+  // ... rest of your code
+  
 import { NextResponse } from 'next/server'
 
 export async function GET(request) {
@@ -217,4 +221,5 @@ function getAQIStatus(aqi) {
   if (aqi <= 200) return 'Unhealthy'
   if (aqi <= 300) return 'Very Unhealthy'
   return 'Hazardous'
+}
 }
