@@ -197,6 +197,26 @@ export default function Home() {
     }))
   }
 }
+
+  const calculateMyPollenPalScore = (treeLevel: number, grassLevel: number, weedLevel: number, aqi: number) => {
+  // Convert AQI to 0-4 scale to match pollen levels
+  let aqiLevel = 1
+  if (aqi <= 50) aqiLevel = 1
+  else if (aqi <= 100) aqiLevel = 2  
+  else if (aqi <= 150) aqiLevel = 3
+  else if (aqi <= 200) aqiLevel = 4
+  else aqiLevel = 4
+
+  // Calculate pollen component (emphasize worst type but consider average too)
+  const maxPollenLevel = Math.max(treeLevel, grassLevel, weedLevel)
+  const avgPollenLevel = (treeLevel + grassLevel + weedLevel) / 3
+  const pollenScore = (maxPollenLevel * 0.6 + avgPollenLevel * 0.4)
+
+  // MyPollenPal Score: 70% pollen, 30% air quality, scaled to 10
+  const rawScore = (pollenScore * 0.7 + aqiLevel * 0.3) * (10/4)
+  
+  return Math.round(rawScore)
+}
   
   // Handle Enter key
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -233,6 +253,15 @@ export default function Home() {
       if (data.current.airQuality) {
         updateAirQualityCard(data.current.airQuality.aqi, data.current.airQuality.status)
       }
+      
+      // Calculate and display MyPollenPal Score
+  const treeLevel = parseInt(data.current.tree.level) || 0
+  const grassLevel = parseInt(data.current.grass.level) || 0
+  const weedLevel = parseInt(data.current.weed.level) || 0
+  const aqi = data.current.airQuality?.aqi || 50
+
+  const myPollenPalScore = calculateMyPollenPalScore(treeLevel, grassLevel, weedLevel, aqi)
+  updateMyPollenPalScore(myPollenPalScore)
       
 let airQualityLevel = 1;
 if (data.current.airQuality && data.current.airQuality.aqi) {
@@ -423,6 +452,43 @@ const updateForecast = (forecast: any[]) => {
     if (status_span) status_span.textContent = status
     if (level_span) level_span.textContent = aqi.toString()
   }
+
+  const updateMyPollenPalScore = (score: number) => {
+  const scoreElement = document.getElementById('myPollenPalScore')
+  const adviceElement = document.getElementById('myPollenPalAdvice')
+  
+  if (scoreElement) scoreElement.textContent = score.toString()
+  
+  // Generate advice based on score
+  let advice = ''
+  let color = '#10b981' // Green
+  
+  if (score <= 2) {
+    advice = "Excellent day for outdoor activities!"
+    color = '#10b981'
+  } else if (score <= 4) {
+    advice = "Good conditions for most outdoor activities"
+    color = '#10b981'
+  } else if (score <= 6) {
+    advice = "Fair conditions - sensitive individuals take note"
+    color = '#f59e0b'
+  } else if (score <= 8) {
+    advice = "Poor conditions - take precautions if going outside"
+    color = '#ef4444'
+  } else {
+    advice = "Severe conditions - stay indoors if possible!"
+    color = '#7c2d12'
+  }
+  
+  if (adviceElement) {
+    adviceElement.textContent = advice
+    adviceElement.style.color = color
+  }
+  
+  // Update score circle color
+  const scoreCircle = document.getElementById('scoreCircle')
+  if (scoreCircle) scoreCircle.style.background = color
+}
 
   return (
     <div style={{
@@ -921,6 +987,65 @@ const updateForecast = (forecast: any[]) => {
         </p>
       </div>
 
+      {/* MyPollenPal Score Display */}
+      {hasSearched && (
+        <div style={{
+          textAlign: 'center',
+          marginBottom: '2rem',
+          padding: '2rem',
+          background: 'linear-gradient(135deg, rgba(212, 175, 55, 0.15) 0%, rgba(212, 175, 55, 0.05) 100%)',
+          borderRadius: '20px',
+          border: '1px solid rgba(212, 175, 55, 0.2)'
+        }}>
+          <div style={{
+            fontSize: '1.1rem',
+            color: '#d4af37',
+            fontWeight: '600',
+            marginBottom: '1rem',
+            textTransform: 'uppercase',
+            letterSpacing: '0.05em'
+          }}>
+            MyPollenPal Score
+          </div>
+          
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '1.5rem',
+            marginBottom: '1rem'
+          }}>
+            <div style={{
+              width: '80px',
+              height: '80px',
+              borderRadius: '50%',
+              background: '#10b981',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: 'white',
+              fontSize: '2rem',
+              fontWeight: '800'
+            }} id="scoreCircle">
+              <span id="myPollenPalScore">7</span>
+            </div>
+            <div style={{
+              fontSize: '2.5rem',
+              color: '#b8b8b8',
+              fontWeight: '300'
+            }}>/10</div>
+          </div>
+          
+          <div style={{
+            fontSize: '1.1rem',
+            fontWeight: '600',
+            color: '#f5f5f5'
+          }} id="myPollenPalAdvice">
+            Fair conditions - sensitive individuals take note
+          </div>
+        </div>
+      )}
+      
       <div style={{
         display: 'grid',
         gridTemplateColumns: 'repeat(4, 1fr)',
