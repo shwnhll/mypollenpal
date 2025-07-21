@@ -200,7 +200,7 @@ export default function Home() {
 
   const calculateMyPollenPalScore = (treeLevel: number, grassLevel: number, weedLevel: number, aqi: number) => {
   // Convert AQI to 0-4 scale to match pollen levels
-  let aqiLevel = 1
+  let aqiLevel = 0
   if (aqi <= 50) aqiLevel = 1
   else if (aqi <= 100) aqiLevel = 2  
   else if (aqi <= 150) aqiLevel = 3
@@ -213,9 +213,12 @@ export default function Home() {
   const pollenScore = (maxPollenLevel * 0.6 + avgPollenLevel * 0.4)
 
   // MyPollenPal Score: 70% pollen, 30% air quality, scaled to 10
-  const rawScore = (pollenScore * 0.7 + aqiLevel * 0.3) * (10/4)
+  const combinedScore = (pollenScore * 0.7 + aqiLevel * 0.3)
+  const scaledScore = (combinedScore / 4) * 10 // Scale from 0-4 range to 0-10 range
   
-  return Math.round(rawScore)
+  console.log('Debug:', { treeLevel, grassLevel, weedLevel, aqi, aqiLevel, maxPollenLevel, avgPollenLevel, pollenScore, combinedScore, scaledScore })
+  
+  return Math.round(scaledScore)
 }
   
   // Handle Enter key
@@ -459,25 +462,25 @@ const updateForecast = (forecast: any[]) => {
   
   if (scoreElement) scoreElement.textContent = score.toString()
   
-  // Generate advice based on score
+  // Fix color coding - make it actually make sense!
   let advice = ''
   let color = '#10b981' // Green
   
-  if (score <= 2) {
+  if (score <= 3) {
     advice = "Excellent day for outdoor activities!"
-    color = '#10b981'
-  } else if (score <= 4) {
+    color = '#10b981' // Green
+  } else if (score <= 5) {
     advice = "Good conditions for most outdoor activities"
-    color = '#10b981'
-  } else if (score <= 6) {
-    advice = "Fair conditions - sensitive individuals take note"
-    color = '#f59e0b'
-  } else if (score <= 8) {
-    advice = "Poor conditions - take precautions if going outside"
-    color = '#ef4444'
+    color = '#10b981' // Green
+  } else if (score <= 7) {
+    advice = "Fair conditions - sensitive individuals take precautions"
+    color = '#f59e0b' // Yellow/Orange
+  } else if (score <= 9) {
+    advice = "Poor conditions - limit outdoor activities"
+    color = '#ef4444' // Red
   } else {
     advice = "Severe conditions - stay indoors if possible!"
-    color = '#7c2d12'
+    color = '#7c2d12' // Dark red
   }
   
   if (adviceElement) {
@@ -485,7 +488,6 @@ const updateForecast = (forecast: any[]) => {
     adviceElement.style.color = color
   }
   
-  // Update score circle color
   const scoreCircle = document.getElementById('scoreCircle')
   if (scoreCircle) scoreCircle.style.background = color
 }
