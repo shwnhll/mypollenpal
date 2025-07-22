@@ -199,6 +199,25 @@ export default function Home() {
 }
 
   const calculateMyPollenPalScore = (treeLevel: number, grassLevel: number, weedLevel: number, aqi: number) => {
+  // Get current month for seasonal weighting
+  const currentMonth = new Date().getMonth() + 1 // 1-12
+  
+  // Apply seasonal multipliers
+  let adjustedTreeLevel = treeLevel
+  let adjustedGrassLevel = grassLevel  
+  let adjustedWeedLevel = weedLevel
+  
+  if (currentMonth >= 3 && currentMonth <= 5) {
+    // Spring: Tree pollen peak
+    adjustedTreeLevel = Math.min(treeLevel * 1.5, 4)
+  } else if (currentMonth >= 6 && currentMonth <= 8) {
+    // Summer: Grass pollen peak  
+    adjustedGrassLevel = Math.min(grassLevel * 1.5, 4)
+  } else if (currentMonth >= 9 && currentMonth <= 11) {
+    // Fall: Weed/ragweed peak
+    adjustedWeedLevel = Math.min(weedLevel * 1.5, 4)
+  }
+  
   // Convert AQI to 0-4 scale to match pollen levels
   let aqiLevel = 0
   if (aqi <= 50) aqiLevel = 1
@@ -207,16 +226,14 @@ export default function Home() {
   else if (aqi <= 200) aqiLevel = 4
   else aqiLevel = 4
 
-  // Calculate pollen component (emphasize worst type but consider average too)
-  const maxPollenLevel = Math.max(treeLevel, grassLevel, weedLevel)
-  const avgPollenLevel = (treeLevel + grassLevel + weedLevel) / 3
-  const pollenScore = (maxPollenLevel * 0.6 + avgPollenLevel * 0.4)
+  // Calculate pollen component (emphasize worst type more)
+  const maxPollenLevel = Math.max(adjustedTreeLevel, adjustedGrassLevel, adjustedWeedLevel)
+  const avgPollenLevel = (adjustedTreeLevel + adjustedGrassLevel + adjustedWeedLevel) / 3
+  const pollenScore = (maxPollenLevel * 0.8 + avgPollenLevel * 0.2)
 
   // MyPollenPal Score: 70% pollen, 30% air quality, scaled to 10
   const combinedScore = (pollenScore * 0.7 + aqiLevel * 0.3)
-  const scaledScore = (combinedScore / 4) * 10 // Scale from 0-4 range to 0-10 range
-  
-  console.log('Debug:', { treeLevel, grassLevel, weedLevel, aqi, aqiLevel, maxPollenLevel, avgPollenLevel, pollenScore, combinedScore, scaledScore })
+  const scaledScore = (combinedScore / 4) * 10
   
   return Math.round(scaledScore)
 }
@@ -462,7 +479,7 @@ const updateForecast = (forecast: any[]) => {
   
   if (scoreElement) scoreElement.textContent = score.toString()
   
-  // Fix color coding - make it actually make sense!
+  // Updated advice to match your expectations
   let advice = ''
   let color = '#10b981' // Green
   
@@ -470,7 +487,7 @@ const updateForecast = (forecast: any[]) => {
     advice = "Excellent day for outdoor activities!"
     color = '#10b981' // Green
   } else if (score <= 5) {
-    advice = "Good conditions for most outdoor activities"
+    advice = "Good day for most outdoor activities. Some sensitive individuals may experience mild symptoms."
     color = '#10b981' // Green
   } else if (score <= 7) {
     advice = "Fair conditions - sensitive individuals take precautions"
