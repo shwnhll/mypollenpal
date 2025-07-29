@@ -25,15 +25,13 @@ export async function GET(request) {
     const { lat, lng } = geocodeData.results[0].geometry.location
     const locationName = geocodeData.results[0].formatted_address
     
-    // Extract ZIP code for AirNow API (it works better with ZIP codes)
-    let zipCode = null
-    const addressComponents = geocodeData.results[0].address_components
-    for (const component of addressComponents) {
-      if (component.types.includes('postal_code')) {
-        zipCode = component.long_name
-        break
-      }
-    }
+    // Build air quality URL - try ZIP first, fall back to lat/lng
+const airQualityUrl = zipCode 
+  ? `https://www.airnowapi.org/aq/observation/zipCode/current/?format=application/json&zipCode=${zipCode}&distance=25&API_KEY=${process.env.NEXT_PUBLIC_AIRNOW_API_KEY}`
+  : `https://www.airnowapi.org/aq/observation/latLong/current/?format=application/json&latitude=${lat}&longitude=${lng}&distance=25&API_KEY=${process.env.NEXT_PUBLIC_AIRNOW_API_KEY}`
+
+console.log('Air Quality URL:', airQualityUrl.replace(process.env.NEXT_PUBLIC_AIRNOW_API_KEY, 'HIDDEN_KEY'))
+console.log('ZIP Code found:', zipCode || 'Using lat/lng fallback')
     
     // Build API URLs
     const pollenUrl = `https://pollen.googleapis.com/v1/forecast:lookup?location.latitude=${lat}&location.longitude=${lng}&days=${days}&plantsDescription=true&key=${process.env.GOOGLE_POLLEN_API_KEY}`
