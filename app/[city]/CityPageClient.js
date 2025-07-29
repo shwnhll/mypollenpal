@@ -494,24 +494,32 @@ export default function CityPageClient({ cityData }) {
             </div>
 
             <div className={`tab-content ${activeTab === 'trends' ? 'active' : ''}`}>
-              <TrendsContent pollenData={pollenData} cityData={cityData} />
-            </div>
+  <div>
+    <h3 style={{ marginBottom: '1.5rem', color: '#f5f5f5' }}>Trends & Patterns</h3>
+    <p style={{ color: '#b8b8b8' }}>Seasonal trends and patterns coming soon...</p>
+  </div>
+</div>
 
-            <div className={`tab-content ${activeTab === 'sources' ? 'active' : ''}`}>
-              <SourcesContent cityData={cityData} />
-            </div>
+<div className={`tab-content ${activeTab === 'sources' ? 'active' : ''}`}>
+  <div>
+    <h3 style={{ marginBottom: '1.5rem', color: '#f5f5f5' }}>Local Pollen Sources</h3>
+    <p style={{ color: '#b8b8b8' }}>Local pollen source information coming soon...</p>
+  </div>
+</div>
 
-            <div className={`tab-content ${activeTab === 'health' ? 'active' : ''}`}>
+<div className={`tab-content ${activeTab === 'health' ? 'active' : ''}`}>
   <div>
     <h3 style={{ marginBottom: '1.5rem', color: '#f5f5f5' }}>Health Impact Analysis</h3>
     <p style={{ color: '#b8b8b8' }}>Health recommendations coming soon...</p>
   </div>
 </div>
 
-            <div className={`tab-content ${activeTab === 'local' ? 'active' : ''}`}>
-              <LocalContent cityData={cityData} />
-            </div>
-          </div>
+<div className={`tab-content ${activeTab === 'local' ? 'active' : ''}`}>
+  <div>
+    <h3 style={{ marginBottom: '1.5rem', color: '#f5f5f5' }}>{cityData.name}-Specific Tips</h3>
+    <p style={{ color: '#b8b8b8' }}>Local tips and recommendations coming soon...</p>
+  </div>
+</div>
         </section>
 
         {/* Activity Recommendations */}
