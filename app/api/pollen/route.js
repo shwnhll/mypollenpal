@@ -13,7 +13,7 @@ export async function GET(request) {
   }
   
   try {
-    // Geocoding (same as before)
+    // Geocoding
     const geocodeUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(location)}&key=${process.env.GOOGLE_POLLEN_API_KEY}`
     const geocodeResponse = await fetch(geocodeUrl)
     const geocodeData = await geocodeResponse.json()
@@ -25,13 +25,15 @@ export async function GET(request) {
     const { lat, lng } = geocodeData.results[0].geometry.location
     const locationName = geocodeData.results[0].formatted_address
     
-    // Build air quality URL - try ZIP first, fall back to lat/lng
-const airQualityUrl = zipCode 
-  ? `https://www.airnowapi.org/aq/observation/zipCode/current/?format=application/json&zipCode=${zipCode}&distance=25&API_KEY=${process.env.NEXT_PUBLIC_AIRNOW_API_KEY}`
-  : `https://www.airnowapi.org/aq/observation/latLong/current/?format=application/json&latitude=${lat}&longitude=${lng}&distance=25&API_KEY=${process.env.NEXT_PUBLIC_AIRNOW_API_KEY}`
-
-console.log('Air Quality URL:', airQualityUrl.replace(process.env.NEXT_PUBLIC_AIRNOW_API_KEY, 'HIDDEN_KEY'))
-console.log('ZIP Code found:', zipCode || 'Using lat/lng fallback')
+    // Extract ZIP code for AirNow API (it works better with ZIP codes)
+    let zipCode = null
+    const addressComponents = geocodeData.results[0].address_components
+    for (const component of addressComponents) {
+      if (component.types.includes('postal_code')) {
+        zipCode = component.long_name
+        break
+      }
+    }
     
     // Build API URLs
     const pollenUrl = `https://pollen.googleapis.com/v1/forecast:lookup?location.latitude=${lat}&location.longitude=${lng}&days=${days}&plantsDescription=true&key=${process.env.GOOGLE_POLLEN_API_KEY}`
@@ -49,7 +51,7 @@ console.log('ZIP Code found:', zipCode || 'Using lat/lng fallback')
     
     console.log('Air Quality URL:', airQualityUrl.replace(process.env.NEXT_PUBLIC_AIRNOW_API_KEY, 'HIDDEN_KEY'))
     console.log('Weather URL:', weatherUrl.replace(process.env.OPENWEATHERMAP_API_KEY, 'HIDDEN_KEY'))
-    console.log('ZIP Code found:', zipCode)
+    console.log('ZIP Code found:', zipCode || 'Using lat/lng fallback')
     
     // Parallel API calls for better performance
     const apiCalls = [
@@ -122,7 +124,7 @@ console.log('ZIP Code found:', zipCode || 'Using lat/lng fallback')
       })
     }
     
-    // Process air quality data (same as before)
+    // Process air quality data
     let airQualityData = null
     if (airQualityResponse.ok) {
       const airData = await airQualityResponse.json()
@@ -148,14 +150,14 @@ console.log('ZIP Code found:', zipCode || 'Using lat/lng fallback')
       console.log('Air Quality API Error:', airQualityResponse.status)
     }
     
-    // Process the multi-day pollen response (same as before)
+    // Process the multi-day pollen response
     const dailyInfo = pollenData.dailyInfo || []
     
     if (dailyInfo.length === 0) {
       return NextResponse.json({ error: 'No pollen data available' }, { status: 404 })
     }
     
-    // Helper function to extract pollen info (same as before)
+    // Helper function to extract pollen info
     const getPollenInfo = (pollenTypes, code) => {
       const pollen = pollenTypes.find(p => p.code === code)
       if (!pollen || !pollen.indexInfo) {
@@ -167,7 +169,7 @@ console.log('ZIP Code found:', zipCode || 'Using lat/lng fallback')
       }
     }
 
-    // Helper function to extract detailed plant species data (same as before)
+    // Helper function to extract detailed plant species data
     const getPlantSpeciesInfo = (plantInfo) => {
       console.log('Plant species available:', plantInfo?.map(p => `${p.code} (${p.displayName})`))
       const trees = {}
@@ -217,7 +219,7 @@ console.log('ZIP Code found:', zipCode || 'Using lat/lng fallback')
       })
     }
 
-    // Process each day (same as before)
+    // Process each day
     dailyInfo.forEach((dayData, index) => {
       const pollenTypes = dayData.pollenTypeInfo || []
       const plantInfo = dayData.plantInfo || [] 
