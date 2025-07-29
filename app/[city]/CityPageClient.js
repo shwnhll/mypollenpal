@@ -502,8 +502,11 @@ export default function CityPageClient({ cityData }) {
             </div>
 
             <div className={`tab-content ${activeTab === 'health' ? 'active' : ''}`}>
-              <HealthContent pollenData={pollenData} />
-            </div>
+  <div>
+    <h3 style={{ marginBottom: '1.5rem', color: '#f5f5f5' }}>Health Impact Analysis</h3>
+    <p style={{ color: '#b8b8b8' }}>Health recommendations coming soon...</p>
+  </div>
+</div>
 
             <div className={`tab-content ${activeTab === 'local' ? 'active' : ''}`}>
               <LocalContent cityData={cityData} />
