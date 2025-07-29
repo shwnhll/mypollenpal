@@ -2,9 +2,7 @@
 import { useState, useEffect } from 'react'
 
 export default function CityPageClient({ cityData }) {
-  // Core data states
   const [pollenData, setPollenData] = useState(null)
-  const [extendedData, setExtendedData] = useState(null)
   const [loading, setLoading] = useState(true)
   const [activeTab, setActiveTab] = useState('trends')
   const [myPollenPalScore, setMyPollenPalScore] = useState(5)
@@ -14,29 +12,19 @@ export default function CityPageClient({ cityData }) {
       try {
         setLoading(true)
         
-        // Load basic pollen data first (for immediate display)
-        const basicResponse = await fetch(`/api/pollen?location=${encodeURIComponent(cityData.name + ', ' + cityData.state_code)}&days=10`)
+        const basicResponse = await fetch(`/api/pollen?location=${encodeURIComponent(cityData.name + ', ' + cityData.state_code)}&days=5`)
         const basicData = await basicResponse.json()
         
         if (basicResponse.ok) {
           setPollenData(basicData)
-          
-          // Calculate enhanced MyPollenPal score
           const score = calculateMyPollenPalScore(basicData)
           setMyPollenPalScore(score)
-        }
-        
-        // Then load extended data (subspecies, hourly, etc.)
-        const extendedResponse = await fetch(`/api/pollen?location=${encodeURIComponent(cityData.name + ', ' + cityData.state_code)}&detailed=true&days=10`)
-        const extended = await extendedResponse.json()
-        
-        if (extendedResponse.ok) {
-          setExtendedData(extended)
+        } else {
+          throw new Error(`API returned ${basicResponse.status}`)
         }
         
       } catch (err) {
         console.error('Failed to load data:', err)
-        // Use fallback data on error
         setPollenData({
           current: {
             tree: { level: '2', status: 'Medium' },
@@ -64,7 +52,6 @@ export default function CityPageClient({ cityData }) {
     const weedLevel = parseInt(data.current.weed?.level) || 0
     const aqi = data.current.airQuality?.aqi || 50
     
-    // Apply seasonal multipliers
     let adjustedTreeLevel = treeLevel
     let adjustedGrassLevel = grassLevel
     let adjustedWeedLevel = weedLevel
@@ -77,7 +64,6 @@ export default function CityPageClient({ cityData }) {
       adjustedWeedLevel = Math.min(weedLevel * 1.5, 4)
     }
     
-    // Convert AQI to 0-4 scale
     let aqiLevel = 0
     if (aqi <= 50) aqiLevel = 1
     else if (aqi <= 100) aqiLevel = 2
@@ -88,7 +74,6 @@ export default function CityPageClient({ cityData }) {
     const maxPollenLevel = Math.max(adjustedTreeLevel, adjustedGrassLevel, adjustedWeedLevel)
     const avgPollenLevel = (adjustedTreeLevel + adjustedGrassLevel + adjustedWeedLevel) / 3
     const pollenScore = (maxPollenLevel * 0.8 + avgPollenLevel * 0.2)
-
     const combinedScore = (pollenScore * 0.7 + aqiLevel * 0.3)
     const scaledScore = (combinedScore / 4) * 10
     
@@ -133,11 +118,6 @@ export default function CityPageClient({ cityData }) {
           scrollbar-width: thin;
         }
         
-        .forecast-day {
-          min-width: 160px;
-          flex-shrink: 0;
-        }
-        
         .tabs {
           display: flex;
           border-bottom: 1px solid rgba(255, 255, 255, 0.1);
@@ -172,12 +152,6 @@ export default function CityPageClient({ cityData }) {
           .pollen-cards-grid {
             grid-template-columns: 1fr !important;
             gap: 1.5rem !important;
-          }
-          
-          .forecast-container {
-            justify-content: flex-start;
-            padding-left: 1rem;
-            padding-right: 1rem;
           }
         }
       `}</style>
@@ -219,18 +193,6 @@ export default function CityPageClient({ cityData }) {
           }}>
             Live pollen forecast and air quality for {cityData.name}, {cityData.state}
           </p>
-          <div style={{
-            fontSize: '0.9rem',
-            color: '#999',
-            marginBottom: '1rem'
-          }}>
-            Last updated: {new Date().toLocaleString('en-US', {
-              month: 'short',
-              day: 'numeric',
-              hour: 'numeric',
-              minute: '2-digit'
-            })}
-          </div>
 
           {/* MyPollenPal Score */}
           <div style={{
@@ -313,37 +275,30 @@ export default function CityPageClient({ cityData }) {
             boxShadow: '0 20px 40px rgba(0, 0, 0, 0.3)'
           }}>
             <div className="pollen-cards-grid">
-              {/* Tree Pollen */}
               <PollenCard 
                 type="Tree Pollen"
                 emoji="🌳"
                 level={currentPollen.tree?.level || '0'}
                 status={currentPollen.tree?.status || 'None'}
                 color="#8b4513"
-                subspecies={extendedData?.current?.tree?.subspecies}
               />
 
-              {/* Grass Pollen */}
               <PollenCard 
                 type="Grass Pollen"
                 emoji="🌱"
                 level={currentPollen.grass?.level || '0'}
                 status={currentPollen.grass?.status || 'None'}
                 color="#556b2f"
-                subspecies={extendedData?.current?.grass?.subspecies}
               />
 
-              {/* Weed Pollen */}
               <PollenCard 
                 type="Weed Pollen"
                 emoji="🌿"
                 level={currentPollen.weed?.level || '0'}
                 status={currentPollen.weed?.status || 'None'}
                 color="#d4af37"
-                subspecies={extendedData?.current?.weed?.subspecies}
               />
 
-              {/* Air Quality */}
               <PollenCard 
                 type="Air Quality"
                 emoji="🌬️"
@@ -353,79 +308,10 @@ export default function CityPageClient({ cityData }) {
                 isAQI={true}
               />
             </div>
-
-            {/* Additional factors if available */}
-            {extendedData?.current && (
-              <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-                gap: '1.5rem',
-                marginTop: '2rem'
-              }}>
-                {extendedData.current.mold && (
-                  <PollenCard 
-                    type="Mold Spores"
-                    emoji="🍄"
-                    level={extendedData.current.mold.level}
-                    status={extendedData.current.mold.status}
-                    color="#7c2d12"
-                    subspecies={extendedData.current.mold.types}
-                  />
-                )}
-                
-                {extendedData.current.dust && (
-                  <PollenCard 
-                    type="Dust & Dander"
-                    emoji="💧"
-                    level={extendedData.current.dust.level}
-                    status={extendedData.current.dust.status}
-                    color="#6b7280"
-                  />
-                )}
-              </div>
-            )}
           </div>
         </section>
 
-        {/* Hourly Forecast */}
-        {extendedData?.hourly && (
-          <section style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 20px' }}>
-            <div style={{
-              background: 'rgba(255, 255, 255, 0.08)',
-              backdropFilter: 'blur(30px)',
-              border: '1px solid rgba(255, 255, 255, 0.15)',
-              borderRadius: '24px',
-              padding: '2.5rem',
-              marginBottom: '2rem',
-              boxShadow: '0 20px 40px rgba(0, 0, 0, 0.3)'
-            }}>
-              <h2 style={{
-                fontFamily: "'Playfair Display', serif",
-                fontSize: '1.8rem',
-                fontWeight: '600',
-                marginBottom: '2rem',
-                textAlign: 'center'
-              }}>
-                Today's Hourly Forecast
-              </h2>
-              <div className="forecast-container">
-                {extendedData.hourly.slice(0, 8).map((hour, index) => (
-                  <HourlyCard key={index} data={hour} />
-                ))}
-              </div>
-              <div style={{
-                textAlign: 'center',
-                marginTop: '1rem',
-                fontSize: '0.9rem',
-                color: '#b8b8b8'
-              }}>
-                💡 Pollen levels typically peak between 6-10 AM
-              </div>
-            </div>
-          </section>
-        )}
-
-        {/* 10-Day Forecast */}
+        {/* Forecast */}
         {pollenData?.forecast && pollenData.forecast.length > 0 && (
           <section style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 20px' }}>
             <div style={{
@@ -444,10 +330,10 @@ export default function CityPageClient({ cityData }) {
                 marginBottom: '2rem',
                 textAlign: 'center'
               }}>
-                10-Day Pollen Forecast
+                5-Day Pollen Forecast
               </h2>
               <div className="forecast-container">
-                {pollenData.forecast.map((day, index) => (
+                {pollenData.forecast.slice(0, 5).map((day, index) => (
                   <ForecastDay key={index} data={day} index={index} />
                 ))}
               </div>
@@ -455,7 +341,7 @@ export default function CityPageClient({ cityData }) {
           </section>
         )}
 
-        {/* Analysis Tabs */}
+        {/* Tabs */}
         <section style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 20px' }}>
           <div style={{
             background: 'rgba(255, 255, 255, 0.08)',
@@ -474,12 +360,6 @@ export default function CityPageClient({ cityData }) {
                 Trends & Patterns
               </button>
               <button 
-                className={`tab ${activeTab === 'sources' ? 'active' : ''}`}
-                onClick={() => setActiveTab('sources')}
-              >
-                Pollen Sources
-              </button>
-              <button 
                 className={`tab ${activeTab === 'health' ? 'active' : ''}`}
                 onClick={() => setActiveTab('health')}
               >
@@ -494,32 +374,26 @@ export default function CityPageClient({ cityData }) {
             </div>
 
             <div className={`tab-content ${activeTab === 'trends' ? 'active' : ''}`}>
-  <div>
-    <h3 style={{ marginBottom: '1.5rem', color: '#f5f5f5' }}>Trends & Patterns</h3>
-    <p style={{ color: '#b8b8b8' }}>Seasonal trends and patterns coming soon...</p>
-  </div>
-</div>
+              <div>
+                <h3 style={{ marginBottom: '1.5rem', color: '#f5f5f5' }}>Trends & Patterns</h3>
+                <p style={{ color: '#b8b8b8' }}>Seasonal trends and patterns coming soon...</p>
+              </div>
+            </div>
 
-<div className={`tab-content ${activeTab === 'sources' ? 'active' : ''}`}>
-  <div>
-    <h3 style={{ marginBottom: '1.5rem', color: '#f5f5f5' }}>Local Pollen Sources</h3>
-    <p style={{ color: '#b8b8b8' }}>Local pollen source information coming soon...</p>
-  </div>
-</div>
+            <div className={`tab-content ${activeTab === 'health' ? 'active' : ''}`}>
+              <div>
+                <h3 style={{ marginBottom: '1.5rem', color: '#f5f5f5' }}>Health Impact Analysis</h3>
+                <p style={{ color: '#b8b8b8' }}>Health recommendations coming soon...</p>
+              </div>
+            </div>
 
-<div className={`tab-content ${activeTab === 'health' ? 'active' : ''}`}>
-  <div>
-    <h3 style={{ marginBottom: '1.5rem', color: '#f5f5f5' }}>Health Impact Analysis</h3>
-    <p style={{ color: '#b8b8b8' }}>Health recommendations coming soon...</p>
-  </div>
-</div>
-
-<div className={`tab-content ${activeTab === 'local' ? 'active' : ''}`}>
-  <div>
-    <h3 style={{ marginBottom: '1.5rem', color: '#f5f5f5' }}>{cityData.name}-Specific Tips</h3>
-    <p style={{ color: '#b8b8b8' }}>Local tips and recommendations coming soon...</p>
-  </div>
-</div>
+            <div className={`tab-content ${activeTab === 'local' ? 'active' : ''}`}>
+              <div>
+                <h3 style={{ marginBottom: '1.5rem', color: '#f5f5f5' }}>{cityData.name}-Specific Tips</h3>
+                <p style={{ color: '#b8b8b8' }}>Local tips and recommendations coming soon...</p>
+              </div>
+            </div>
+          </div>
         </section>
 
         {/* Activity Recommendations */}
@@ -551,7 +425,7 @@ export default function CityPageClient({ cityData }) {
 }
 
 // Helper Components
-function PollenCard({ type, emoji, level, status, color, subspecies, isAQI = false }) {
+function PollenCard({ type, emoji, level, status, color, isAQI = false }) {
   const numLevel = parseInt(level) || 0
   const maxLevel = isAQI ? 6 : 4
   const strokeDasharray = `${(numLevel / maxLevel) * 201.06} 201.06`
@@ -620,66 +494,9 @@ function PollenCard({ type, emoji, level, status, color, subspecies, isAQI = fal
         fontWeight: '600',
         textTransform: 'uppercase',
         fontSize: '0.9rem',
-        letterSpacing: '0.5px',
-        marginBottom: '1rem'
+        letterSpacing: '0.5px'
       }}>
         {status}
-      </div>
-
-      {/* Subspecies breakdown */}
-      {subspecies && (
-        <div style={{
-          borderTop: '1px solid rgba(255, 255, 255, 0.1)',
-          paddingTop: '1rem',
-          fontSize: '0.85rem',
-          color: '#b8b8b8'
-        }}>
-          {Object.entries(subspecies).map(([name, level]) => (
-            <div key={name} style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              marginBottom: '0.3rem'
-            }}>
-              <span style={{ textTransform: 'capitalize' }}>{name}:</span>
-              <span style={{ color: getLevelColor(level) }}>
-                {getLevelStatus(level)}
-              </span>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  )
-}
-
-function HourlyCard({ data }) {
-  return (
-    <div style={{
-      minWidth: '100px',
-      background: 'rgba(255, 255, 255, 0.05)',
-      borderRadius: '12px',
-      padding: '1rem 0.5rem',
-      textAlign: 'center'
-    }}>
-      <div style={{ fontWeight: '600', marginBottom: '0.5rem' }}>
-        {data.time}
-      </div>
-      <div style={{
-        width: '40px',
-        height: '40px',
-        background: getScoreColor(data.score),
-        borderRadius: '50%',
-        margin: '0 auto 0.5rem',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        color: 'white',
-        fontWeight: 'bold'
-      }}>
-        {data.score}
-      </div>
-      <div style={{ fontSize: '0.8rem', color: '#b8b8b8' }}>
-        {data.condition}
       </div>
     </div>
   )
@@ -709,12 +526,14 @@ function ForecastDay({ data, index }) {
   )
 
   return (
-    <div className="forecast-day" style={{
+    <div style={{
       background: 'rgba(255, 255, 255, 0.08)',
       border: '1px solid rgba(255, 255, 255, 0.15)',
       borderRadius: '16px',
       padding: '1.5rem',
-      textAlign: 'center'
+      textAlign: 'center',
+      minWidth: '140px',
+      flexShrink: 0
     }}>
       <div style={{ fontWeight: '600', marginBottom: '0.5rem' }}>
         {dayName}
@@ -747,146 +566,136 @@ function ForecastDay({ data, index }) {
 }
 
 function ActivityRecommendations({ score }) {
- const activities = [
-   {
-     name: 'Outdoor Running',
-     emoji: '🏃‍♂️',
-     getStatus: (score) => score <= 3 ? 'recommended' : score <= 6 ? 'moderate' : 'avoid',
-     getAdvice: (score) => {
-       if (score <= 3) return 'Perfect conditions'
-       if (score <= 6) return 'Best after 6 PM'
-       return 'Consider indoor alternatives'
-     }
-   },
-   {
-     name: 'Gardening',
-     emoji: '🌱',
-     getStatus: (score) => score <= 2 ? 'recommended' : score <= 5 ? 'moderate' : 'avoid',
-     getAdvice: (score) => {
-       if (score <= 2) return 'Great day for yard work'
-       if (score <= 5) return 'Wear mask and limit time'
-       return 'High exposure risk'
-     }
-   },
-   {
-     name: 'Walking/Hiking',
-     emoji: '🚶‍♀️',
-     getStatus: (score) => score <= 4 ? 'recommended' : score <= 7 ? 'moderate' : 'avoid',
-     getAdvice: (score) => {
-       if (score <= 4) return 'Enjoy the outdoors'
-       if (score <= 7) return 'Choose covered trails'
-       return 'Consider indoor malls'
-     }
-   },
-   {
-     name: 'Windows Open',
-     emoji: '🪟',
-     getStatus: (score) => score <= 3 ? 'recommended' : score <= 6 ? 'moderate' : 'avoid',
-     getAdvice: (score) => {
-       if (score <= 3) return 'Fresh air is great'
-       if (score <= 6) return 'Open briefly if needed'
-       return 'Keep closed, use A/C'
-     }
-   },
-   {
-     name: 'Outdoor Dining',
-     emoji: '🍽️',
-     getStatus: (score) => score <= 4 ? 'recommended' : score <= 7 ? 'moderate' : 'avoid',
-     getAdvice: (score) => {
-       if (score <= 4) return 'Perfect patio weather'
-       if (score <= 7) return 'Choose covered seating'
-       return 'Indoor dining recommended'
-     }
-   },
-   {
-     name: 'Dog Walking',
-     emoji: '🐕',
-     getStatus: (score) => score <= 5 ? 'recommended' : score <= 8 ? 'moderate' : 'avoid',
-     getAdvice: (score) => {
-       if (score <= 5) return 'Normal walks fine'
-       if (score <= 8) return 'Shorter walks, wipe paws'
-       return 'Quick potty breaks only'
-     }
-   }
- ]
+  const activities = [
+    {
+      name: 'Outdoor Running',
+      emoji: '🏃‍♂️',
+      getStatus: (score) => score <= 3 ? 'recommended' : score <= 6 ? 'moderate' : 'avoid',
+      getAdvice: (score) => {
+        if (score <= 3) return 'Perfect conditions'
+        if (score <= 6) return 'Best after 6 PM'
+        return 'Consider indoor alternatives'
+      }
+    },
+    {
+      name: 'Gardening',
+      emoji: '🌱',
+      getStatus: (score) => score <= 2 ? 'recommended' : score <= 5 ? 'moderate' : 'avoid',
+      getAdvice: (score) => {
+        if (score <= 2) return 'Great day for yard work'
+        if (score <= 5) return 'Wear mask and limit time'
+        return 'High exposure risk'
+      }
+    },
+    {
+      name: 'Walking/Hiking',
+      emoji: '🚶‍♀️',
+      getStatus: (score) => score <= 4 ? 'recommended' : score <= 7 ? 'moderate' : 'avoid',
+      getAdvice: (score) => {
+        if (score <= 4) return 'Enjoy the outdoors'
+        if (score <= 7) return 'Choose covered trails'
+        return 'Consider indoor malls'
+      }
+    },
+    {
+      name: 'Windows Open',
+      emoji: '🪟',
+      getStatus: (score) => score <= 3 ? 'recommended' : score <= 6 ? 'moderate' : 'avoid',
+      getAdvice: (score) => {
+        if (score <= 3) return 'Fresh air is great'
+        if (score <= 6) return 'Open briefly if needed'
+        return 'Keep closed, use A/C'
+      }
+    },
+    {
+      name: 'Outdoor Dining',
+      emoji: '🍽️',
+      getStatus: (score) => score <= 4 ? 'recommended' : score <= 7 ? 'moderate' : 'avoid',
+      getAdvice: (score) => {
+        if (score <= 4) return 'Perfect patio weather'
+        if (score <= 7) return 'Choose covered seating'
+        return 'Indoor dining recommended'
+      }
+    },
+    {
+      name: 'Dog Walking',
+      emoji: '🐕',
+      getStatus: (score) => score <= 5 ? 'recommended' : score <= 8 ? 'moderate' : 'avoid',
+      getAdvice: (score) => {
+        if (score <= 5) return 'Normal walks fine'
+        if (score <= 8) return 'Shorter walks, wipe paws'
+        return 'Quick potty breaks only'
+      }
+    }
+  ]
 
- return (
-   <div style={{
-     display: 'grid',
-     gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-     gap: '1rem'
-   }}>
-     {activities.map((activity, index) => {
-       const status = activity.getStatus(score)
-       const advice = activity.getAdvice(score)
-       const statusColor = status === 'recommended' ? '#10b981' : status === 'moderate' ? '#f59e0b' : '#ef4444'
-       const statusText = status === 'recommended' ? 'Recommended' : status === 'moderate' ? 'Use Caution' : 'Not Recommended'
+  return (
+    <div style={{
+      display: 'grid',
+      gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+      gap: '1rem'
+    }}>
+      {activities.map((activity, index) => {
+        const status = activity.getStatus(score)
+        const advice = activity.getAdvice(score)
+        const statusColor = status === 'recommended' ? '#10b981' : status === 'moderate' ? '#f59e0b' : '#ef4444'
+        const statusText = status === 'recommended' ? 'Recommended' : status === 'moderate' ? 'Use Caution' : 'Not Recommended'
 
-       return (
-         <div key={index} style={{
-           background: 'rgba(255, 255, 255, 0.05)',
-           borderRadius: '12px',
-           padding: '1.5rem',
-           textAlign: 'center'
-         }}>
-           <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>
-             {activity.emoji}
-           </div>
-           <div style={{
-             fontWeight: '600',
-             color: statusColor,
-             marginBottom: '0.5rem',
-             textTransform: 'uppercase',
-             fontSize: '0.9rem'
-           }}>
-             {statusText}
-           </div>
-           <div style={{ fontSize: '0.85rem', color: '#f5f5f5', marginBottom: '0.5rem' }}>
-             {activity.name}
-           </div>
-           <div style={{ fontSize: '0.8rem', color: '#b8b8b8' }}>
-             {advice}
-           </div>
-         </div>
-       )
-     })}
-   </div>
- )
+        return (
+          <div key={index} style={{
+            background: 'rgba(255, 255, 255, 0.05)',
+            borderRadius: '12px',
+            padding: '1.5rem',
+            textAlign: 'center'
+          }}>
+            <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>
+              {activity.emoji}
+            </div>
+            <div style={{
+              fontWeight: '600',
+              color: statusColor,
+              marginBottom: '0.5rem',
+              textTransform: 'uppercase',
+              fontSize: '0.9rem'
+            }}>
+              {statusText}
+            </div>
+            <div style={{ fontSize: '0.85rem', color: '#f5f5f5', marginBottom: '0.5rem' }}>
+              {activity.name}
+            </div>
+            <div style={{ fontSize: '0.8rem', color: '#b8b8b8' }}>
+              {advice}
+            </div>
+          </div>
+        )
+      })}
+    </div>
+  )
 }
 
 // Helper functions
 function getScoreColor(score) {
- if (score <= 3) return '#10b981'      // Green
- if (score <= 5) return '#10b981'      // Green  
- if (score <= 7) return '#f59e0b'      // Yellow/Orange
- if (score <= 9) return '#ef4444'      // Red
- return '#7c2d12'                      // Dark red
+  if (score <= 3) return '#10b981'
+  if (score <= 5) return '#10b981'
+  if (score <= 7) return '#f59e0b'
+  if (score <= 9) return '#ef4444'
+  return '#7c2d12'
 }
 
 function getScoreAdvice(score) {
- if (score <= 3) return "Excellent day for outdoor activities!"
- if (score <= 5) return "Good day for most outdoor activities"
- if (score <= 7) return "Fair conditions - sensitive individuals take precautions"
- if (score <= 9) return "Poor conditions - limit outdoor activities"
- return "Severe conditions - stay indoors if possible!"
+  if (score <= 3) return "Excellent day for outdoor activities!"
+  if (score <= 5) return "Good day for most outdoor activities"
+  if (score <= 7) return "Fair conditions - sensitive individuals take precautions"
+  if (score <= 9) return "Poor conditions - limit outdoor activities"
+  return "Severe conditions - stay indoors if possible!"
 }
 
 function getLevelColor(level) {
- const numLevel = parseInt(level) || 0
- if (numLevel === 0) return '#9ca3af'
- if (numLevel === 1) return '#10b981'
- if (numLevel === 2) return '#f59e0b'
- if (numLevel === 3) return '#ef4444'
- if (numLevel >= 4) return '#7c2d12'
- return '#9ca3af'
-}
-
-function getLevelStatus(level) {
- const numLevel = parseInt(level) || 0
- if (numLevel === 0) return 'None'
- if (numLevel === 1) return 'Low'
- if (numLevel === 2) return 'Medium'
- if (numLevel === 3) return 'High'
- if (numLevel >= 4) return 'Very High'
- return 'None'
+  const numLevel = parseInt(level) || 0
+  if (numLevel === 0) return '#9ca3af'
+  if (numLevel === 1) return '#10b981'
+  if (numLevel === 2) return '#f59e0b'
+  if (numLevel === 3) return '#ef4444'
+  if (numLevel >= 4) return '#7c2d12'
+  return '#9ca3af'
 }
