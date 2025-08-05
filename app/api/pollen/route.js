@@ -104,6 +104,28 @@ export async function GET(request) {
       console.log('Weather API Error:', weatherResponse.status)
     }
 
+        // Process air pollution data
+let airPollutionData = null
+if (airPollutionResponse && airPollutionResponse.ok) {
+  const pollution = await airPollutionResponse.json()
+  console.log('OpenWeather Air Pollution Data:', pollution)
+  
+  if (pollution.list && pollution.list.length > 0) {
+    const current = pollution.list[0]
+    const components = current.components
+    
+    airPollutionData = {
+      aqi: current.main.aqi,
+      status: getOpenWeatherAQIStatus(current.main.aqi),
+      pm25: Math.round(components.pm2_5 || 0),
+      pm10: Math.round(components.pm10 || 0),
+      lastUpdated: new Date().toISOString()
+    }
+  }
+} else {
+  console.log('OpenWeather Air Pollution API Error:', airPollutionResponse?.status)
+}
+
     // Enhance air quality with OpenWeather data
 let enhancedAirQuality = airQualityData
 
@@ -125,28 +147,6 @@ if (airPollutionData) {
       }
     }
   }
-}
-
-    // Process air pollution data
-let airPollutionData = null
-if (airPollutionResponse && airPollutionResponse.ok) {
-  const pollution = await airPollutionResponse.json()
-  console.log('OpenWeather Air Pollution Data:', pollution)
-  
-  if (pollution.list && pollution.list.length > 0) {
-    const current = pollution.list[0]
-    const components = current.components
-    
-    airPollutionData = {
-      aqi: current.main.aqi,
-      status: getOpenWeatherAQIStatus(current.main.aqi),
-      pm25: Math.round(components.pm2_5 || 0),
-      pm10: Math.round(components.pm10 || 0),
-      lastUpdated: new Date().toISOString()
-    }
-  }
-} else {
-  console.log('OpenWeather Air Pollution API Error:', airPollutionResponse?.status)
 }
     
     // Process hourly weather data
