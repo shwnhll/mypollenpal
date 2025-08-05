@@ -125,29 +125,6 @@ if (airPollutionResponse && airPollutionResponse.ok) {
 } else {
   console.log('OpenWeather Air Pollution API Error:', airPollutionResponse?.status)
 }
-
-    // Enhance air quality with OpenWeather data
-let enhancedAirQuality = airQualityData
-
-if (airPollutionData) {
-  enhancedAirQuality = {
-    aqi: airQualityData?.aqi || 100, // Use AirNow AQI if available, otherwise default
-    level: airPollutionData.aqi,
-    status: airQualityData?.status || airPollutionData.status,
-    source: airQualityData ? 'AirNow' : 'OpenWeather',
-    lastUpdated: airPollutionData.lastUpdated,
-    breakdown: {
-      pm25: {
-        value: airPollutionData.pm25,
-        description: 'Fine particles'
-      },
-      pm10: {
-        value: airPollutionData.pm10,
-        description: 'Coarse particles (dust)'
-      }
-    }
-  }
-}
     
     // Process hourly weather data
     let hourlyData = []
@@ -197,6 +174,29 @@ if (airPollutionData) {
     } else {
       console.log('Air Quality API Error:', airQualityResponse.status)
     }
+
+        // Enhance air quality with OpenWeather data
+let enhancedAirQuality = airQualityData
+
+if (airPollutionData) {
+  enhancedAirQuality = {
+    aqi: airQualityData?.aqi || 100, // Use AirNow AQI if available, otherwise default
+    level: airPollutionData.aqi,
+    status: airQualityData?.status || airPollutionData.status,
+    source: airQualityData ? 'AirNow' : 'OpenWeather',
+    lastUpdated: airPollutionData.lastUpdated,
+    breakdown: {
+      pm25: {
+        value: airPollutionData.pm25,
+        description: 'Fine particles'
+      },
+      pm10: {
+        value: airPollutionData.pm10,
+        description: 'Coarse particles (dust)'
+      }
+    }
+  }
+}
     
     // Process the multi-day pollen response
     const dailyInfo = pollenData.dailyInfo || []
