@@ -230,7 +230,7 @@ export async function GET(request) {
         tree: getPollenInfo(pollenTypes, 'TREE'),
         grass: getPollenInfo(pollenTypes, 'GRASS'), 
         weed: getPollenInfo(pollenTypes, 'WEED'),
-        ...(detailed && { subspecies: detailedPollen })
+        subspecies: detailedPollen
       }
       
       if (index === 0) {
