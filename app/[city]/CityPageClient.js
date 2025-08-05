@@ -314,7 +314,7 @@ export default function CityPageClient({ cityData }) {
   status={currentPollen.airQuality?.status || 'Good'}
   color="#10b981"
   isAQI={true}
-  subspecies={pollenData?.airQuality?.breakdown}
+  subspecies={transformAirQualityBreakdown(pollenData?.airQuality?.breakdown)}
 />
 
   <WeatherCard weather={pollenData?.weather} />
@@ -749,6 +749,30 @@ function WeatherCard({ weather }) {
       </div>
     </div>
   )
+}
+
+function transformAirQualityBreakdown(breakdown) {
+  if (!breakdown) return null
+  
+  const transformed = {}
+  
+  if (breakdown.pm25) {
+    transformed.pm25 = {
+      displayName: 'PM2.5',
+      level: breakdown.pm25.value,
+      status: breakdown.pm25.description
+    }
+  }
+  
+  if (breakdown.pm10) {
+    transformed.pm10 = {
+      displayName: 'PM10',
+      level: breakdown.pm10.value,
+      status: breakdown.pm10.description
+    }
+  }
+  
+  return transformed
 }
 
 function ForecastDay({ data, index }) {
