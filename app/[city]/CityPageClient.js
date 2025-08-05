@@ -149,11 +149,11 @@ export default function CityPageClient({ cityData }) {
         }
         
         @media (max-width: 768px) {
-          .pollen-cards-grid {
-            grid-template-columns: 1fr !important;
-            gap: 1.5rem !important;
-          }
-        }
+  .pollen-cards-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1.5rem !important;
+  }
+}
       `}</style>
       
       <div style={{
@@ -274,41 +274,47 @@ export default function CityPageClient({ cityData }) {
             marginBottom: '2rem',
             boxShadow: '0 20px 40px rgba(0, 0, 0, 0.3)'
           }}>
-            <div className="pollen-cards-grid">
-              <PollenCard 
-                type="Tree Pollen"
-                emoji="🌳"
-                level={currentPollen.tree?.level || '0'}
-                status={currentPollen.tree?.status || 'None'}
-                color="#8b4513"
-              />
+            <div style={{
+  display: 'grid',
+  gridTemplateColumns: 'repeat(5, 1fr)', // Changed from 4 to 5
+  gap: '2rem',
+  margin: '2rem 0'
+}} className="pollen-cards-grid">
+  <PollenCard 
+    type="Tree Pollen"
+    emoji="🌳"
+    level={currentPollen.tree?.level || '0'}
+    status={currentPollen.tree?.status || 'None'}
+    color="#8b4513"
+  />
 
-              <PollenCard 
-                type="Grass Pollen"
-                emoji="🌱"
-                level={currentPollen.grass?.level || '0'}
-                status={currentPollen.grass?.status || 'None'}
-                color="#556b2f"
-              />
+  <PollenCard 
+    type="Grass Pollen"
+    emoji="🌱"
+    level={currentPollen.grass?.level || '0'}
+    status={currentPollen.grass?.status || 'None'}
+    color="#556b2f"
+  />
 
-              <PollenCard 
-                type="Weed Pollen"
-                emoji="🌿"
-                level={currentPollen.weed?.level || '0'}
-                status={currentPollen.weed?.status || 'None'}
-                color="#d4af37"
-              />
+  <PollenCard 
+    type="Weed Pollen"
+    emoji="🌿"
+    level={currentPollen.weed?.level || '0'}
+    status={currentPollen.weed?.status || 'None'}
+    color="#d4af37"
+  />
 
-              <PollenCard 
-                type="Air Quality"
-                emoji="🌬️"
-                level={currentPollen.airQuality?.aqi || '50'}
-                status={currentPollen.airQuality?.status || 'Good'}
-                color="#10b981"
-                isAQI={true}
-              />
-            </div>
-          </div>
+  <PollenCard 
+    type="Air Quality"
+    emoji="🌬️"
+    level={currentPollen.airQuality?.aqi || '50'}
+    status={currentPollen.airQuality?.status || 'Good'}
+    color="#10b981"
+    isAQI={true}
+  />
+
+  <WeatherCard weather={pollenData?.weather} />
+</div>
         </section>
 
         {/* Forecast */}
@@ -497,6 +503,143 @@ function PollenCard({ type, emoji, level, status, color, isAQI = false }) {
         letterSpacing: '0.5px'
       }}>
         {status}
+      </div>
+    </div>
+  )
+}
+
+function WeatherCard({ weather }) {
+  if (!weather) {
+    return (
+      <div style={{
+        background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%)',
+        backdropFilter: 'blur(20px)',
+        border: '1px solid rgba(255, 255, 255, 0.2)',
+        borderRadius: '20px',
+        padding: '2rem',
+        textAlign: 'center',
+        position: 'relative',
+        overflow: 'hidden',
+        transition: 'transform 0.3s ease'
+      }}>
+        <div style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          height: '4px',
+          background: 'linear-gradient(90deg, #6b7280, transparent)'
+        }}></div>
+        
+        <div style={{ fontSize: '1.8rem', marginBottom: '1rem' }}>🌤️</div>
+        <div style={{
+          fontWeight: '600',
+          color: '#f5f5f5',
+          marginBottom: '1.5rem',
+          fontSize: '1rem',
+          textTransform: 'uppercase',
+          letterSpacing: '0.05em'
+        }}>
+          Weather
+        </div>
+        <div style={{ color: '#b8b8b8', fontSize: '0.9rem' }}>
+          Data unavailable
+        </div>
+      </div>
+    )
+  }
+
+  const getWeatherEmoji = (description) => {
+    const desc = description.toLowerCase()
+    if (desc.includes('clear')) return '☀️'
+    if (desc.includes('cloud')) return '☁️'
+    if (desc.includes('rain')) return '🌧️'
+    if (desc.includes('snow')) return '❄️'
+    if (desc.includes('thunder')) return '⛈️'
+    if (desc.includes('mist') || desc.includes('fog')) return '🌫️'
+    return '🌤️'
+  }
+
+  return (
+    <div style={{
+      background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%)',
+      backdropFilter: 'blur(20px)',
+      border: '1px solid rgba(255, 255, 255, 0.2)',
+      borderRadius: '20px',
+      padding: '2rem',
+      textAlign: 'center',
+      position: 'relative',
+      overflow: 'hidden',
+      transition: 'transform 0.3s ease'
+    }}>
+      <div style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        height: '4px',
+        background: 'linear-gradient(90deg, #0ea5e9, transparent)'
+      }}></div>
+      
+      <div style={{ fontSize: '1.8rem', marginBottom: '1rem' }}>
+        {getWeatherEmoji(weather.description)}
+      </div>
+      
+      <div style={{
+        fontWeight: '600',
+        color: '#f5f5f5',
+        marginBottom: '1.5rem',
+        fontSize: '1rem',
+        textTransform: 'uppercase',
+        letterSpacing: '0.05em'
+      }}>
+        Weather
+      </div>
+      
+      <div style={{
+        fontSize: '2rem',
+        fontWeight: '800',
+        color: '#0ea5e9',
+        marginBottom: '0.5rem'
+      }}>
+        {weather.temperature}°F
+      </div>
+      
+      <div style={{
+        color: '#0ea5e9',
+        fontWeight: '600',
+        marginBottom: '1rem',
+        textTransform: 'capitalize',
+        fontSize: '0.9rem',
+        letterSpacing: '0.5px'
+      }}>
+        {weather.description}
+      </div>
+      
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: '1fr 1fr',
+        gap: '0.5rem',
+        fontSize: '0.75rem',
+        color: '#b8b8b8',
+        textAlign: 'left'
+      }}>
+        <div>
+          <div style={{ color: '#f5f5f5', fontWeight: '600', marginBottom: '2px' }}>Humidity</div>
+          <div>{weather.humidity}%</div>
+        </div>
+        <div>
+          <div style={{ color: '#f5f5f5', fontWeight: '600', marginBottom: '2px' }}>Wind</div>
+          <div>{weather.windSpeed} mph {weather.windDirectionText}</div>
+        </div>
+        <div>
+          <div style={{ color: '#f5f5f5', fontWeight: '600', marginBottom: '2px' }}>Feels Like</div>
+          <div>{weather.feelsLike}°F</div>
+        </div>
+        <div>
+          <div style={{ color: '#f5f5f5', fontWeight: '600', marginBottom: '2px' }}>Pressure</div>
+          <div>{weather.pressure} mb</div>
+        </div>
       </div>
     </div>
   )
