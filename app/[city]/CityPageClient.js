@@ -568,19 +568,6 @@ function PollenCard({ type, emoji, level, status, color, isAQI = false, subspeci
                     }}>
                       {data.level}
                     </span>
-                    {isCurrentlyInSeason(data.displayName) && (
-                      <div style={{
-                        background: 'rgba(16, 185, 129, 0.3)',
-                        color: '#10b981',
-                        padding: '0.2rem 0.4rem',
-                        borderRadius: '4px',
-                        fontSize: '0.6rem',
-                        fontWeight: '600',
-                        textTransform: 'uppercase'
-                      }}>
-                        Active
-                      </div>
-                    )}
                   </div>
                 </div>
               </div>
