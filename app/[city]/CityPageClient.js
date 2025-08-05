@@ -315,6 +315,8 @@ export default function CityPageClient({ cityData }) {
 
   <WeatherCard weather={pollenData?.weather} />
 </div>
+      </div>
+      </div>
         </section>
 
         {/* Forecast */}
