@@ -256,14 +256,32 @@ export default function CityPageClient({ cityData }) {
         {/* Current Conditions */}
         <section style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 20px' }}>
           <h2 style={{
-            fontFamily: "'Playfair Display', serif",
-            fontSize: '2rem',
-            fontWeight: '700',
-            marginBottom: '2rem',
-            textAlign: 'center'
-          }}>
-            Current Pollen Levels
-          </h2>
+  fontFamily: "'Playfair Display', serif",
+  fontSize: '2rem',
+  fontWeight: '700',
+  marginBottom: '0.5rem', // Reduced margin
+  textAlign: 'center'
+}}>
+  Current Pollen Levels in {cityData.name}
+</h2>
+
+{/* Add date subtitle */}
+<p style={{
+  textAlign: 'center',
+  color: '#b8b8b8',
+  fontSize: '0.9rem',
+  marginBottom: '2rem'
+}}>
+  Updated {new Date().toLocaleDateString('en-US', { 
+    year: 'numeric', 
+    month: 'long', 
+    day: 'numeric' 
+  })} at {new Date().toLocaleTimeString('en-US', { 
+    hour: 'numeric', 
+    minute: '2-digit',
+    hour12: true 
+  })}
+</p>
           
           <div style={{
             background: 'rgba(255, 255, 255, 0.08)',
@@ -276,7 +294,7 @@ export default function CityPageClient({ cityData }) {
           }}>
             <div style={{
   display: 'grid',
-  gridTemplateColumns: 'repeat(5, 1fr)', // Changed from 4 to 5
+  gridTemplateColumns: 'repeat(3, 1fr)', // Changed from 4 to 5
   gap: '2rem',
   margin: '2rem 0'
 }} className="pollen-cards-grid">
@@ -306,108 +324,89 @@ export default function CityPageClient({ cityData }) {
   color="#d4af37"
   subspecies={pollenData?.current?.subspecies?.weeds}
 />
+  </div>
+{pollenData?.forecast && pollenData.forecast.length > 0 && (
+  <>
+    <h2 style={{
+      fontFamily: "'Playfair Display', serif",
+      fontSize: '1.8rem',
+      fontWeight: '600',
+      marginBottom: '2rem',
+      textAlign: 'center'
+    }}>
+      5-Day Pollen Forecast
+    </h2>
+    <div className="forecast-container">
+      {pollenData.forecast.slice(0, 5).map((day, index) => (
+        <ForecastDay key={index} data={day} index={index} />
+      ))}
+    </div>
+  </>
+)}
 
-<PollenCard 
-  type="Air Quality"
-  emoji="🌬️"
-  level={currentPollen.airQuality?.aqi || '50'}
-  status={currentPollen.airQuality?.status || 'Good'}
-  color="#10b981"
-  isAQI={true}
-  subspecies={transformAirQualityBreakdown(pollenData?.airQuality?.breakdown)}
-/>
+</div>  {/* This closes the pollen container */}
+</section>  {/* This closes the pollen section */}
 
-  <WeatherCard weather={pollenData?.weather} />
-</div>
-      </div>
-        </section>
+{/* Air Quality & Weather */}
+<section style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 20px' }}>
+  <h2 style={{
+    fontFamily: "'Playfair Display', serif",
+    fontSize: '2rem',
+    fontWeight: '700',
+    marginBottom: '0.5rem',
+    textAlign: 'center'
+  }}>
+    Air Quality & Weather in {cityData.name}
+  </h2>
+  
+  <p style={{
+    textAlign: 'center',
+    color: '#b8b8b8',
+    fontSize: '0.9rem',
+    marginBottom: '2rem'
+  }}>
+    Updated {new Date().toLocaleDateString('en-US', { 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    })} at {new Date().toLocaleTimeString('en-US', { 
+      hour: 'numeric', 
+      minute: '2-digit',
+      hour12: true 
+    })}
+  </p>
+  
+  <div style={{
+    background: 'rgba(255, 255, 255, 0.08)',
+    backdropFilter: 'blur(30px)',
+    border: '1px solid rgba(255, 255, 255, 0.15)',
+    borderRadius: '24px',
+    padding: '2.5rem',
+    marginBottom: '2rem',
+    boxShadow: '0 20px 40px rgba(0, 0, 0, 0.3)'
+  }}>
+    <div style={{
+      display: 'grid',
+      gridTemplateColumns: 'repeat(2, 1fr)',
+      gap: '2rem',
+      margin: '2rem 0'
+    }}>
+      <PollenCard 
+        type="Air Quality"
+        emoji="🌬️"
+        level={currentPollen.airQuality?.aqi || '50'}
+        status={currentPollen.airQuality?.status || 'Good'}
+        color="#10b981"
+        isAQI={true}
+        subspecies={transformAirQualityBreakdown(pollenData?.airQuality?.breakdown)}
+      />
 
-        {/* Forecast */}
-        {pollenData?.forecast && pollenData.forecast.length > 0 && (
-          <section style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 20px' }}>
-            <div style={{
-              background: 'rgba(255, 255, 255, 0.08)',
-              backdropFilter: 'blur(30px)',
-              border: '1px solid rgba(255, 255, 255, 0.15)',
-              borderRadius: '24px',
-              padding: '2.5rem',
-              marginBottom: '2rem',
-              boxShadow: '0 20px 40px rgba(0, 0, 0, 0.3)'
-            }}>
-              <h2 style={{
-                fontFamily: "'Playfair Display', serif",
-                fontSize: '1.8rem',
-                fontWeight: '600',
-                marginBottom: '2rem',
-                textAlign: 'center'
-              }}>
-                5-Day Pollen Forecast
-              </h2>
-              <div className="forecast-container">
-                {pollenData.forecast.slice(0, 5).map((day, index) => (
-                  <ForecastDay key={index} data={day} index={index} />
-                ))}
-              </div>
-            </div>
-          </section>
-        )}
+      <WeatherCard weather={pollenData?.weather} />
+    </div>
+  </div>
+</section>
 
-        {/* Tabs */}
-        <section style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 20px' }}>
-          <div style={{
-            background: 'rgba(255, 255, 255, 0.08)',
-            backdropFilter: 'blur(30px)',
-            border: '1px solid rgba(255, 255, 255, 0.15)',
-            borderRadius: '24px',
-            padding: '2.5rem',
-            marginBottom: '2rem',
-            boxShadow: '0 20px 40px rgba(0, 0, 0, 0.3)'
-          }}>
-            <div className="tabs">
-              <button 
-                className={`tab ${activeTab === 'trends' ? 'active' : ''}`}
-                onClick={() => setActiveTab('trends')}
-              >
-                Trends & Patterns
-              </button>
-              <button 
-                className={`tab ${activeTab === 'health' ? 'active' : ''}`}
-                onClick={() => setActiveTab('health')}
-              >
-                Health Impact
-              </button>
-              <button 
-                className={`tab ${activeTab === 'local' ? 'active' : ''}`}
-                onClick={() => setActiveTab('local')}
-              >
-                Local Tips
-              </button>
-            </div>
-
-            <div className={`tab-content ${activeTab === 'trends' ? 'active' : ''}`}>
-              <div>
-                <h3 style={{ marginBottom: '1.5rem', color: '#f5f5f5' }}>Trends & Patterns</h3>
-                <p style={{ color: '#b8b8b8' }}>Seasonal trends and patterns coming soon...</p>
-              </div>
-            </div>
-
-            <div className={`tab-content ${activeTab === 'health' ? 'active' : ''}`}>
-              <div>
-                <h3 style={{ marginBottom: '1.5rem', color: '#f5f5f5' }}>Health Impact Analysis</h3>
-                <p style={{ color: '#b8b8b8' }}>Health recommendations coming soon...</p>
-              </div>
-            </div>
-
-            <div className={`tab-content ${activeTab === 'local' ? 'active' : ''}`}>
-              <div>
-                <h3 style={{ marginBottom: '1.5rem', color: '#f5f5f5' }}>{cityData.name}-Specific Tips</h3>
-                <p style={{ color: '#b8b8b8' }}>Local tips and recommendations coming soon...</p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Activity Recommendations */}
+                {/* Activity Recommendations */}
         <section style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 20px' }}>
           <div style={{
             background: 'rgba(255, 255, 255, 0.08)',
