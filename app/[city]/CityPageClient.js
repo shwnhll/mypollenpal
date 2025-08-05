@@ -281,37 +281,40 @@ export default function CityPageClient({ cityData }) {
   margin: '2rem 0'
 }} className="pollen-cards-grid">
   <PollenCard 
-    type="Tree Pollen"
-    emoji="🌳"
-    level={currentPollen.tree?.level || '0'}
-    status={currentPollen.tree?.status || 'None'}
-    color="#8b4513"
-  />
+  type="Tree Pollen"
+  emoji="🌳"
+  level={currentPollen.tree?.level || '0'}
+  status={currentPollen.tree?.status || 'None'}
+  color="#8b4513"
+  subspecies={pollenData?.current?.subspecies?.trees}
+/>
 
-  <PollenCard 
-    type="Grass Pollen"
-    emoji="🌱"
-    level={currentPollen.grass?.level || '0'}
-    status={currentPollen.grass?.status || 'None'}
-    color="#556b2f"
-  />
+<PollenCard 
+  type="Grass Pollen"
+  emoji="🌱"
+  level={currentPollen.grass?.level || '0'}
+  status={currentPollen.grass?.status || 'None'}
+  color="#556b2f"
+  subspecies={pollenData?.current?.subspecies?.grasses}
+/>
 
-  <PollenCard 
-    type="Weed Pollen"
-    emoji="🌿"
-    level={currentPollen.weed?.level || '0'}
-    status={currentPollen.weed?.status || 'None'}
-    color="#d4af37"
-  />
+<PollenCard 
+  type="Weed Pollen"
+  emoji="🌿"
+  level={currentPollen.weed?.level || '0'}
+  status={currentPollen.weed?.status || 'None'}
+  color="#d4af37"
+  subspecies={pollenData?.current?.subspecies?.weeds}
+/>
 
-  <PollenCard 
-    type="Air Quality"
-    emoji="🌬️"
-    level={currentPollen.airQuality?.aqi || '50'}
-    status={currentPollen.airQuality?.status || 'Good'}
-    color="#10b981"
-    isAQI={true}
-  />
+<PollenCard 
+  type="Air Quality"
+  emoji="🌬️"
+  level={currentPollen.airQuality?.aqi || '50'}
+  status={currentPollen.airQuality?.status || 'Good'}
+  color="#10b981"
+  isAQI={true}
+/>
 
   <WeatherCard weather={pollenData?.weather} />
 </div>
@@ -432,7 +435,7 @@ export default function CityPageClient({ cityData }) {
 }
 
 // Helper Components
-function PollenCard({ type, emoji, level, status, color, isAQI = false }) {
+function PollenCard({ type, emoji, level, status, color, isAQI = false, subspecies = null }) {
   const numLevel = parseInt(level) || 0
   const maxLevel = isAQI ? 6 : 4
   const strokeDasharray = `${(numLevel / maxLevel) * 201.06} 201.06`
@@ -447,7 +450,8 @@ function PollenCard({ type, emoji, level, status, color, isAQI = false }) {
       textAlign: 'center',
       position: 'relative',
       overflow: 'hidden',
-      transition: 'transform 0.3s ease'
+      transition: 'transform 0.3s ease',
+      minHeight: subspecies ? '320px' : 'auto' // Make taller if subspecies data
     }}>
       <div style={{
         position: 'absolute',
@@ -501,12 +505,125 @@ function PollenCard({ type, emoji, level, status, color, isAQI = false }) {
         fontWeight: '600',
         textTransform: 'uppercase',
         fontSize: '0.9rem',
-        letterSpacing: '0.5px'
+        letterSpacing: '0.5px',
+        marginBottom: subspecies ? '1rem' : '0'
       }}>
         {status}
       </div>
+
+      {/* Subspecies breakdown */}
+      {subspecies && Object.keys(subspecies).length > 0 && (
+        <div style={{
+          borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+          paddingTop: '1rem',
+          marginTop: '1rem'
+        }}>
+          <div style={{
+            fontSize: '0.8rem',
+            color: '#d4af37',
+            fontWeight: '600',
+            marginBottom: '0.75rem',
+            textTransform: 'uppercase',
+            letterSpacing: '0.5px'
+          }}>
+            Breakdown
+          </div>
+          
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '0.5rem'
+          }}>
+            {Object.entries(subspecies).map(([key, data]) => (
+              <div key={key} style={{
+                background: 'rgba(255, 255, 255, 0.08)',
+                borderRadius: '8px',
+                padding: '0.5rem',
+                fontSize: '0.75rem',
+                textAlign: 'left'
+              }}>
+                <div style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center'
+                }}>
+                  <span style={{
+                    color: '#f5f5f5',
+                    fontWeight: '600'
+                  }}>
+                    {data.displayName}
+                  </span>
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem'
+                  }}>
+                    <span style={{
+                      background: getSubspeciesLevelColor(data.level),
+                      color: 'white',
+                      padding: '0.2rem 0.4rem',
+                      borderRadius: '4px',
+                      fontSize: '0.7rem',
+                      fontWeight: '600'
+                    }}>
+                      {data.level}
+                    </span>
+                    {isCurrentlyInSeason(data.displayName) && (
+                      <div style={{
+                        background: 'rgba(16, 185, 129, 0.3)',
+                        color: '#10b981',
+                        padding: '0.2rem 0.4rem',
+                        borderRadius: '4px',
+                        fontSize: '0.6rem',
+                        fontWeight: '600',
+                        textTransform: 'uppercase'
+                      }}>
+                        Active
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   )
+}
+
+// Helper functions for subspecies
+function getSubspeciesLevelColor(level) {
+  const numLevel = parseInt(level) || 0
+  if (numLevel === 0) return '#9ca3af'
+  if (numLevel === 1) return '#10b981'
+  if (numLevel === 2) return '#f59e0b'
+  if (numLevel === 3) return '#ef4444'
+  if (numLevel >= 4) return '#7c2d12'
+  return '#9ca3af'
+}
+
+function isCurrentlyInSeason(speciesName) {
+  const currentMonth = new Date().getMonth() + 1 // 1-12
+  const species = speciesName.toLowerCase()
+  
+  // Trees (spring: March-May)
+  if (species.includes('oak') || species.includes('maple') || species.includes('birch') || 
+      species.includes('elm') || species.includes('ash')) {
+    return currentMonth >= 3 && currentMonth <= 5
+  }
+  
+  // Grasses (summer: June-August) 
+  if (species.includes('grass') || species.includes('graminales')) {
+    return currentMonth >= 6 && currentMonth <= 8
+  }
+  
+  // Weeds (fall: August-October)
+  if (species.includes('ragweed') || species.includes('mugwort')) {
+    return currentMonth >= 8 && currentMonth <= 10
+  }
+  
+  return false
 }
 
 function WeatherCard({ weather }) {
