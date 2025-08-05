@@ -105,7 +105,7 @@ export default function CityPageClient({ cityData }) {
       <style jsx>{`
         .pollen-cards-grid {
           display: grid;
-          grid-template-columns: repeat(4, 1fr);
+          grid-template-columns: repeat(5, 1fr);
           gap: 2rem;
           margin: 2rem 0;
         }
