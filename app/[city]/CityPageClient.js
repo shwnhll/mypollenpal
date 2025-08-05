@@ -314,6 +314,7 @@ export default function CityPageClient({ cityData }) {
   status={currentPollen.airQuality?.status || 'Good'}
   color="#10b981"
   isAQI={true}
+  subspecies={pollenData?.airQuality?.breakdown}
 />
 
   <WeatherCard weather={pollenData?.weather} />
