@@ -49,6 +49,8 @@ export async function GET(request) {
       ? `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lng}&appid=${process.env.OPENWEATHERMAP_API_KEY}&units=imperial`
       : null
     
+    const airPollutionUrl = `https://api.openweathermap.org/data/2.5/air_pollution?lat=${lat}&lon=${lng}&appid=${process.env.OPENWEATHERMAP_API_KEY}`
+    
     console.log('Air Quality URL:', airQualityUrl.replace(process.env.NEXT_PUBLIC_AIRNOW_API_KEY, 'HIDDEN_KEY'))
     console.log('Weather URL:', weatherUrl.replace(process.env.OPENWEATHERMAP_API_KEY, 'HIDDEN_KEY'))
     console.log('ZIP Code found:', zipCode || 'Using lat/lng fallback')
@@ -60,7 +62,8 @@ export async function GET(request) {
         headers: { 'Content-Type': 'application/json' }
       }),
       fetch(airQualityUrl),
-      fetch(weatherUrl)
+      fetch(weatherUrl),
+      fetch(airPollutionUrl)
     ]
     
     // Add hourly weather if detailed request
@@ -69,7 +72,7 @@ export async function GET(request) {
     }
     
     const responses = await Promise.all(apiCalls)
-    const [pollenResponse, airQualityResponse, weatherResponse, hourlyWeatherResponse] = responses
+    const [pollenResponse, airQualityResponse, weatherResponse, airPollutionResponse, hourlyWeatherResponse] = responses
     
     // Check pollen response
     if (!pollenResponse.ok) {
@@ -100,6 +103,51 @@ export async function GET(request) {
     } else {
       console.log('Weather API Error:', weatherResponse.status)
     }
+
+    // Enhance air quality with OpenWeather data
+let enhancedAirQuality = airQualityData
+
+if (airPollutionData) {
+  enhancedAirQuality = {
+    aqi: airQualityData?.aqi || 100, // Use AirNow AQI if available, otherwise default
+    level: airPollutionData.aqi,
+    status: airQualityData?.status || airPollutionData.status,
+    source: airQualityData ? 'AirNow' : 'OpenWeather',
+    lastUpdated: airPollutionData.lastUpdated,
+    breakdown: {
+      pm25: {
+        value: airPollutionData.pm25,
+        description: 'Fine particles'
+      },
+      pm10: {
+        value: airPollutionData.pm10,
+        description: 'Coarse particles (dust)'
+      }
+    }
+  }
+}
+
+    // Process air pollution data
+let airPollutionData = null
+if (airPollutionResponse && airPollutionResponse.ok) {
+  const pollution = await airPollutionResponse.json()
+  console.log('OpenWeather Air Pollution Data:', pollution)
+  
+  if (pollution.list && pollution.list.length > 0) {
+    const current = pollution.list[0]
+    const components = current.components
+    
+    airPollutionData = {
+      aqi: current.main.aqi,
+      status: getOpenWeatherAQIStatus(current.main.aqi),
+      pm25: Math.round(components.pm2_5 || 0),
+      pm10: Math.round(components.pm10 || 0),
+      lastUpdated: new Date().toISOString()
+    }
+  }
+} else {
+  console.log('OpenWeather Air Pollution API Error:', airPollutionResponse?.status)
+}
     
     // Process hourly weather data
     let hourlyData = []
@@ -211,7 +259,7 @@ export async function GET(request) {
       lastUpdated: new Date().toLocaleString(),
       current: null,
       forecast: [],
-      airQuality: airQualityData,
+      airQuality: enhancedAirQuality,
       weather: weatherData,
       ...(detailed && { 
         hourly: hourlyData,
@@ -278,6 +326,17 @@ function getWindDirection(degrees) {
   const directions = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW']
   const index = Math.round(degrees / 22.5) % 16
   return directions[index]
+}
+
+function getOpenWeatherAQIStatus(aqi) {
+  switch(aqi) {
+    case 1: return 'Good'
+    case 2: return 'Fair' 
+    case 3: return 'Moderate'
+    case 4: return 'Poor'
+    case 5: return 'Very Poor'
+    default: return 'Unknown'
+  }
 }
 
 function calculateHourlyPollenScore(dayData, weather, hourIndex) {
