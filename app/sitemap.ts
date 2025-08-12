@@ -1,5 +1,5 @@
 import { MetadataRoute } from 'next'
-import { getAllCities } from './utils/getCities'
+import { getAllCities } from '../utils/getCities'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Get all active cities from your database
