@@ -1870,7 +1870,7 @@ const updateForecast = (forecast: any[]) => {
       { name: 'Nashville', state: 'TN', slug: 'nashville-tn' },
       { name: 'San Diego', state: 'CA', slug: 'san-diego-ca' }
     ].map((city, index) => (
-      
+        <a
         key={index}
         href={`/${city.slug}`}
         className="popular-city-card"
