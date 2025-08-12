@@ -137,8 +137,8 @@ export default function Home() {
   }
 }
 
-  // Helper function to convert user input to URL slug
-const convertLocationToSlug = (location) => {
+// Helper function to convert user input to URL slug
+const convertLocationToSlug = (location: string): string | null => {
   // Remove extra spaces and normalize
   const cleaned = location.trim().toLowerCase()
   
@@ -204,8 +204,8 @@ const convertLocationToSlug = (location) => {
 }
 
 // Helper to convert state names to codes
-const convertToStateCode = (state) => {
-  const stateMap = {
+const convertToStateCode = (state: string): string | null => {
+  const stateMap: { [key: string]: string } = {
     'alabama': 'al', 'alaska': 'ak', 'arizona': 'az', 'arkansas': 'ar', 'california': 'ca',
     'colorado': 'co', 'connecticut': 'ct', 'delaware': 'de', 'florida': 'fl', 'georgia': 'ga',
     'hawaii': 'hi', 'idaho': 'id', 'illinois': 'il', 'indiana': 'in', 'iowa': 'ia',
@@ -230,7 +230,7 @@ const convertToStateCode = (state) => {
   return stateMap[normalized] || null
 }
 
-const isStateName = (str) => {
+const isStateName = (str: string): boolean => {
   const stateNames = ['alabama', 'alaska', 'arizona', 'arkansas', 'california', 'colorado', 'connecticut', 'delaware', 'florida', 'georgia', 'hawaii', 'idaho', 'illinois', 'indiana', 'iowa', 'kansas', 'kentucky', 'louisiana', 'maine', 'maryland', 'massachusetts', 'michigan', 'minnesota', 'mississippi', 'missouri', 'montana', 'nebraska', 'nevada', 'new hampshire', 'new jersey', 'new mexico', 'new york', 'north carolina', 'north dakota', 'ohio', 'oklahoma', 'oregon', 'pennsylvania', 'rhode island', 'south carolina', 'south dakota', 'tennessee', 'texas', 'utah', 'vermont', 'virginia', 'washington', 'west virginia', 'wisconsin', 'wyoming', 'district of columbia']
   return stateNames.includes(str.toLowerCase())
 }
