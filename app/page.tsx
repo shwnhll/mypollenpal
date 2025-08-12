@@ -171,34 +171,41 @@ const convertLocationToSlug = (location: string): string | null => {
     cityPart = cleaned
   }
   
-  // Convert state to abbreviation if needed
-  if (statePart) {
-    statePart = convertToStateCode(statePart)
+// Convert state to abbreviation if needed
+if (statePart) {
+  const convertedState = convertToStateCode(statePart)
+  if (convertedState) {
+    statePart = convertedState
   }
+}
   
-  // If no state provided, try to find it in your cities array
-  if (!statePart && cityPart) {
-    const matchedCity = cities.find(city => {
-      const cityName = city.split(',')[0].toLowerCase().trim()
-      return cityName === cityPart
-    })
-    
-    if (matchedCity) {
-      const parts = matchedCity.split(',')
-      cityPart = parts[0].trim().toLowerCase()
-      statePart = parts[1].trim().toLowerCase()
+// If no state provided, try to find it in your cities array
+if (!statePart && cityPart) {
+  const matchedCity = cities.find(city => {
+    const cityName = city.split(',')[0].toLowerCase().trim()
+    return cityName === cityPart
+  })
+  
+  if (matchedCity) {
+    const parts = matchedCity.split(',')
+    cityPart = parts[0].trim().toLowerCase()
+    const matchedStatePart = parts[1].trim().toLowerCase()
+    const convertedState = convertToStateCode(matchedStatePart)
+    if (convertedState) {
+      statePart = convertedState
     }
   }
+}
+
+if (cityPart && statePart) {
+  // Convert to slug format: "denver-co"
+  const citySlug = cityPart.replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
+  const stateSlug = convertToStateCode(statePart)
   
-  if (cityPart && statePart) {
-    // Convert to slug format: "denver-co"
-    const citySlug = cityPart.replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
-    const stateSlug = convertToStateCode(statePart)
-    
-    if (stateSlug) {
-      return `${citySlug}-${stateSlug.toLowerCase()}`
-    }
+  if (stateSlug) {
+    return `${citySlug}-${stateSlug.toLowerCase()}`
   }
+}
   
   return null
 }
