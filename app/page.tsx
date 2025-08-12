@@ -606,6 +606,8 @@ const updateForecast = (forecast: any[]) => {
   if (scoreCircle) scoreCircle.style.background = color
 }
 
+}
+
   return (
     <div style={{
       fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
