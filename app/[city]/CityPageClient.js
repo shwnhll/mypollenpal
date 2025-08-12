@@ -439,6 +439,8 @@ function PollenCard({ type, emoji, level, status, color, isAQI = false, subspeci
   const numLevel = parseInt(level) || 0
   const maxLevel = isAQI ? 6 : 4
   const strokeDasharray = `${(numLevel / maxLevel) * 201.06} 201.06`
+  const cardColor = getLevelColor(level, isAQI)
+  const healthStatus = getHealthStatus(level, isAQI)
 
   return (
     <div style={{
@@ -483,7 +485,7 @@ function PollenCard({ type, emoji, level, status, color, isAQI = false, subspeci
         <svg width="80" height="80" style={{ transform: 'rotate(-90deg)' }}>
           <circle cx="40" cy="40" r="32" fill="none" stroke="rgba(255, 255, 255, 0.2)" strokeWidth="6" />
           <circle
-            cx="40" cy="40" r="32" fill="none" stroke={color} strokeWidth="6"
+            cx="40" cy="40" r="32" fill="none" stroke={cardColor} strokeWidth="6"
             strokeDasharray={strokeDasharray} strokeLinecap="round"
           />
         </svg>
@@ -494,21 +496,21 @@ function PollenCard({ type, emoji, level, status, color, isAQI = false, subspeci
           transform: 'translate(-50%, -50%)',
           fontSize: isAQI ? '1.2rem' : '1.5rem',
           fontWeight: '800',
-          color: color
+          color: cardColor
         }}>
           {level}
         </div>
       </div>
       
       <div style={{
-        color: color,
+        color: cardColor,
         fontWeight: '600',
         textTransform: 'uppercase',
         fontSize: '0.9rem',
         letterSpacing: '0.5px',
         marginBottom: subspecies ? '1rem' : '0'
       }}>
-        {status}
+        {healthStatus}
       </div>
 
       {/* Subspecies breakdown */}
@@ -947,11 +949,11 @@ function ActivityRecommendations({ score }) {
 
 // Helper functions
 function getScoreColor(score) {
-  if (score <= 3) return '#10b981'
-  if (score <= 5) return '#10b981'
-  if (score <= 7) return '#f59e0b'
-  if (score <= 9) return '#ef4444'
-  return '#7c2d12'
+  if (score <= 3) return '#22c55e'    // Excellent - Bright Green
+  if (score <= 5) return '#22c55e'    // Good - Bright Green  
+  if (score <= 7) return '#eab308'    // Fair - Yellow
+  if (score <= 9) return '#f97316'    // Poor - Orange
+  return '#ef4444'                    // Severe - Red
 }
 
 function getScoreAdvice(score) {
@@ -962,12 +964,46 @@ function getScoreAdvice(score) {
   return "Severe conditions - stay indoors if possible!"
 }
 
-function getLevelColor(level) {
+// Enhanced health-based color system
+function getLevelColor(level, isAQI = false) {
   const numLevel = parseInt(level) || 0
-  if (numLevel === 0) return '#9ca3af'
-  if (numLevel === 1) return '#10b981'
-  if (numLevel === 2) return '#f59e0b'
-  if (numLevel === 3) return '#ef4444'
-  if (numLevel >= 4) return '#7c2d12'
-  return '#9ca3af'
+  
+  if (isAQI) {
+    // AQI colors (EPA standard)
+    if (numLevel <= 50) return '#22c55e'      // Good - Bright Green
+    if (numLevel <= 100) return '#eab308'     // Moderate - Yellow  
+    if (numLevel <= 150) return '#f97316'     // Unhealthy for Sensitive - Orange
+    if (numLevel <= 200) return '#ef4444'     // Unhealthy - Red
+    if (numLevel <= 300) return '#a855f7'     // Very Unhealthy - Purple
+    return '#7c2d12'                          // Hazardous - Maroon
+  } else {
+    // Pollen levels (0-4 scale)
+    if (numLevel === 0) return '#64748b'      // None - Gray
+    if (numLevel === 1) return '#22c55e'      // Low - Bright Green  
+    if (numLevel === 2) return '#eab308'      // Medium - Yellow
+    if (numLevel === 3) return '#f97316'      // High - Orange
+    if (numLevel >= 4) return '#ef4444'       // Very High - Red
+  }
+  return '#64748b' // Default gray
+}
+
+// Health status text with better descriptions
+function getHealthStatus(level, isAQI = false) {
+  const numLevel = parseInt(level) || 0
+  
+  if (isAQI) {
+    if (numLevel <= 50) return 'Good Air'
+    if (numLevel <= 100) return 'Moderate'  
+    if (numLevel <= 150) return 'Sensitive Alert'
+    if (numLevel <= 200) return 'Unhealthy'
+    if (numLevel <= 300) return 'Very Unhealthy'
+    return 'Hazardous'
+  } else {
+    if (numLevel === 0) return 'None'
+    if (numLevel === 1) return 'Low Risk'
+    if (numLevel === 2) return 'Moderate Risk'
+    if (numLevel === 3) return 'High Risk'
+    if (numLevel >= 4) return 'Very High Risk'
+  }
+  return 'Unknown'
 }
