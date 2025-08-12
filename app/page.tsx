@@ -114,36 +114,126 @@ export default function Home() {
     // Using simple city list instead
   }, []);
 
-  const searchLocation = async () => {
-    const location = searchValue.trim()
-    
-    if (!location) {
-      alert('Please enter a location')
-      return
-    }
-
-    setLoading(true)
-    setShowSuggestions(false) // Hide suggestions when searching
-    
-    try {
-      const response = await fetch(`/api/pollen?location=${encodeURIComponent(location)}&days=5`)
-      const data = await response.json()
-      
-      if (response.ok) {
-        setPollenData(data)
-        setHasSearched(true)
-        if (data.forecast) {
-          setForecastData(data.forecast)
-        }
-        updateDisplay(data)
-      } else {
-        alert(data.error || 'Unable to fetch pollen data. Please try again.')
-      }
-    } catch (error) {
-      alert('Unable to fetch pollen data. Please try again.')
-    }
-    setLoading(false)
+ const searchLocation = async () => {
+  const location = searchValue.trim()
+  
+  if (!location) {
+    alert('Please enter a location')
+    return
   }
+
+  setLoading(true)
+  setShowSuggestions(false)
+
+  // Convert location to city-state slug format
+  const citySlug = convertLocationToSlug(location)
+  
+  if (citySlug) {
+    // Redirect to the city page
+    window.location.href = `/${citySlug}`
+  } else {
+    setLoading(false)
+    alert('Please enter a valid city and state (e.g., "Denver, CO" or "Chicago, IL")')
+  }
+}
+
+  // Helper function to convert user input to URL slug
+const convertLocationToSlug = (location) => {
+  // Remove extra spaces and normalize
+  const cleaned = location.trim().toLowerCase()
+  
+  // Handle various input formats
+  let cityPart = ''
+  let statePart = ''
+  
+  // Format: "Denver, CO" or "Denver, Colorado"
+  if (cleaned.includes(',')) {
+    const parts = cleaned.split(',').map(p => p.trim())
+    cityPart = parts[0]
+    statePart = parts[1]
+  }
+  // Format: "Denver CO" (space separated)
+  else if (cleaned.includes(' ')) {
+    const parts = cleaned.split(' ')
+    const lastPart = parts[parts.length - 1]
+    
+    // Check if last part looks like a state
+    if (lastPart.length === 2 || isStateName(lastPart)) {
+      statePart = lastPart
+      cityPart = parts.slice(0, -1).join(' ')
+    } else {
+      // Assume it's just a city name, try to match with your cities list
+      cityPart = cleaned
+    }
+  }
+  // Just a city name
+  else {
+    cityPart = cleaned
+  }
+  
+  // Convert state to abbreviation if needed
+  if (statePart) {
+    statePart = convertToStateCode(statePart)
+  }
+  
+  // If no state provided, try to find it in your cities array
+  if (!statePart && cityPart) {
+    const matchedCity = cities.find(city => {
+      const cityName = city.split(',')[0].toLowerCase().trim()
+      return cityName === cityPart
+    })
+    
+    if (matchedCity) {
+      const parts = matchedCity.split(',')
+      cityPart = parts[0].trim().toLowerCase()
+      statePart = parts[1].trim().toLowerCase()
+    }
+  }
+  
+  if (cityPart && statePart) {
+    // Convert to slug format: "denver-co"
+    const citySlug = cityPart.replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
+    const stateSlug = convertToStateCode(statePart)
+    
+    if (stateSlug) {
+      return `${citySlug}-${stateSlug.toLowerCase()}`
+    }
+  }
+  
+  return null
+}
+
+// Helper to convert state names to codes
+const convertToStateCode = (state) => {
+  const stateMap = {
+    'alabama': 'al', 'alaska': 'ak', 'arizona': 'az', 'arkansas': 'ar', 'california': 'ca',
+    'colorado': 'co', 'connecticut': 'ct', 'delaware': 'de', 'florida': 'fl', 'georgia': 'ga',
+    'hawaii': 'hi', 'idaho': 'id', 'illinois': 'il', 'indiana': 'in', 'iowa': 'ia',
+    'kansas': 'ks', 'kentucky': 'ky', 'louisiana': 'la', 'maine': 'me', 'maryland': 'md',
+    'massachusetts': 'ma', 'michigan': 'mi', 'minnesota': 'mn', 'mississippi': 'ms', 'missouri': 'mo',
+    'montana': 'mt', 'nebraska': 'ne', 'nevada': 'nv', 'new hampshire': 'nh', 'new jersey': 'nj',
+    'new mexico': 'nm', 'new york': 'ny', 'north carolina': 'nc', 'north dakota': 'nd', 'ohio': 'oh',
+    'oklahoma': 'ok', 'oregon': 'or', 'pennsylvania': 'pa', 'rhode island': 'ri', 'south carolina': 'sc',
+    'south dakota': 'sd', 'tennessee': 'tn', 'texas': 'tx', 'utah': 'ut', 'vermont': 'vt',
+    'virginia': 'va', 'washington': 'wa', 'west virginia': 'wv', 'wisconsin': 'wi', 'wyoming': 'wy',
+    'district of columbia': 'dc'
+  }
+  
+  const normalized = state.toLowerCase().trim()
+  
+  // If it's already a 2-letter code
+  if (normalized.length === 2 && /^[a-z]{2}$/.test(normalized)) {
+    return normalized
+  }
+  
+  // Look up full state name
+  return stateMap[normalized] || null
+}
+
+const isStateName = (str) => {
+  const stateNames = ['alabama', 'alaska', 'arizona', 'arkansas', 'california', 'colorado', 'connecticut', 'delaware', 'florida', 'georgia', 'hawaii', 'idaho', 'illinois', 'indiana', 'iowa', 'kansas', 'kentucky', 'louisiana', 'maine', 'maryland', 'massachusetts', 'michigan', 'minnesota', 'mississippi', 'missouri', 'montana', 'nebraska', 'nevada', 'new hampshire', 'new jersey', 'new mexico', 'new york', 'north carolina', 'north dakota', 'ohio', 'oklahoma', 'oregon', 'pennsylvania', 'rhode island', 'south carolina', 'south dakota', 'tennessee', 'texas', 'utah', 'vermont', 'virginia', 'washington', 'west virginia', 'wisconsin', 'wyoming', 'district of columbia']
+  return stateNames.includes(str.toLowerCase())
+}
 
   const handleEmailSignup = async (e: React.FormEvent) => {
   e.preventDefault()
