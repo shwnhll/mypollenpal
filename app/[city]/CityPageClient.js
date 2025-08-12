@@ -103,58 +103,167 @@ export default function CityPageClient({ cityData }) {
   return (
     <>
       <style jsx>{`
-        .pollen-cards-grid {
-          display: grid;
-          grid-template-columns: repeat(5, 1fr);
-          gap: 2rem;
-          margin: 2rem 0;
-        }
-        
-        .forecast-container {
-          display: flex;
-          gap: 1rem;
-          overflow-x: auto;
-          padding: 1rem 0;
-          scrollbar-width: thin;
-        }
-        
-        .tabs {
-          display: flex;
-          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-          margin-bottom: 2rem;
-          overflow-x: auto;
-        }
-        
-        .tab {
-          padding: 1rem 2rem;
-          background: none;
-          border: none;
-          color: #b8b8b8;
-          cursor: pointer;
-          transition: color 0.2s;
-          white-space: nowrap;
-        }
-        
-        .tab.active {
-          color: #d4af37;
-          border-bottom: 2px solid #d4af37;
-        }
-        
-        .tab-content {
-          display: none;
-        }
-        
-        .tab-content.active {
-          display: block;
-        }
-        
-        @media (max-width: 768px) {
   .pollen-cards-grid {
-    grid-template-columns: 1fr !important;
-    gap: 1.5rem !important;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    margin: 2rem 0;
   }
-}
-      `}</style>
+  
+  .forecast-container {
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    padding: 1rem 0;
+    scrollbar-width: thin;
+    scroll-snap-type: x mandatory;
+  }
+  
+  .forecast-container > div {
+    scroll-snap-align: start;
+    flex-shrink: 0;
+  }
+  
+  .tabs {
+    display: flex;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 2rem;
+    overflow-x: auto;
+  }
+  
+  .tab {
+    padding: 1rem 2rem;
+    background: none;
+    border: none;
+    color: #b8b8b8;
+    cursor: pointer;
+    transition: color 0.2s;
+    white-space: nowrap;
+  }
+  
+  .tab.active {
+    color: #d4af37;
+    border-bottom: 2px solid #d4af37;
+  }
+  
+  .tab-content {
+    display: none;
+  }
+  
+  .tab-content.active {
+    display: block;
+  }
+  
+  /* Enhanced Mobile Styles */
+  @media (max-width: 768px) {
+    .pollen-cards-grid {
+      grid-template-columns: 1fr !important;
+      gap: 1rem !important;
+      margin: 1rem 0 !important;
+    }
+    
+    .forecast-container {
+      gap: 0.75rem !important;
+      padding: 1rem 0.5rem !important;
+      margin: 0 -1rem !important;
+      width: calc(100% + 2rem) !important;
+    }
+    
+    .forecast-container > div {
+      min-width: 120px !important;
+      padding: 1rem 0.75rem !important;
+    }
+    
+    /* Better mobile typography */
+    h1 {
+      font-size: 2rem !important;
+      line-height: 1.2 !important;
+    }
+    
+    h2 {
+      font-size: 1.5rem !important;
+      margin-bottom: 1rem !important;
+    }
+    
+    /* Mobile-optimized sections */
+    section {
+      padding: 0 1rem !important;
+    }
+    
+    /* Activity recommendations mobile grid */
+    .activity-grid {
+      grid-template-columns: repeat(2, 1fr) !important;
+      gap: 0.75rem !important;
+    }
+    
+    /* Better mobile cards */
+    .pollen-card {
+      padding: 1.5rem 1rem !important;
+      border-radius: 16px !important;
+    }
+    
+    /* Mobile score display */
+    .score-display {
+      flex-direction: column !important;
+      gap: 1rem !important;
+      text-align: center !important;
+    }
+    
+    .score-display > div:first-child {
+      width: 80px !important;
+      height: 80px !important;
+      font-size: 2rem !important;
+    }
+  }
+  
+  /* Tablet styles */
+  @media (max-width: 1024px) and (min-width: 769px) {
+    .pollen-cards-grid {
+      grid-template-columns: repeat(2, 1fr) !important;
+      gap: 1.5rem !important;
+    }
+    
+    .activity-grid {
+      grid-template-columns: repeat(3, 1fr) !important;
+    }
+  }
+  
+  /* Small mobile phones */
+  @media (max-width: 480px) {
+    .pollen-cards-grid {
+      margin: 0.5rem 0 !important;
+    }
+    
+    .pollen-card {
+      padding: 1rem 0.75rem !important;
+    }
+    
+    h1 {
+      font-size: 1.75rem !important;
+    }
+    
+    .activity-grid {
+      grid-template-columns: 1fr !important;
+    }
+    
+    /* Horizontal scroll indicators */
+    .forecast-container::after {
+      content: "← Swipe for more →";
+      position: absolute;
+      bottom: -1.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.75rem;
+      color: rgba(255, 255, 255, 0.5);
+      white-space: nowrap;
+    }
+    
+    .forecast-container {
+      position: relative;
+      margin-bottom: 2rem !important;
+    }
+  }
+`}</style>
       
       <div style={{
         fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
@@ -904,11 +1013,14 @@ function ActivityRecommendations({ score }) {
   ]
 
   return (
-    <div style={{
-      display: 'grid',
-      gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-      gap: '1rem'
-    }}>
+    <div 
+      className="activity-grid"
+      style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+        gap: '1rem'
+      }}
+    >
       {activities.map((activity, index) => {
         const status = activity.getStatus(score)
         const advice = activity.getAdvice(score)
