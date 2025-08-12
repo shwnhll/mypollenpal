@@ -695,6 +695,50 @@ const updateForecast = (forecast: any[]) => {
             margin-bottom: 2rem;
           }
 
+          .popular-cities-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+}
+
+.popular-city-card {
+  transition: all 0.3s ease;
+}
+
+/* Mobile optimizations for popular cities */
+@media (max-width: 768px) {
+  .popular-cities-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.75rem !important;
+  }
+  
+  .popular-city-card {
+    padding: 0.75rem !important;
+    min-height: 70px !important;
+    font-size: 0.9rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .popular-cities-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.5rem !important;
+  }
+  
+  .popular-city-card {
+    padding: 1rem !important;
+    min-height: 60px !important;
+  }
+}
+
+/* Touch-friendly hover states for mobile */
+@media (hover: none) {
+  .popular-city-card:active {
+    transform: scale(0.98) !important;
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.2) 0%, rgba(212, 175, 55, 0.1) 100%) !important;
+  }
+}
+
 @keyframes floatSwayLeft {
   0% { 
     transform: translate(0, 0) rotate(0deg); 
@@ -1774,7 +1818,106 @@ const updateForecast = (forecast: any[]) => {
               </div>
             </div>
           </div>
-
+{/* Popular Cities Section */}
+<div style={{
+  background: 'rgba(255, 255, 255, 0.04)',
+  backdropFilter: 'blur(20px)',
+  border: '1px solid rgba(255, 255, 255, 0.1)',
+  borderRadius: '24px',
+  padding: '3rem 2rem',
+  marginBottom: '2rem'
+}}>
+  <h3 style={{
+    fontFamily: "'Playfair Display', serif",
+    fontSize: '2rem',
+    fontWeight: '700',
+    color: '#f5f5f5',
+    marginBottom: '1rem',
+    textAlign: 'center'
+  }}>
+    Popular Cities
+  </h3>
+  <p style={{
+    textAlign: 'center',
+    color: '#b8b8b8',
+    fontSize: '1rem',
+    marginBottom: '2rem'
+  }}>
+    Check pollen levels in these popular locations
+  </p>
+  <div 
+    className="popular-cities-grid"
+    style={{
+      display: 'grid',
+      gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+      gap: '1rem',
+      maxWidth: '800px',
+      margin: '0 auto'
+    }}
+  >
+    {[
+      { name: 'Chicago', state: 'IL', slug: 'chicago-il' },
+      { name: 'Phoenix', state: 'AZ', slug: 'phoenix-az' },
+      { name: 'Denver', state: 'CO', slug: 'denver-co' },
+      { name: 'Austin', state: 'TX', slug: 'austin-tx' },
+      { name: 'Atlanta', state: 'GA', slug: 'atlanta-ga' },
+      { name: 'Seattle', state: 'WA', slug: 'seattle-wa' },
+      { name: 'Miami', state: 'FL', slug: 'miami-fl' },
+      { name: 'Boston', state: 'MA', slug: 'boston-ma' },
+      { name: 'Las Vegas', state: 'NV', slug: 'las-vegas-nv' },
+      { name: 'Portland', state: 'OR', slug: 'portland-or' },
+      { name: 'Nashville', state: 'TN', slug: 'nashville-tn' },
+      { name: 'San Diego', state: 'CA', slug: 'san-diego-ca' }
+    ].map((city, index) => (
+      
+        key={index}
+        href={`/${city.slug}`}
+        className="popular-city-card"
+        style={{
+          display: 'block',
+          background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%)',
+          border: '1px solid rgba(255, 255, 255, 0.15)',
+          borderRadius: '12px',
+          padding: '1rem',
+          textAlign: 'center',
+          textDecoration: 'none',
+          color: '#f5f5f5',
+          transition: 'all 0.3s ease',
+          cursor: 'pointer',
+          minHeight: '80px',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center'
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.transform = 'translateY(-2px)'
+          e.currentTarget.style.borderColor = 'rgba(212, 175, 55, 0.5)'
+          e.currentTarget.style.background = 'linear-gradient(135deg, rgba(212, 175, 55, 0.2) 0%, rgba(212, 175, 55, 0.1) 100%)'
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.transform = 'translateY(0)'
+          e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.15)'
+          e.currentTarget.style.background = 'linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%)'
+        }}
+      >
+        <div style={{
+          fontWeight: '600',
+          fontSize: '1rem',
+          marginBottom: '0.25rem'
+        }}>
+          {city.name}
+        </div>
+        <div style={{
+          fontSize: '0.9rem',
+          color: '#b8b8b8'
+        }}>
+          {city.state}
+        </div>
+      </a>
+    ))}
+  </div>
+</div>
+    
 {/* How It Works */}
 <div style={{
   background: 'rgba(255, 255, 255, 0.04)',
