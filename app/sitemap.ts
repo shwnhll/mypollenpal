@@ -6,7 +6,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const cities = await getAllCities()
   
   // Base URL of your site
-  const baseUrl = 'https://mypollenpal.com'
+  const baseUrl = 'https://www.mypollenpal.com'
   
   // Static pages
   const staticPages = [
