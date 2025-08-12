@@ -35,6 +35,16 @@ export async function generateMetadata({ params }) {
   }
 
   // Enhanced SEO metadata
+export async function generateMetadata({ params }) {
+  const cityData = await getCityBySlug(params.city)
+  
+  if (!cityData) {
+    return {
+      title: 'City Not Found | MyPollenPal',
+      description: 'The requested city page could not be found.',
+    }
+  }
+
   const currentDate = new Date().toLocaleDateString('en-US', { 
     month: 'long', 
     day: 'numeric', 
@@ -69,7 +79,7 @@ export async function generateMetadata({ params }) {
       description: `Current pollen levels and forecast for ${cityData.name}. Get personalized allergy alerts.`,
     },
     alternates: {
-      canonical: `https://mypollenpal.com/cities/${cityData.slug}`,
+      canonical: `https://mypollenpal.com/${cityData.slug}`,
     },
     robots: {
       index: true,
@@ -91,7 +101,7 @@ export async function generateMetadata({ params }) {
 }
 
 export default async function CityPage({ params }) {
-  // Get city info from database (server-side)
+  // This now handles both database cities AND dynamic cities
   const cityData = await getCityBySlug(params.city)
   
   if (!cityData) {
@@ -104,7 +114,7 @@ export default async function CityPage({ params }) {
     "@type": "WebPage",
     "name": `${cityData.name}, ${cityData.state_code} Pollen Forecast`,
     "description": `Live pollen levels and air quality data for ${cityData.name}, ${cityData.state}`,
-    "url": `https://mypollenpal.com/cities/${cityData.slug}`,
+    "url": `https://mypollenpal.com/${cityData.slug}`,
     "about": {
       "@type": "Place",
       "name": `${cityData.name}, ${cityData.state}`,
@@ -144,14 +154,8 @@ export default async function CityPage({ params }) {
         {
           "@type": "ListItem",
           "position": 2,
-          "name": "Cities",
-          "item": "https://mypollenpal.com/cities"
-        },
-        {
-          "@type": "ListItem",
-          "position": 3,
           "name": `${cityData.name}, ${cityData.state_code}`,
-          "item": `https://mypollenpal.com/cities/${cityData.slug}`
+          "item": `https://mypollenpal.com/${cityData.slug}`
         }
       ]
     },
@@ -180,4 +184,10 @@ export default async function CityPage({ params }) {
 }
 
 // Add revalidation for ISR (Incremental Static Regeneration)
+export const revalidate = 86400 // Revalidate once per day (24 hours)
+
+// Add this line to handle dynamic pages (not just static ones)
+export const dynamicParams = true
+
+// Keep your existing revalidate
 export const revalidate = 86400 // Revalidate once per day (24 hours)
