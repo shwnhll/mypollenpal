@@ -34,17 +34,6 @@ export async function generateMetadata({ params }) {
     }
   }
 
-  // Enhanced SEO metadata
-export async function generateMetadata({ params }) {
-  const cityData = await getCityBySlug(params.city)
-  
-  if (!cityData) {
-    return {
-      title: 'City Not Found | MyPollenPal',
-      description: 'The requested city page could not be found.',
-    }
-  }
-
   const currentDate = new Date().toLocaleDateString('en-US', { 
     month: 'long', 
     day: 'numeric', 
@@ -88,7 +77,7 @@ export async function generateMetadata({ params }) {
         index: true,
         follow: true,
         'max-video-preview': -1,
-        'max-image-preview': 'large',
+        'max-image-preview': 'large,
         'max-snippet': -1,
       },
     },
@@ -183,11 +172,6 @@ export default async function CityPage({ params }) {
   )
 }
 
-// Add revalidation for ISR (Incremental Static Regeneration)
-export const revalidate = 86400 // Revalidate once per day (24 hours)
-
-// Add this line to handle dynamic pages (not just static ones)
+// Handle dynamic pages and revalidation
 export const dynamicParams = true
-
-// Keep your existing revalidate
 export const revalidate = 86400 // Revalidate once per day (24 hours)
