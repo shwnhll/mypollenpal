@@ -605,7 +605,6 @@ const updateForecast = (forecast: any[]) => {
   const scoreCircle = document.getElementById('scoreCircle')
   if (scoreCircle) scoreCircle.style.background = color
 }
-
 }
 
   return (
