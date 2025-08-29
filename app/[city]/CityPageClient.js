@@ -44,41 +44,51 @@ export default function CityPageClient({ cityData }) {
   }, [cityData])
 
   function calculateMyPollenPalScore(data) {
-    if (!data?.current) return 5
-    
-    const currentMonth = new Date().getMonth() + 1
-    const treeLevel = parseInt(data.current.tree?.level) || 0
-    const grassLevel = parseInt(data.current.grass?.level) || 0
-    const weedLevel = parseInt(data.current.weed?.level) || 0
-    const aqi = data.current.airQuality?.aqi || 50
-    
-    let adjustedTreeLevel = treeLevel
-    let adjustedGrassLevel = grassLevel
-    let adjustedWeedLevel = weedLevel
-    
-    if (currentMonth >= 3 && currentMonth <= 5) {
-      adjustedTreeLevel = Math.min(treeLevel * 1.5, 4)
-    } else if (currentMonth >= 6 && currentMonth <= 8) {
-      adjustedGrassLevel = Math.min(grassLevel * 1.5, 4)
-    } else if (currentMonth >= 9 && currentMonth <= 11) {
-      adjustedWeedLevel = Math.min(weedLevel * 1.5, 4)
-    }
-    
-    let aqiLevel = 0
-    if (aqi <= 50) aqiLevel = 1
-    else if (aqi <= 100) aqiLevel = 2
-    else if (aqi <= 150) aqiLevel = 3
-    else if (aqi <= 200) aqiLevel = 4
-    else aqiLevel = 4
-
-    const maxPollenLevel = Math.max(adjustedTreeLevel, adjustedGrassLevel, adjustedWeedLevel)
-    const avgPollenLevel = (adjustedTreeLevel + adjustedGrassLevel + adjustedWeedLevel) / 3
-    const pollenScore = (maxPollenLevel * 0.8 + avgPollenLevel * 0.2)
-    const combinedScore = (pollenScore * 0.7 + aqiLevel * 0.3)
-    const scaledScore = (combinedScore / 4) * 10
-    
-    return Math.round(scaledScore)
+  if (!data?.current) return 5
+  
+  const currentMonth = new Date().getMonth() + 1
+  const treeLevel = parseInt(data.current.tree?.level) || 0
+  const grassLevel = parseInt(data.current.grass?.level) || 0
+  const weedLevel = parseInt(data.current.weed?.level) || 0
+  const aqi = data.current.airQuality?.aqi || 50
+  
+  // Apply seasonal emphasis (but don't cap at 4)
+  let adjustedTreeLevel = treeLevel
+  let adjustedGrassLevel = grassLevel  
+  let adjustedWeedLevel = weedLevel
+  
+  if (currentMonth >= 3 && currentMonth <= 5) {
+    adjustedTreeLevel = treeLevel * 1.3 // Spring tree emphasis
+  } else if (currentMonth >= 6 && currentMonth <= 8) {
+    adjustedGrassLevel = grassLevel * 1.3 // Summer grass emphasis
+  } else if (currentMonth >= 9 && currentMonth <= 11) {
+    adjustedWeedLevel = weedLevel * 1.5 // Fall weed/ragweed emphasis (stronger)
   }
+  
+  // Find the worst pollen offender (this should drive the score)
+  const maxPollenLevel = Math.max(adjustedTreeLevel, adjustedGrassLevel, adjustedWeedLevel)
+  
+  // Convert AQI to 0-5 scale
+  let aqiLevel = 0
+  if (aqi <= 50) aqiLevel = 1
+  else if (aqi <= 100) aqiLevel = 2  
+  else if (aqi <= 150) aqiLevel = 3
+  else if (aqi <= 200) aqiLevel = 4
+  else aqiLevel = 5
+
+  // If any pollen type is Very High (4+), score should be 8+
+  if (maxPollenLevel >= 4) {
+    const baseScore = 8 + (maxPollenLevel - 4) // 8 for level 4, higher for above
+    const aqiAdjustment = Math.max(0, (aqiLevel - 2) * 0.5) // Only bad AQI makes it worse
+    return Math.min(10, Math.round(baseScore + aqiAdjustment))
+  }
+  
+  // For lower pollen levels, use more balanced approach
+  const combinedScore = (maxPollenLevel * 0.8 + aqiLevel * 0.2)
+  const scaledScore = (combinedScore / 4) * 7 // Cap normal scores at 7
+  
+  return Math.round(scaledScore)
+}
 
   if (loading) {
     return (
