@@ -125,24 +125,44 @@ export default function Home() {
   setLoading(true)
   setShowSuggestions(false)
 
-  // Convert location to city-state slug format
-  const citySlug = convertLocationToSlug(location)
+  // Convert location to city-state slug format (now async)
+  const citySlug = await convertLocationToSlug(location)
   
   if (citySlug) {
     // Redirect to the city page
     window.location.href = `/${citySlug}`
   } else {
     setLoading(false)
-    alert('Please enter a valid city and state (e.g., "Denver, CO" or "Chicago, IL")')
+    alert('Please enter a valid ZIP code, city and state (e.g., "46122", "Denver, CO" or "Chicago, IL")')
   }
 }
 
 // Helper function to convert user input to URL slug
-const convertLocationToSlug = (location: string): string | null => {
+const convertLocationToSlug = async (location: string): Promise<string | null> => {
   // Remove extra spaces and normalize
   const cleaned = location.trim().toLowerCase()
   
-  // Handle various input formats
+  // Check if input is a 5-digit zip code
+  if (/^\d{5}$/.test(cleaned)) {
+    try {
+      // Use a geocoding service to convert zip to city/state
+      const response = await fetch(`https://api.zippopotam.us/us/${cleaned}`)
+      if (response.ok) {
+        const data = await response.json()
+        const city = data.places[0]['place name'].toLowerCase()
+        const state = data.places[0]['state abbreviation'].toLowerCase()
+        
+        // Convert to slug format: "danville-in"
+        const citySlug = city.replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
+        return `${citySlug}-${state}`
+      }
+    } catch (error) {
+      console.error('Zip code lookup failed:', error)
+      // Fall through to regular processing
+    }
+  }
+  
+  // Handle various input formats (existing logic)
   let cityPart = ''
   let statePart = ''
   
@@ -171,41 +191,41 @@ const convertLocationToSlug = (location: string): string | null => {
     cityPart = cleaned
   }
   
-// Convert state to abbreviation if needed
-if (statePart) {
-  const convertedState = convertToStateCode(statePart)
-  if (convertedState) {
-    statePart = convertedState
-  }
-}
-  
-// If no state provided, try to find it in your cities array
-if (!statePart && cityPart) {
-  const matchedCity = cities.find(city => {
-    const cityName = city.split(',')[0].toLowerCase().trim()
-    return cityName === cityPart
-  })
-  
-  if (matchedCity) {
-    const parts = matchedCity.split(',')
-    cityPart = parts[0].trim().toLowerCase()
-    const matchedStatePart = parts[1].trim().toLowerCase()
-    const convertedState = convertToStateCode(matchedStatePart)
+  // Convert state to abbreviation if needed
+  if (statePart) {
+    const convertedState = convertToStateCode(statePart)
     if (convertedState) {
       statePart = convertedState
     }
   }
-}
-
-if (cityPart && statePart) {
-  // Convert to slug format: "denver-co"
-  const citySlug = cityPart.replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
-  const stateSlug = convertToStateCode(statePart)
   
-  if (stateSlug) {
-    return `${citySlug}-${stateSlug.toLowerCase()}`
+  // If no state provided, try to find it in your cities array
+  if (!statePart && cityPart) {
+    const matchedCity = cities.find(city => {
+      const cityName = city.split(',')[0].toLowerCase().trim()
+      return cityName === cityPart
+    })
+    
+    if (matchedCity) {
+      const parts = matchedCity.split(',')
+      cityPart = parts[0].trim().toLowerCase()
+      const matchedStatePart = parts[1].trim().toLowerCase()
+      const convertedState = convertToStateCode(matchedStatePart)
+      if (convertedState) {
+        statePart = convertedState
+      }
+    }
   }
-}
+
+  if (cityPart && statePart) {
+    // Convert to slug format: "denver-co"
+    const citySlug = cityPart.replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
+    const stateSlug = convertToStateCode(statePart)
+    
+    if (stateSlug) {
+      return `${citySlug}-${stateSlug.toLowerCase()}`
+    }
+  }
   
   return null
 }
