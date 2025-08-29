@@ -17,25 +17,40 @@ export async function getAllCities() {
 
 export async function getCityBySlug(slug) {
   try {
+    // Check if slug starts with a zip code pattern (ZIP-city-state format)
+    const zipPattern = /^(\d{5})-(.+)$/
+    const zipMatch = slug.match(zipPattern)
+    
+    let searchSlug = slug
+    if (zipMatch) {
+      // Extract city-state from ZIP-city-state format  
+      const [, zipCode, cityStatePart] = zipMatch
+      searchSlug = cityStatePart
+    }
+    
     // First, try to get from Supabase (your existing cities)
     const { data: city, error } = await supabase
       .from('cities')
       .select('*')
-      .eq('slug', slug)
+      .eq('slug', searchSlug)  // Use the cleaned slug
       .eq('is_active', true)
       .single()
-
+      
     if (city && !error) {
       return city
     }
-
+    
     // If not found in database, create dynamic city data
-    return createDynamicCityData(slug)
+    return createDynamicCityData(searchSlug)  // Use the cleaned slug
     
   } catch (error) {
     console.error('Error in getCityBySlug:', error)
-    // Fall back to dynamic city
-    return createDynamicCityData(slug)
+    // Fall back to dynamic city - use cleaned slug if zip pattern was found
+    const zipPattern = /^(\d{5})-(.+)$/
+    const zipMatch = slug.match(zipPattern)
+    const fallbackSlug = zipMatch ? zipMatch[2] : slug
+    
+    return createDynamicCityData(fallbackSlug)
   }
 }
 
