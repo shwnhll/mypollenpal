@@ -59,19 +59,19 @@ export async function GET() {
         if (!shouldSend) continue; // skip quiet days
 
         // 5) human-friendly email with homepage link + unsubscribe
-        const homepageUrl = `${SITE}/?loc=${encodeURIComponent(location)}`;
+        const homepageUrl = "https://www.mypollenpal.com/";
         const unsubscribeUrl = `${SITE}/unsubscribe`;
 
         const subject = `Pollen in ${location} — alert`;
         const html = `
           <div style="font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;line-height:1.5">
             <h2 style="margin:0 0 8px">Today’s pollen in ${location}</h2>
-            <p>
-              Tree: <b>${tree.status ?? "-"}</b> ·
-              Grass: <b>${grass.status ?? "-"}</b> ·
-              Weed: <b>${weed.status ?? "-"}</b>
-            </p>
-            <p><a href="${homepageUrl}">See the full breakdown on MyPollenPal</a></p>
+            <ul>
+              <li>Tree: <b>${tree.status ?? "-"}</b></li>
+              <li>Grass: <b>${grass.status ?? "-"}</b></li>
+              <li>Weed: <b>${weed.status ?? "-"}</b></li>
+            </ul>
+            <p><a href="${homepageUrl}">Visit MyPollenPal</a></p>
             <hr style="border:none;border-top:1px solid #eee;margin:16px 0" />
             <p style="color:#667085;font-size:12px">
               Don’t want these? <a href="${unsubscribeUrl}">Unsubscribe</a>
