@@ -1,67 +1,59 @@
-import { NextResponse } from 'next/server'
-import { Resend } from 'resend'
-import { supabase } from '../../../../lib/supabase'
-import { generatePollenAlert } from '../../../../lib/emailTemplate'
+// app/api/cron/daily-alerts/route.ts
+import { NextResponse } from "next/server";
+import { Resend } from "resend";
+import { supabaseServer } from "@/lib/supabase.server"; // server client with SERVICE_ROLE_KEY
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+export const runtime = "nodejs";
+const resend = new Resend(process.env.RESEND_API_KEY!);
 
 export async function GET() {
   try {
-    // Get all unique locations from subscribers
-    const { data: subscribers, error } = await supabase
-      .from('email_subscribers')
-      .select('email, location')
-      .eq('verified', true)
+    // 1. Get subscribers
+    const { data: subs, error } = await supabaseServer
+      .from("email_subscribers")
+      .select("email, location")
+      .eq("verified", true);
 
-    if (error) throw error
+    if (error) throw error;
 
-    // Group subscribers by location
-    const locationGroups = subscribers.reduce((acc, sub) => {
-      if (!acc[sub.location]) acc[sub.location] = []
-      acc[sub.location].push(sub.email)
-      return acc
-    }, {})
+    let alertsSent = 0;
+    let locationsProcessed = 0;
 
-    let alertsSent = 0
+    // 2. Group by location
+    const groups: Record<string, string[]> = {};
+    for (const sub of subs ?? []) {
+      if (!sub.email || !sub.location) continue;
+      if (!groups[sub.location]) groups[sub.location] = [];
+      groups[sub.location].push(sub.email);
+    }
 
-    // Process each location
-    for (const [location, emails] of Object.entries(locationGroups)) {
-      try {
-        // Fetch pollen data for this location
-        const pollenResponse = await fetch(`${process.env.NEXT_PUBLIC_VERCEL_URL || 'http://localhost:3000'}/api/pollen?location=${encodeURIComponent(location)}`)
-        const pollenData = await pollenResponse.json()
+    // 3. For each location, fetch pollen + send one email
+    for (const [location, emails] of Object.entries(groups)) {
+      const pollenUrl = `https://mypollenpal.com/api/pollen?location=${encodeURIComponent(location)}`;
+      const res = await fetch(pollenUrl);
+      if (!res.ok) continue;
 
-        if (!pollenResponse.ok) continue
+      const pollen = await res.json();
+      // TEMP: always send (to confirm pipeline works)
+      const subject = `Pollen update for ${location}`;
+      const html = `<h2>Pollen in ${location}</h2><pre>${JSON.stringify(pollen, null, 2)}</pre>`;
 
-        // Generate email template
-        const emailContent = generatePollenAlert(pollenData, location)
-        
-        if (!emailContent) continue // Skip if no alert needed
+      const send = await resend.emails.send({
+        from: "MyPollenPal <alerts@mypollenpal.com>",
+        to: emails,
+        subject,
+        html,
+      });
 
-        // Send emails to all subscribers for this location
-        await resend.emails.send({
-          from: 'MyPollenPal <alerts@mypollenpal.com>',
-          to: emails,
-          subject: emailContent.subject,
-          html: emailContent.html
-        })
-
-        alertsSent += emails.length
-        
-      } catch (error) {
-        console.error(`Error processing location ${location}:`, error)
-        continue
+      if (!send.error) {
+        alertsSent += emails.length;
+        locationsProcessed++;
       }
     }
 
-    return NextResponse.json({ 
-      success: true, 
-      alertsSent,
-      locationsProcessed: Object.keys(locationGroups).length 
-    })
-
-  } catch (error) {
-    console.error('Cron job error:', error)
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json({ ok: true, alertsSent, locationsProcessed });
+  } catch (e: any) {
+    console.error("Cron error:", e);
+    return NextResponse.json({ ok: false, error: e.message }, { status: 500 });
   }
 }
