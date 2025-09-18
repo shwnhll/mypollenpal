@@ -60,7 +60,7 @@ export async function GET() {
 
         // 5) human-friendly email with homepage link + unsubscribe
         const homepageUrl = "https://www.mypollenpal.com/";
-        const unsubscribeUrl = `${SITE}/unsubscribe`;
+        const unsubscribeUrl = `https://www.mypollenpal.com/api/unsubscribe?email=${encodeURIComponent(email)}`;
 
         const subject = `Pollen in ${location} — alert`;
         const html = `
