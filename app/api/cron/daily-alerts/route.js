@@ -83,14 +83,24 @@ Tree: ${tree.status ?? "-"}, Grass: ${grass.status ?? "-"}, Weed: ${weed.status 
 Full breakdown: ${homepageUrl}
 Unsubscribe: ${unsubscribeUrl}`;
 
-        const send = await resend.emails.send({
-          from: "MyPollenPal <alerts@mypollenpal.com>",
-          to: emails,                // one send per location to all recipients there
-          subject,
-          html,
-          text,
-          headers: { "List-Unsubscribe": `<${unsubscribeUrl}>` }
-        });
+        for (const email of emails) {
+  const send = await resend.emails.send({
+    from: "MyPollenPal <alerts@mypollenpal.com>",
+    to: email,          // ✅ one recipient per send
+    subject,
+    html,
+    text,
+    headers: { "List-Unsubscribe": `<${unsubscribeUrl}>` }
+  });
+
+  if (send?.error) {
+    console.error("Resend error", { location, email, error: send.error });
+  } else {
+    alertsSent += 1;
+  }
+}
+// locationsProcessed += 1; // keep this if the location processed successfully
+
 
         if (send?.error) {
           console.error("Resend error", { location, error: send.error });
