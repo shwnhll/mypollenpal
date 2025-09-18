@@ -997,7 +997,7 @@ const updateForecast = (forecast: any[]) => {
         backgroundClip: 'text',
         lineHeight: '1.2'
       }}>
-        Will pollen ruin your day?
+        Today’s Pollen Count by ZIP Code
       </h1>
       <p style={{
         fontSize: '1.1rem',
@@ -1009,7 +1009,7 @@ const updateForecast = (forecast: any[]) => {
         color: '#b8b8b8',
         fontWeight: '300'
       }}>
-        Your personal pollen companion that delivers hyperlocal forecasts and actionable advice. Never be caught off guard again.
+        Check today’s pollen levels for tree, grass, and weed pollen in your area. Enter your ZIP code for hyperlocal results.
       </p>
 
 <div style={{
@@ -1020,7 +1020,7 @@ const updateForecast = (forecast: any[]) => {
   <input 
     id="locationInput"
     type="text" 
-    placeholder="Enter your ZIP code or city..."
+    placeholder="Enter your ZIP code to see today’s pollen count..."
     value={searchValue}
     onChange={(e) => handleInputChange(e.target.value)}
     onKeyPress={(e) => {
@@ -1157,13 +1157,13 @@ const updateForecast = (forecast: any[]) => {
           color: '#f5f5f5',
           marginBottom: '0.5rem'
         }} id="currentLocation">
-          Carmel, Indiana
+          Today’s Pollen Count
         </h2>
         <p style={{
           color: '#b8b8b8',
           fontSize: '0.9rem'
         }} id="lastUpdated">
-          Sample data - Enter a location to see real pollen levels
+          Sample Data - Enter your ZIP code above for your local forecast.
         </p>
       </div>
 
